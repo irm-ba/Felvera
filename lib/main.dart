@@ -1,3 +1,4 @@
+import 'package:felvera/authWarapper.dart';
 import 'package:felvera/constants.dart';
 import 'package:felvera/login.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
       ),
 
       // Set the LoginPage as the initial screen of the app
-      home: LoginPage(),
+      home: AuthWrapper(),
     );
   }
 }
