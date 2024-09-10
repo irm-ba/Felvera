@@ -120,11 +120,20 @@ class _HomeState extends State<Home> {
                       leading: Icon(Icons.logout_rounded,
                           color: Color.fromARGB(255, 147, 58, 142)),
                       title: Text('Çıkış yap'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
+                      onTap: () async {
+                        try {
+                          // Firebase Authentication ile çıkış yapma
+                          await FirebaseAuth.instance.signOut();
+                          // Çıkış yaptıktan sonra LoginPage'e yönlendirme
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                          );
+                        } catch (e) {
+                          // Hata durumunda kullanıcıyı bilgilendirmek için bir yöntem ekleyebilirsiniz
+                          print('Çıkış yapma hatası: $e');
+                        }
                       },
                     ),
                   ],

@@ -15,15 +15,21 @@ class IntroScreen extends StatelessWidget {
         scrollPhysics: BouncingScrollPhysics(),
         pages: [
           PageViewModel(
-            titleWidget: Text(
-              "Felvera Evcil Hayvan Platformu",
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
+            titleWidget: Container(
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.only(top: 40), // Adjust padding as needed
+              child: Text(
+                "Felvera Evcil Hayvan Platformu",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 147, 58, 142), // Purple color
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
             body:
-                "Felvera'ya Hoş Geldiniz! Sevgi dolu dostlarımızı keşfedin ve hayatlarına neşe katın..",
+                "Felvera'ya Hoş Geldiniz! Sevgi dolu dostlarımızı keşfedin ve hayatlarına neşe katın..",
             image: Image.asset(
               "assets/images/birinci.png",
               height: 400,
@@ -31,15 +37,21 @@ class IntroScreen extends StatelessWidget {
             ),
           ),
           PageViewModel(
-            titleWidget: Text(
-              "Felvera Evcil Hayvan Platformu",
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
+            titleWidget: Container(
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.only(top: 40), // Adjust padding as needed
+              child: Text(
+                "Felvera Evcil Hayvan Platformu",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 147, 58, 142), // Purple color
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
             body:
-                "Bizim amacımız sevimli dostlarımızın daha güzel bir yaşam sürmesi. bunu hep birlikte başarabiliriz.",
+                "Bizim amacımız sevimli dostlarımızın daha güzel bir yaşam sürmesi. bunu hep birlikte başarabiliriz.",
             image: Image.asset(
               "assets/images/ikinci.png",
               height: 400,
@@ -47,15 +59,21 @@ class IntroScreen extends StatelessWidget {
             ),
           ),
           PageViewModel(
-            titleWidget: Text(
-              "Felvera Evcil Hayvan Platformu",
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
+            titleWidget: Container(
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.only(top: 40), // Adjust padding as needed
+              child: Text(
+                "Felvera Evcil Hayvan Platformu",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 147, 58, 142), // Purple color
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
             body:
-                "Sokak hayvanlarına yuva, kayıp dostlara kavuşma, evcil hayvanlara sıcak bir yuva sunmak için hemen başlayın!",
+                "Sokak hayvanlarına yuva, kayıp dostlara kavuşma, evcil hayvanlara sıcak bir yuva sunmak için hemen başlayın!",
             image: Image.asset(
               "assets/images/resim.png",
               height: 400,
@@ -75,7 +93,6 @@ class IntroScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => SignupPage()),
           );
         },
-        showBackButton: false,
         skip: Text(
           "Atla",
           style: TextStyle(
