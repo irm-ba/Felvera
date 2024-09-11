@@ -31,6 +31,14 @@ class _HomeState extends State<Home> {
   String ageRange = '';
   String location = '';
 
+  // Kullanıcı değerlendirme yanıtlarını tutan değişkenler
+  int rating = 0; // Kullanıcıdan 1-5 arasında bir değerlendirme almak için
+  String feedback = ''; // Kullanıcı geri bildirimi
+  int adoptionProcessRating =
+      0; // Hayvan Sahiplendirme Süreci Değerlendirme Değişkeni
+  int healthServiceRating =
+      0; // Sağlık Kontrolü Hizmeti Değerlendirme Değişkeni
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -158,17 +166,18 @@ class _HomeState extends State<Home> {
             ),
           ),
           title: Align(
-            alignment: Alignment.centerLeft, // Yazıyı sola kaydırır
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left:
-                      115), // Sola biraz daha kaydırmak için padding ekleyebilirsiniz
-              child: Text(
-                'Felvera',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+            alignment: Alignment.center, // Yazıyı ortalar
+            child: Text(
+              'Felvera',
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.star, color: Color.fromARGB(255, 147, 58, 142)),
+              onPressed: _showRatingDialog,
+            ),
+          ],
         ),
         body: Column(
           children: [
@@ -238,6 +247,152 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void _showRatingDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Uygulamayı Değerlendir'),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Uygulamamızı 1-5 arasında yıldızlarla değerlendirin:'),
+
+                  // Genel Yıldız Değerlendirme Kısmı
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return IconButton(
+                        icon: Icon(
+                          index < rating ? Icons.star : Icons.star_border,
+                          color: Color.fromARGB(255, 147, 58, 142),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            rating = index + 1;
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Soru 1: Hayvan Sahiplendirme Süreci
+                  Text(
+                      '1. Hayvan sahiplendirme sürecini nasıl değerlendirirsiniz?'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return IconButton(
+                        icon: Icon(
+                          index < adoptionProcessRating
+                              ? Icons.star
+                              : Icons.star_border,
+                          color: Color.fromARGB(255, 147, 58, 142),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            adoptionProcessRating = index + 1;
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Soru 2: Sağlık Kontrolü Hizmeti
+                  Text(
+                      '2. Sağlık kontrolü hizmetini nasıl değerlendirirsiniz?'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return IconButton(
+                        icon: Icon(
+                          index < healthServiceRating
+                              ? Icons.star
+                              : Icons.star_border,
+                          color: Color.fromARGB(255, 147, 58, 142),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            healthServiceRating = index + 1;
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Geri Bildirim Metni
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Geri Bildirim',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        feedback = value;
+                      });
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              child: Text('İptal'),
+              onPressed: () {
+                // Alanları temizle
+                setState(() {
+                  rating = 0;
+                  adoptionProcessRating = 0;
+                  healthServiceRating = 0;
+                  feedback = '';
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Gönder'),
+              onPressed: () async {
+                await _submitFeedback(); // Geri bildirimi gönder
+                // Alanları temizle
+                setState(() {
+                  rating = 0;
+                  adoptionProcessRating = 0;
+                  healthServiceRating = 0;
+                  feedback = '';
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _submitFeedback() async {
+    try {
+      // Firestore'a geri bildirim verilerini kaydet
+      await FirebaseFirestore.instance.collection('feedbacks').add({
+        'rating': rating,
+        'adoptionProcessRating': adoptionProcessRating,
+        'healthServiceRating': healthServiceRating,
+        'feedback': feedback,
+        'timestamp': FieldValue.serverTimestamp(), // Zaman damgası
+      });
+
+      // Başarılı kaydetme işlemi sonrası kullanıcıya bilgi ver
+      print('Geri bildirim başarıyla kaydedildi.');
+    } catch (e) {
+      // Hata durumunda
+      print('Geri bildirim kaydedilirken bir hata oluştu: $e');
+    }
   }
 
   Widget _buildCategoryButton(String category, {bool isNavigable = false}) {
