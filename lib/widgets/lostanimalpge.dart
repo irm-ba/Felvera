@@ -149,7 +149,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
 
   Stream<QuerySnapshot> _getFilteredLostAnimalsStream() {
     CollectionReference lostAnimalsRef =
-        FirebaseFirestore.instance.collection('lost_animals');
+    FirebaseFirestore.instance.collection('lost_animals');
 
     Query query = lostAnimalsRef;
 

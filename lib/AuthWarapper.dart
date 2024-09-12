@@ -1,8 +1,8 @@
-import 'package:felvera/login.dart';
-import 'package:felvera/screens/IntroScreen.dart';
-import 'package:felvera/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:felvera/screens/home.dart';
+import 'package:felvera/login.dart';
+import 'package:felvera/screens/IntroScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthWrapper extends StatefulWidget {

@@ -35,9 +35,9 @@ class _HomeState extends State<Home> {
   int rating = 0; // Kullanıcıdan 1-5 arasında bir değerlendirme almak için
   String feedback = ''; // Kullanıcı geri bildirimi
   int adoptionProcessRating =
-      0; // Hayvan Sahiplendirme Süreci Değerlendirme Değişkeni
+  0; // Hayvan Sahiplendirme Süreci Değerlendirme Değişkeni
   int healthServiceRating =
-      0; // Sağlık Kontrolü Hizmeti Değerlendirme Değişkeni
+  0; // Sağlık Kontrolü Hizmeti Değerlendirme Değişkeni
 
   @override
   Widget build(BuildContext context) {
@@ -200,48 +200,48 @@ class _HomeState extends State<Home> {
               child: selectedCategory == 'Blog'
                   ? BlogPage()
                   : selectedCategory == 'Forum'
-                      ? ForumPage()
-                      : selectedCategory == 'Gönüllülük Etkinlikleri'
-                          ? EventPage()
-                          : selectedCategory == 'Kayıp İlanları'
-                              ? LostAnimalsPage()
-                              : StreamBuilder(
-                                  stream: _getCategoryStream(selectedCategory),
-                                  builder: (context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    }
-                                    if (snapshot.hasError) {
-                                      return Center(
-                                          child: Text(
-                                              'Hata oluştu: ${snapshot.error}'));
-                                    }
-                                    if (!snapshot.hasData ||
-                                        snapshot.data!.docs.isEmpty) {
-                                      return Center(
-                                        child: Text(
-                                          selectedCategory ==
-                                                  'Gönüllülük Etkinlikleri'
-                                              ? 'Henüz gönüllülük etkinliği bulunmamaktadır.'
-                                              : 'Hiç hayvan bulunamadı.',
-                                        ),
-                                      );
-                                    }
+                  ? ForumPage()
+                  : selectedCategory == 'Gönüllülük Etkinlikleri'
+                  ? EventPage()
+                  : selectedCategory == 'Kayıp İlanları'
+                  ? LostAnimalsPage()
+                  : StreamBuilder(
+                stream: _getCategoryStream(selectedCategory),
+                builder: (context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                        child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                        child: Text(
+                            'Hata oluştu: ${snapshot.error}'));
+                  }
+                  if (!snapshot.hasData ||
+                      snapshot.data!.docs.isEmpty) {
+                    return Center(
+                      child: Text(
+                        selectedCategory ==
+                            'Gönüllülük Etkinlikleri'
+                            ? 'Henüz gönüllülük etkinliği bulunmamaktadır.'
+                            : 'Hiç hayvan bulunamadı.',
+                      ),
+                    );
+                  }
 
-                                    // Firestore'dan gelen verileri PetData listesine dönüştürme
-                                    List<PetData> pets = snapshot.data!.docs
-                                        .map((DocumentSnapshot doc) {
-                                      return PetData.fromSnapshot(doc);
-                                    }).toList();
+                  // Firestore'dan gelen verileri PetData listesine dönüştürme
+                  List<PetData> pets = snapshot.data!.docs
+                      .map((DocumentSnapshot doc) {
+                    return PetData.fromSnapshot(doc);
+                  }).toList();
 
-                                    return PetGridList(
-                                        pets:
-                                            pets); // Burada pets parametresini geçiyoruz
-                                  },
-                                ),
+                  return PetGridList(
+                      pets:
+                      pets); // Burada pets parametresini geçiyoruz
+                },
+              ),
             ),
           ],
         ),
@@ -431,7 +431,7 @@ class _HomeState extends State<Home> {
 
   Stream<QuerySnapshot> _getCategoryStream(String category) {
     CollectionReference collection =
-        FirebaseFirestore.instance.collection('pet');
+    FirebaseFirestore.instance.collection('pet');
 
     Query query = collection;
 

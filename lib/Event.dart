@@ -69,7 +69,7 @@ class EventCard extends StatelessWidget {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
       final eventDoc =
-          FirebaseFirestore.instance.collection('events').doc(eventData.id);
+      FirebaseFirestore.instance.collection('events').doc(eventData.id);
 
       // Katılımcı listesine UID ekle
       await eventDoc.update({
@@ -104,11 +104,11 @@ class EventCard extends StatelessWidget {
               borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
               child: eventData.imageUrl != null
                   ? Image.network(
-                      eventData.imageUrl!,
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
+                eventData.imageUrl!,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
                   : Placeholder(fallbackHeight: 200),
             ),
             Padding(

@@ -49,16 +49,16 @@ class BlogPage extends StatelessWidget {
   }
 
   Widget _buildBlogPost(
-    BuildContext context, {
-    required String title,
-    required String date,
-    required String author,
-    required String content,
-    required String imageUrl,
-    required String category,
-    required List<String> tags,
-    required String contentType,
-  }) {
+      BuildContext context, {
+        required String title,
+        required String date,
+        required String author,
+        required String content,
+        required String imageUrl,
+        required String category,
+        required List<String> tags,
+        required String contentType,
+      }) {
     return GestureDetector(
       onTap: () => _showPostDetails(
         context,
@@ -176,15 +176,15 @@ class BlogPage extends StatelessWidget {
   }
 
   void _showPostDetails(
-    BuildContext context, {
-    required String title,
-    required String date,
-    required String author,
-    required String content,
-    required String category,
-    required List<String> tags,
-    required String contentType,
-  }) {
+      BuildContext context, {
+        required String title,
+        required String date,
+        required String author,
+        required String content,
+        required String category,
+        required List<String> tags,
+        required String contentType,
+      }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
