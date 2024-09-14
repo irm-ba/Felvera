@@ -23,7 +23,6 @@ class _AdminApplicationState extends State<AdminApplication> {
   // State variables for selecting which details to show
   bool _showName = true;
   bool _showEmail = true;
-  bool _showPhone = true;
   bool _showPetName = true;
   bool _showAnimalType = true;
   bool _showBreed = true;
@@ -214,9 +213,6 @@ class _AdminApplicationState extends State<AdminApplication> {
             if (_showEmail)
               _buildDetailRow(
                   'E-posta', _userData?['email'] ?? 'Bilgi mevcut değil'),
-            if (_showPhone)
-              _buildDetailRow(
-                  'Telefon', _userData?['phone'] ?? 'Bilgi mevcut değil'),
             Divider(color: Colors.grey[400], height: 30),
             Text(
               'Hayvan Detayları',

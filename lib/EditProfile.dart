@@ -13,7 +13,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  final _bioController = TextEditingController();
 
   User? _currentUser;
   Map<String, dynamic>? _userData;
@@ -37,7 +36,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         if (_userData != null) {
           _firstNameController.text = _userData!['firstName'] ?? '';
           _lastNameController.text = _userData!['lastName'] ?? '';
-          _bioController.text = _userData!['bio'] ?? '';
+
           // Telefon numarasını almayı kaldırdık
         }
       });
@@ -53,7 +52,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             .update({
           'firstName': _firstNameController.text,
           'lastName': _lastNameController.text,
-          'bio': _bioController.text,
+
           // Telefon numarasını güncellemelerden çıkardık
         });
         Navigator.pop(context); // Profili kaydettikten sonra geri dön
@@ -110,10 +109,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     //     return null;
                     //   },
                     // ),
-                    TextFormField(
-                      controller: _bioController,
-                      decoration: InputDecoration(labelText: 'Biyografi'),
-                    ),
+
                     SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _saveProfile,
@@ -134,7 +130,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void dispose() {
     _firstNameController.dispose();
     _lastNameController.dispose();
-    _bioController.dispose();
+
     super.dispose();
   }
 }

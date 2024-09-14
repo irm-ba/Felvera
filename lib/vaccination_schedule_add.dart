@@ -18,44 +18,10 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _visitDateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String? _selectedAnimalId;
-  List<String> _animalIds = [];
-  List<String> _animalNames = [];
-  List<String> _animalImageUrls = [];
   File? _selectedImage;
   bool _isLoading = false;
 
   final ImagePicker _picker = ImagePicker();
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchAnimals();
-  }
-
-  Future<void> _fetchAnimals() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      try {
-        final petsSnapshot = await FirebaseFirestore.instance
-            .collection('pet')
-            .where('userId', isEqualTo: user.uid)
-            .get();
-
-        setState(() {
-          _animalIds = petsSnapshot.docs.map((doc) => doc.id).toList();
-          _animalNames = petsSnapshot.docs
-              .map((doc) => doc.data()['name'] as String)
-              .toList();
-          _animalImageUrls = petsSnapshot.docs
-              .map((doc) => doc.data()['imageUrl'] as String)
-              .toList();
-        });
-      } catch (e) {
-        print('Error fetching animals: $e');
-      }
-    }
-  }
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -100,7 +66,6 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
             'description': _descriptionController.text,
             'start': start,
             'end': end,
-            'animalId': _selectedAnimalId,
             'userId': user.uid,
             'animalImageUrl': imageUrl,
           });
@@ -159,17 +124,41 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                               ),
                         ),
                         SizedBox(height: 20),
-                        _buildDropdownField(
-                          label: 'Hayvan Seç (Opsiyonel)',
-                          value: _selectedAnimalId,
-                          items: _animalIds,
-                          itemNames: _animalNames,
-                          itemImageUrls: _animalImageUrls,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedAnimalId = value;
-                            });
-                          },
+                        GestureDetector(
+                          onTap: _pickImage, // Resim ekleme fonksiyonu
+                          child: _selectedImage == null
+                              ? Card(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.add_a_photo,
+                                            color: Colors.grey[600]),
+                                        SizedBox(width: 8),
+                                        Text('Hayvan Resmi Ekle'),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Column(
+                                  children: [
+                                    Image.file(
+                                      _selectedImage!,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    SizedBox(height: 8),
+                                    TextButton(
+                                      onPressed: _pickImage,
+                                      child: Text('Resmi Değiştir'),
+                                    ),
+                                  ],
+                                ),
                         ),
                         SizedBox(height: 20),
                         _buildTextField(
@@ -200,7 +189,6 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        _buildImagePicker(),
                       ],
                     ),
                   ),
@@ -227,110 +215,6 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                 ),
               ],
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDropdownField({
-    required String label,
-    required String? value,
-    required List<String> items,
-    required List<String> itemNames,
-    required List<String> itemImageUrls,
-    required void Function(String?) onChanged,
-  }) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: DropdownButtonFormField<String>(
-        value: value,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-        items: List.generate(items.length, (index) {
-          return DropdownMenuItem<String>(
-            value: items[index],
-            child: Row(
-              children: [
-                itemImageUrls[index].isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Image.network(
-                          itemImageUrls[index],
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : SizedBox(width: 40, height: 40),
-                Text(itemNames[index]),
-              ],
-            ),
-          );
-        })
-          ..add(
-            DropdownMenuItem<String>(
-              value: 'custom',
-              child: Row(
-                children: [
-                  Icon(Icons.add_a_photo, color: Colors.grey[600]),
-                  SizedBox(width: 8),
-                  Text('Diğer Resim Ekle'),
-                ],
-              ),
-            ),
-          ),
-        onChanged: onChanged,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Hayvan seçin';
-          }
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget _buildImagePicker() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: InkWell(
-        onTap: _pickImage,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              _selectedImage != null
-                  ? Image.file(
-                      _selectedImage!,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    )
-                  : Icon(Icons.camera_alt, size: 50, color: Colors.grey),
-              SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  _selectedImage != null
-                      ? 'Resmi değiştirmek için dokunun'
-                      : 'Resim ekleyin',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                ),
-              ),
-            ],
           ),
         ),
       ),

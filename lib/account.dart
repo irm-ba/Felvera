@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:felvera/login.dart';
 import 'package:felvera/models/pet_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -27,54 +28,82 @@ class _AccountPageState extends State<AccountPage>
   @override
   void initState() {
     super.initState();
-    _initializeData();
     _tabController = TabController(length: 2, vsync: this);
+    _initializeData();
   }
 
   Future<void> _initializeData() async {
     final currentUser = FirebaseAuth.instance.currentUser;
 
-    if (currentUser != null) {
-      try {
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser.uid)
-            .get();
-
-        setState(() {
-          _userData = userDoc.data() as Map<String, dynamic>?;
-        });
-
-        QuerySnapshot petsSnapshot = await FirebaseFirestore.instance
-            .collection('pet')
-            .where('userId', isEqualTo: currentUser.uid)
-            .get();
-
-        setState(() {
-          _userPets = petsSnapshot.docs
-              .map((doc) => PetData.fromSnapshot(doc))
-              .toList();
-        });
-
-        List<String> petIds = _userPets.map((pet) => pet.petId).toList();
-        if (petIds.isNotEmpty) {
-          QuerySnapshot applicationsSnapshot = await FirebaseFirestore.instance
-              .collection('adoption_applications')
-              .where('petId', whereIn: petIds)
-              .get();
-
-          setState(() {
-            _userApplications = applicationsSnapshot.docs;
-          });
-        } else {
-          setState(() {
-            _userApplications = [];
-          });
-        }
-      } catch (e) {
-        print('Error initializing data: $e');
-      }
+    if (currentUser == null) {
+      // Kullanıcı oturum açmamışsa
+      _showNotLoggedInDialog(); // Uyarı göster
+      return;
     }
+
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      setState(() {
+        _userData = userDoc.data() as Map<String, dynamic>?;
+      });
+
+      QuerySnapshot petsSnapshot = await FirebaseFirestore.instance
+          .collection('pet')
+          .where('userId', isEqualTo: currentUser.uid)
+          .get();
+
+      setState(() {
+        _userPets =
+            petsSnapshot.docs.map((doc) => PetData.fromSnapshot(doc)).toList();
+      });
+
+      List<String> petIds = _userPets.map((pet) => pet.petId).toList();
+      if (petIds.isNotEmpty) {
+        QuerySnapshot applicationsSnapshot = await FirebaseFirestore.instance
+            .collection('adoption_applications')
+            .where('petId', whereIn: petIds)
+            .get();
+
+        setState(() {
+          _userApplications = applicationsSnapshot.docs;
+        });
+      } else {
+        setState(() {
+          _userApplications = [];
+        });
+      }
+    } catch (e) {
+      print('Error initializing data: $e');
+    }
+  }
+
+  // Kullanıcı oturum açmamışsa gösterilecek uyarı dialogu
+  void _showNotLoggedInDialog() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Oturum Açılmadı'),
+            content: const Text('Lütfen oturum açın.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Dialog'u kapat
+                  Navigator.pushReplacementNamed(
+                      context, '/login'); // Giriş sayfasına yönlendir
+                },
+                child: const Text('Tamam'),
+              ),
+            ],
+          );
+        },
+      );
+    });
   }
 
   Future<void> _pickImage() async {
@@ -108,6 +137,42 @@ class _AccountPageState extends State<AccountPage>
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    // Kullanıcı giriş yapmamışsa otomatik olarak giriş sayfasına yönlendir
+    if (currentUser == null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Oturum Açılmamış. Lütfen Giriş Yapın.',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            LoginPage()), // LoginPage'i kendi giriş sayfanız ile değiştirin
+                  );
+                },
+                child: Text('Giriş Yap'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(
+                      255, 147, 58, 142), // Buton arka plan rengi
+                  foregroundColor: Colors.white, // Buton metin rengi
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Profil'),

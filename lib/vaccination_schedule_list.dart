@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart'; // Tarih formatlama için intl paketini ekleyin
 
 class VaccinationScheduleList extends StatelessWidget {
   const VaccinationScheduleList({Key? key}) : super(key: key);
@@ -18,9 +19,7 @@ class VaccinationScheduleList extends StatelessWidget {
           : StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('vaccinationSchedules')
-                  .where('userId',
-                      isEqualTo:
-                          user.uid) // Sadece kullanıcıya ait verileri çek
+                  .where('userId', isEqualTo: user.uid)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
@@ -37,6 +36,14 @@ class VaccinationScheduleList extends StatelessWidget {
                     final schedule =
                         schedules[index].data() as Map<String, dynamic>;
                     final animalImageUrl = schedule['animalImageUrl'] as String;
+                    final startDate = schedule['start'].toDate();
+                    final endDate = schedule['end'].toDate();
+
+                    // Tarihi saat olmadan göstermek için formatla
+                    final formattedStartDate =
+                        DateFormat('dd/MM/yyyy').format(startDate);
+                    final formattedEndDate =
+                        DateFormat('dd/MM/yyyy').format(endDate);
 
                     return Card(
                       margin: const EdgeInsets.symmetric(
@@ -58,7 +65,7 @@ class VaccinationScheduleList extends StatelessWidget {
                               ),
                         title: Text(schedule['description'] as String),
                         subtitle: Text(
-                          'Başlangıç: ${schedule['start'].toDate()} \nBitiş: ${schedule['end'].toDate()}',
+                          'Başlangıç: $formattedStartDate \nBitiş: $formattedEndDate',
                         ),
                       ),
                     );

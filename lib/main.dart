@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:felvera/authWarapper.dart';
 import 'package:felvera/constants.dart';
 import 'package:felvera/login.dart';
@@ -45,6 +46,15 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: SplashScreen(), // `SplashScreen` widget'ını burada kullanın
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('tr', ''), // Türkçe
+        Locale('en', ''), // İngilizce
+      ],
     );
   }
 }

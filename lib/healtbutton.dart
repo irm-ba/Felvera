@@ -165,7 +165,7 @@ class VaccinationScheduleHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const VaccinationScheduleAdd()),
+                      builder: (context) => VaccinationScheduleAdd()),
                 );
               },
             ),

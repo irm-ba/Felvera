@@ -21,7 +21,7 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _livingConditionsController =
@@ -82,13 +82,6 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
                   controller: _nameController,
                   labelText: 'Adınız ve Soyadınız',
                   prefixIcon: Icons.person,
-                ),
-                SizedBox(height: 12),
-                _buildTextField(
-                  controller: _phoneController,
-                  labelText: 'Telefon Numaranız',
-                  keyboardType: TextInputType.phone,
-                  prefixIcon: Icons.phone,
                 ),
                 SizedBox(height: 12),
                 _buildTextField(
@@ -201,7 +194,7 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final name = _nameController.text;
-      final phone = _phoneController.text;
+
       final email = _emailController.text;
       final address = _addressController.text;
       final livingConditions = _livingConditionsController.text;
@@ -223,7 +216,6 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
           'petOwnerId': petOwnerId,
           'petId': petId, // Use petId from widget
           'name': name,
-          'phone': phone,
           'email': email,
           'address': address,
           'livingConditions': livingConditions,
@@ -235,7 +227,6 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
         );
 
         _nameController.clear();
-        _phoneController.clear();
         _emailController.clear();
         _addressController.clear();
         _livingConditionsController.clear();

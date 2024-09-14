@@ -5,15 +5,13 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.5.0-191.0.dev <4.0.0"
-
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  introduction_screen: ^3.0.0  # Güncel sürüm
-  cupertino_icons: ^1.0.8  # Güncel sürüm
-
+  introduction_screen: ^2.1.0
+  cupertino_icons: ^1.0.8
 
   # Diğer bağımlılıklar
   cloud_firestore: ^5.2.1
@@ -30,7 +28,9 @@ dependencies:
   mailer: ^6.0.0
   uuid: ^3.0.0
   cached_network_image: ^3.2.0
-  shared_preferences: ^2.0.14
+  shared_preferences: ^2.0.15
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -45,5 +45,3 @@ flutter:
     - assets/images/resim.png
     - assets/proarka.jpg
     - assets/images/logo_felveraa.png
-    - assets/images/felveraarkaplan.png
-    - assets/images/arka.png

@@ -51,7 +51,6 @@ class VetVisitList extends StatelessWidget {
                     final description = visit['description'] as String? ?? '';
                     final animalImageUrl =
                         visit['animalImageUrl'] as String? ?? '';
-                    final animalId = visit['animalId'] as String? ?? '';
 
                     // Check if visitDate is a Timestamp or String
                     final visitDateField = visit['visitDate'];
@@ -70,10 +69,9 @@ class VetVisitList extends StatelessWidget {
                           DateTime.now(); // Default to now if unknown type
                     }
 
-                    // Format date to "August 24, 2024 at 3:00:00 AM UTC+3"
+                    // Format date to "14/09/2024" (Day/Month/Year)
                     final formattedDate =
-                        DateFormat('MMMM d, yyyy \'at\' h:mm:ss a')
-                            .format(visitDate.toLocal());
+                        DateFormat('d/M/yyyy').format(visitDate.toLocal());
 
                     return Card(
                       margin: const EdgeInsets.symmetric(
@@ -113,7 +111,7 @@ class VetVisitList extends StatelessWidget {
                                   ),
                         ),
                         subtitle: Text(
-                          'Ziyaret Tarihi: $formattedDate\nHayvan ID: $animalId',
+                          'Ziyaret Tarihi: $formattedDate',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: Colors.grey[700],

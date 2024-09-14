@@ -19,10 +19,7 @@ class _VetVisitAddState extends State<VetVisitAdd> {
   DateTime? _selectedDate;
   String? _selectedAnimalId;
   List<String> _animalIds = [];
-  List<String> _animalNames = [];
-  List<String> _animalImageUrls = [];
   File? _selectedImage;
-  String? _selectedAnimalName;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -35,24 +32,22 @@ class _VetVisitAddState extends State<VetVisitAdd> {
   Future<void> _fetchAnimals() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      try {
-        final petsSnapshot = await FirebaseFirestore.instance
-            .collection('pet')
-            .where('userId', isEqualTo: user.uid)
-            .get();
+      final snapshot = await FirebaseFirestore.instance
+          .collection('animals')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+      final animals = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return {
+          'id': doc.id,
+          'name': data['name'] ?? 'Unknown',
+          'imageUrl': data['animalImageUrl'] ?? '',
+        };
+      }).toList();
 
-        setState(() {
-          _animalIds = petsSnapshot.docs.map((doc) => doc.id).toList();
-          _animalNames = petsSnapshot.docs
-              .map((doc) => doc.data()['name'] as String)
-              .toList();
-          _animalImageUrls = petsSnapshot.docs
-              .map((doc) => doc.data()['imageUrl'] as String)
-              .toList();
-        });
-      } catch (e) {
-        print('Error fetching animals: $e');
-      }
+      setState(() {
+        _animalIds = animals.map((animal) => animal['id'] as String).toList();
+      });
     }
   }
 
@@ -65,11 +60,82 @@ class _VetVisitAddState extends State<VetVisitAdd> {
     }
   }
 
+  Future<String?> _uploadImage(File image) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref();
+      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final imageRef = storageRef.child('vet_visit_images/$fileName');
+      final uploadTask = imageRef.putFile(image);
+      final snapshot = await uploadTask.whenComplete(() {});
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+  Future<void> _saveVetVisit() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        try {
+          String? imageUrl;
+          if (_selectedImage != null) {
+            imageUrl = await _uploadImage(_selectedImage!);
+          }
+
+          await FirebaseFirestore.instance.collection('vet_visits').add({
+            'description': _descriptionController.text,
+            'visitDate': _selectedDate?.toIso8601String(), // Tarih formatı
+            'animalId': _selectedAnimalId,
+            'animalImageUrl': imageUrl,
+            'userId': user.uid,
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Veteriner ziyareti eklendi!')),
+          );
+          Navigator.pop(context);
+        } catch (e) {
+          print('Error adding vet visit: $e');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text('Veteriner ziyareti eklenirken bir hata oluştu.')),
+          );
+        }
+      }
+    }
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    String? hint,
+    required FormFieldValidator<String> validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ),
+      validator: validator,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Veteriner Ziyareti Ekle'),
+        title: const Text("Veteriner Ziyareti Ekle"),
         elevation: 0,
       ),
       body: Padding(
@@ -101,26 +167,41 @@ class _VetVisitAddState extends State<VetVisitAdd> {
                               ),
                         ),
                         SizedBox(height: 20),
-                        _buildDropdownField(
-                          label: 'Hayvan Seç',
-                          value: _selectedAnimalId,
-                          items: _animalIds,
-                          itemNames: _animalNames,
-                          itemImageUrls: _animalImageUrls,
-                          onChanged: (value) {
-                            setState(() {
-                              if (value != 'custom') {
-                                _selectedAnimalId = value;
-                                _selectedAnimalName =
-                                    _animalNames[_animalIds.indexOf(value!)];
-                                _selectedImage =
-                                    null; // Clear selected image if animal is selected
-                              } else {
-                                _selectedAnimalId = null;
-                                _selectedAnimalName = null;
-                              }
-                            });
-                          },
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: _selectedImage == null
+                              ? Card(
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.add_a_photo,
+                                            color: Colors.grey[600]),
+                                        SizedBox(width: 8),
+                                        Text('Hayvan Resmi Ekle'),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Column(
+                                  children: [
+                                    Image.file(
+                                      _selectedImage!,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    SizedBox(height: 8),
+                                    TextButton(
+                                      onPressed: _pickImage,
+                                      child: Text('Resmi Değiştir'),
+                                    ),
+                                  ],
+                                ),
                         ),
                         SizedBox(height: 20),
                         _buildTextField(
@@ -135,15 +216,33 @@ class _VetVisitAddState extends State<VetVisitAdd> {
                         ),
                         SizedBox(height: 20),
                         GestureDetector(
-                          onTap: _selectDate,
+                          onTap: () async {
+                            final DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: _selectedDate ?? DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2100),
+                            );
+                            if (pickedDate != null &&
+                                pickedDate != _selectedDate) {
+                              setState(() {
+                                _selectedDate = pickedDate;
+                                _visitDateController.text = _selectedDate
+                                        ?.toLocal()
+                                        .toString()
+                                        .split(' ')[0] ??
+                                    '';
+                              });
+                            }
+                          },
                           child: AbsorbPointer(
                             child: _buildTextField(
                               controller: _visitDateController,
                               label: 'Ziyaret Tarihi',
-                              hint: 'YYYY-MM-DD',
+                              hint: 'Tarih Seçin',
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Ziyaret tarihi girin';
+                                  return 'Tarih seçin';
                                 }
                                 return null;
                               },
@@ -151,7 +250,6 @@ class _VetVisitAddState extends State<VetVisitAdd> {
                           ),
                         ),
                         SizedBox(height: 20),
-                        _buildImagePicker(),
                       ],
                     ),
                   ),
@@ -159,8 +257,8 @@ class _VetVisitAddState extends State<VetVisitAdd> {
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
-                    onPressed: _addVetVisit,
-                    child: const Text('Ekle'),
+                    onPressed: _saveVetVisit,
+                    child: const Text('Kaydet'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 147, 58, 142),
                       foregroundColor: Colors.white,
@@ -179,196 +277,6 @@ class _VetVisitAddState extends State<VetVisitAdd> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildDropdownField({
-    required String label,
-    required String? value,
-    required List<String> items,
-    required List<String> itemNames,
-    required List<String> itemImageUrls,
-    required void Function(String?) onChanged,
-  }) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: DropdownButtonFormField<String>(
-        value: value,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        ),
-        items: List.generate(items.length, (index) {
-          return DropdownMenuItem<String>(
-            value: items[index],
-            child: Row(
-              children: [
-                itemImageUrls[index].isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Image.network(
-                          itemImageUrls[index],
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : SizedBox(width: 40, height: 40),
-                Text(itemNames[index]),
-              ],
-            ),
-          );
-        })
-          ..add(
-            DropdownMenuItem<String>(
-              value: 'custom',
-              child: Row(
-                children: [
-                  Icon(Icons.add_a_photo, color: Colors.grey[600]),
-                  SizedBox(width: 8),
-                  Text('Diğer Resim Ekle'),
-                ],
-              ),
-            ),
-          ),
-        onChanged: onChanged,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Hayvan seçin';
-          }
-          return null;
-        },
-      ),
-    );
-  }
-
-  Widget _buildImagePicker() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        leading: _selectedImage != null
-            ? Image.file(
-                _selectedImage!,
-                width: 40,
-                height: 40,
-                fit: BoxFit.cover,
-              )
-            : Icon(Icons.add_a_photo, color: Colors.grey[600]),
-        title: Text(
-          _selectedImage != null
-              ? 'Resim Seçildi ($_selectedAnimalName)'
-              : 'Resim Seç',
-        ),
-        onTap: _pickImage,
-      ),
-    );
-  }
-
-  Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        _visitDateController.text =
-            '${picked.toLocal().toIso8601String().split('T').first}';
-      });
-    }
-  }
-
-  Future<String?> _uploadImage(File image) async {
-    try {
-      final storageRef = FirebaseStorage.instance.ref();
-      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      final imageRef = storageRef.child('vetVisitImages/$fileName');
-      final uploadTask = imageRef.putFile(image);
-      final snapshot = await uploadTask.whenComplete(() {});
-      final downloadUrl = await snapshot.ref.getDownloadURL();
-      return downloadUrl;
-    } catch (e) {
-      print('Error uploading image: $e');
-      return null;
-    }
-  }
-
-  Future<void> _addVetVisit() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        String animalImageUrl;
-        if (_selectedAnimalId != null &&
-            _animalIds.contains(_selectedAnimalId)) {
-          animalImageUrl =
-              _animalImageUrls[_animalIds.indexOf(_selectedAnimalId!)];
-        } else if (_selectedImage != null) {
-          final uploadedImageUrl = await _uploadImage(_selectedImage!);
-          if (uploadedImageUrl != null) {
-            animalImageUrl = uploadedImageUrl;
-          } else {
-            animalImageUrl = '';
-          }
-        } else {
-          animalImageUrl = '';
-        }
-
-        try {
-          await FirebaseFirestore.instance.collection('vet_visits').add({
-            'userId': user.uid,
-            'animalId': _selectedAnimalId,
-            'description': _descriptionController.text,
-            'visitDate': _visitDateController.text,
-            'animalImageUrl': animalImageUrl,
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Veteriner ziyareti eklendi!')),
-          );
-          Navigator.pop(context);
-        } catch (e) {
-          print('Error adding vet visit: $e');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text('Veteriner ziyareti eklenirken bir hata oluştu.')),
-          );
-        }
-      }
-    }
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    String? hint,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      ),
-      validator: validator,
     );
   }
 }

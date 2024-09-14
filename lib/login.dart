@@ -1,25 +1,36 @@
-import 'package:felvera/screens/home.dart';
-import 'package:felvera/sign_up.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Add Firebase Auth import
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:felvera/screens/home.dart';
+import 'sign_up.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
-  // Create an instance of Firebase Auth
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Burada kontrolörleri tanımlıyoruz
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _header(context),
+            const SizedBox(height: 30),
             _inputField(context),
+            const SizedBox(height: 20),
             _forgotPassword(context),
+            const SizedBox(height: 20),
+            _loginButton(context),
+            const SizedBox(height: 10),
+            _guestLogin(context),
+            const SizedBox(height: 20),
             _signup(context),
           ],
         ),
@@ -30,20 +41,34 @@ class LoginPage extends StatelessWidget {
   Widget _header(BuildContext context) {
     return Column(
       children: [
-        Image.asset('assets/images/felvera.png'),
+        Padding(
+          padding: const EdgeInsets.only(top: 5), // Üstten boşluk
+          child: Image.asset('assets/images/felvera.png',
+              height: 180), // Daha büyük resim
+        ),
+        const SizedBox(height: 5),
         const Text(
           "HOŞGELDİNİZ",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF933A8E), // Renk kodu
+          ),
         ),
-        const Text("Hayvan dostlarımız yuva bulsun"),
+        const SizedBox(height: 5),
+        const Text(
+          "Hayvan dostlarımız yuva bulsun",
+          style: TextStyle(
+            fontSize: 16,
+            color: Color(0xFF707070), // Renk kodu
+            fontStyle: FontStyle.normal, // İtalik olmayan stil
+          ),
+        ),
       ],
     );
   }
 
   Widget _inputField(BuildContext context) {
-    TextEditingController emailController = TextEditingController();
-    TextEditingController passwordController = TextEditingController();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -52,115 +77,177 @@ class LoginPage extends StatelessWidget {
           decoration: InputDecoration(
             hintText: "E-Posta",
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(25), // Daha yuvarlak köşeler
               borderSide: BorderSide.none,
             ),
-            fillColor: Colors.purple.withOpacity(0.1),
             filled: true,
-            prefixIcon: const Icon(Icons.person),
+            fillColor:
+                Color.fromARGB(255, 243, 234, 241), // Hafif pembe opak renk
+            prefixIcon: const Icon(
+              Icons.person,
+              color: Color(0xFF933A8E), // Renk kodu
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         TextField(
           controller: passwordController,
           decoration: InputDecoration(
             hintText: "Şifre",
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: BorderRadius.circular(25), // Daha yuvarlak köşeler
               borderSide: BorderSide.none,
             ),
-            fillColor: const Color.fromARGB(255, 160, 98, 171).withOpacity(0.1),
             filled: true,
-            prefixIcon: const Icon(Icons.lock),
+            fillColor:
+                Color.fromARGB(255, 243, 234, 241), // Hafif pembe opak renk
+            prefixIcon: const Icon(
+              Icons.lock,
+              color: Color(0xFF933A8E), // Renk kodu
+            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           ),
           obscureText: true,
-        ),
-        const SizedBox(height: 30),
-        ElevatedButton(
-          onPressed: () {
-            _signInWithEmailAndPassword(
-              context,
-              emailController.text.trim(),
-              passwordController.text.trim(),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: const Color.fromARGB(255, 196, 120, 209),
-          ),
-          child: const Text(
-            "Giriş Yap",
-            style: TextStyle(
-              fontSize: 20,
-              color: Color.fromARGB(255, 255, 255, 255),
-            ),
-          ),
         ),
       ],
     );
   }
 
   Widget _forgotPassword(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            final TextEditingController _emailController =
-                TextEditingController();
+    return Align(
+      alignment: Alignment.centerRight, // Yazıyı sağa hizalar
+      child: TextButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              final TextEditingController _emailController =
+                  TextEditingController();
 
-            return AlertDialog(
-              title: const Text("Şifremi Unuttum"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      hintText: "E-Posta",
-                      border: OutlineInputBorder(),
+              return AlertDialog(
+                title: const Text("Şifremi Unuttum"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: "E-Posta",
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(12), // Yuvarlak köşeler
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () async {
-                      String email = _emailController.text.trim();
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        String email = _emailController.text.trim();
 
-                      if (email.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text("Lütfen e-posta adresinizi girin")),
-                        );
-                        return;
-                      }
+                        if (email.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Lütfen e-posta adresinizi girin"),
+                            ),
+                          );
+                          return;
+                        }
 
-                      try {
-                        await _auth.sendPasswordResetEmail(email: email);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                        try {
+                          await FirebaseAuth.instance
+                              .sendPasswordResetEmail(email: email);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
                               content:
-                                  Text("Şifre sıfırlama e-postası gönderildi")),
-                        );
-                        Navigator.of(context)
-                            .pop(); // E-posta gönderildikten sonra dialog'ı kapat
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("E-posta gönderilemedi: $e")),
-                        );
-                      }
-                    },
-                    child: const Text("Gönder"),
-                  ),
-                ],
+                                  Text("Şifre sıfırlama e-postası gönderildi"),
+                            ),
+                          );
+                          Navigator.of(context)
+                              .pop(); // E-posta gönderildikten sonra dialog'ı kapat
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("E-posta gönderilemedi"),
+                            ),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(12), // Yuvarlak köşeler
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 24),
+                        backgroundColor: Color(0xFF933A8E), // Renk kodu
+                      ),
+                      child: const Text("Gönder"),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        child: const Text(
+          "Şifremi unuttum",
+          style: TextStyle(color: Color(0xFF933A8E)), // Renk kodu
+        ),
+      ),
+    );
+  }
+
+  Widget _loginButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        try {
+          final email = emailController.text.trim();
+          final password = passwordController.text.trim();
+
+          if (email.isEmpty || password.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Lütfen e-posta ve şifre girin"),
               ),
             );
-          },
-        );
+            return;
+          }
+
+          UserCredential userCredential =
+              await _auth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Home()), // Home sayfasına yönlendirme
+          );
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Giriş başarısız"),
+            ),
+          );
+        }
       },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25), // Daha yuvarlak köşeler
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        backgroundColor: Color(0xFF933A8E), // Renk kodu
+      ),
       child: const Text(
-        "Şifremi unuttum",
-        style: TextStyle(color: Colors.purple),
+        "Giriş Yap",
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -179,45 +266,30 @@ class LoginPage extends StatelessWidget {
           },
           child: const Text(
             "Üye ol",
-            style: TextStyle(color: Colors.purple),
+            style: TextStyle(
+                color: Color(0xFF933A8E), // Renk kodu
+                fontWeight: FontWeight.bold),
           ),
         ),
       ],
     );
   }
 
-  // Function to sign in with email and password
-  void _signInWithEmailAndPassword(
-      BuildContext context, String email, String password) async {
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const Home()),
-      );
-    } catch (e) {
-      // Handle sign-in errors
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Giriş Hatası"),
-            content: const Text(
-                "Giriş yaparken bir hata oluştu. Lütfen tekrar deneyin."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Tamam"),
-              ),
-            ],
-          );
-        },
-      );
-    }
+  Widget _guestLogin(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Home()),
+        );
+      },
+      child: const Text(
+        "Misafir Olarak Görüntüle",
+        style: TextStyle(
+          fontSize: 18,
+          color: Color(0xFF707070), // Renk kodu
+        ),
+      ),
+    );
   }
 }
