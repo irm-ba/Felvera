@@ -1,5 +1,7 @@
+import 'package:felvera/Contact.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore'u kullanmak için
 import 'package:felvera/screens/home.dart';
 import 'sign_up.dart';
 
@@ -32,6 +34,8 @@ class LoginPage extends StatelessWidget {
             _guestLogin(context),
             const SizedBox(height: 20),
             _signup(context),
+            const SizedBox(height: 20),
+            _contactPage(context), // Yeni butonu ekleyin
           ],
         ),
       ),
@@ -216,11 +220,33 @@ class LoginPage extends StatelessWidget {
             return;
           }
 
+          // Kullanıcıyı oturum açma
           UserCredential userCredential =
               await _auth.signInWithEmailAndPassword(
             email: email,
             password: password,
           );
+
+          // Kullanıcı profilini Firestore'dan al
+          final userDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userCredential.user?.uid)
+              .get();
+
+          if (userDoc.exists) {
+            final isSuspended = userDoc.data()?['isSuspended'] ?? false;
+
+            if (isSuspended) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      "Hesabınız askıya alınmış. Lütfen destek ile iletişime geçin."),
+                ),
+              );
+              await _auth.signOut(); // Hesap askıya alınmışsa oturumu kapat
+              return;
+            }
+          }
 
           Navigator.pushReplacement(
             context,
@@ -288,6 +314,25 @@ class LoginPage extends StatelessWidget {
         style: TextStyle(
           fontSize: 18,
           color: Color(0xFF707070), // Renk kodu
+        ),
+      ),
+    );
+  }
+
+  Widget _contactPage(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ContactPage()), // ContactPage yönlendirme
+        );
+      },
+      child: const Text(
+        "İletişime Geç",
+        style: TextStyle(
+          fontSize: 14,
+          color: Color(0xFF933A8E), // Renk kodu
         ),
       ),
     );

@@ -18,6 +18,8 @@ class _SignupPageState extends State<SignupPage> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   String? _errorMessage;
+  bool _isKvkkAccepted = false; // KVKK onay durumu
+  bool _isRulesAccepted = false; // Kullanım kuralları onay durumu
 
   void _signup() async {
     final email = _emailController.text.trim();
@@ -25,6 +27,20 @@ class _SignupPageState extends State<SignupPage> {
     final confirmPassword = _confirmPasswordController.text.trim();
     final firstName = _firstNameController.text.trim();
     final lastName = _lastNameController.text.trim();
+
+    if (!_isKvkkAccepted) {
+      setState(() {
+        _errorMessage = "KVKK metnini kabul etmelisiniz.";
+      });
+      return;
+    }
+
+    if (!_isRulesAccepted) {
+      setState(() {
+        _errorMessage = "Kullanım kurallarını kabul etmelisiniz.";
+      });
+      return;
+    }
 
     if (password != confirmPassword) {
       setState(() {
@@ -51,6 +67,9 @@ class _SignupPageState extends State<SignupPage> {
         'profileImageUrl': '', // Default or empty initially
         'location': '', // Default or empty initially
         'phoneNumber': '', // Default or empty initially
+        'isKvkkAccepted': _isKvkkAccepted, // KVKK onay durumu
+        'isRulesAccepted': _isRulesAccepted, // Kullanım kuralları onay durumu
+        'isSuspended': false, // Varsayılan olarak false
       });
 
       Navigator.pushReplacement(
@@ -77,26 +96,32 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _header(context),
-            const SizedBox(height: 30),
-            _inputFields(),
-            const SizedBox(height: 20),
-            if (_errorMessage != null)
-              Text(
-                _errorMessage!,
-                style: const TextStyle(color: Colors.red),
-              ),
-            const SizedBox(height: 20),
-            _signupButton(context),
-            const SizedBox(height: 10),
-            _login(context),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _header(context),
+              const SizedBox(height: 20),
+              _inputFields(),
+              const SizedBox(height: 4), // Daha da küçültüldü
+              _kvkkCheckbox(),
+              const SizedBox(height: 4), // Daha da küçültüldü
+              _rulesCheckbox(),
+              const SizedBox(height: 10),
+              if (_errorMessage != null)
+                Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              const SizedBox(height: 20),
+              _signupButton(context),
+              const SizedBox(height: 10),
+              _login(context),
+            ],
+          ),
         ),
       ),
     );
@@ -106,25 +131,24 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 5), // Üstten boşluk
-          child: Image.asset('assets/images/felvera.png',
-              height: 180), // Daha büyük resim
+          padding: const EdgeInsets.only(top: 5),
+          child: Image.asset('assets/images/felvera.png', height: 160),
         ),
         const SizedBox(height: 10),
         const Text(
           "Üye Ol",
           style: TextStyle(
-            fontSize: 30,
+            fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF933A8E), // Renk kodu
+            color: Color(0xFF933A8E),
           ),
         ),
         const SizedBox(height: 5),
         const Text(
           "Hesabınızı oluşturun",
           style: TextStyle(
-            fontSize: 16,
-            color: Color(0xFF707070), // Renk kodu
+            fontSize: 14,
+            color: Color(0xFF707070),
           ),
         ),
       ],
@@ -135,13 +159,13 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       children: [
         _textField(_firstNameController, "Ad", Icons.person),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         _textField(_lastNameController, "Soyad", Icons.person),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         _textField(_emailController, "E-posta", Icons.email),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         _textField(_passwordController, "Şifre", Icons.lock, obscureText: true),
-        const SizedBox(height: 15),
+        const SizedBox(height: 10),
         _textField(_confirmPasswordController, "Şifreyi Onayla", Icons.lock,
             obscureText: true),
       ],
@@ -156,12 +180,12 @@ class _SignupPageState extends State<SignupPage> {
       decoration: InputDecoration(
         hintText: hintText,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25), // Yuvarlak köşeler
+          borderRadius: BorderRadius.circular(25),
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: Color.fromARGB(255, 243, 234, 241), // Hafif pembe opak renk
-        prefixIcon: Icon(icon, color: Color(0xFF933A8E)), // Renk kodu
+        fillColor: Color.fromARGB(255, 243, 234, 241),
+        prefixIcon: Icon(icon, color: Color(0xFF933A8E)),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       ),
@@ -169,20 +193,169 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
+  Widget _kvkkCheckbox() {
+    return Row(
+      children: [
+        Checkbox(
+          value: _isKvkkAccepted,
+          onChanged: (bool? newValue) {
+            setState(() {
+              _isKvkkAccepted = newValue!;
+            });
+          },
+          checkColor: Colors.white,
+          activeColor: Color(0xFF933A8E),
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text("KVKK Metni"),
+                  content: SingleChildScrollView(
+                    child: Text(
+                      """
+Değerli Kullanıcı,
+
+6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) uyarınca, kişisel verilerinizin işlenmesi, korunması ve saklanmasına dair önemli bilgilendirmeler aşağıda yer almaktadır:
+
+**1. Kişisel Verilerin Toplanması ve İşlenmesi:**
+Uygulamamızı kullandığınız süre boyunca, adınız, soyadınız, e-posta adresiniz gibi kimlik ve iletişim bilgileriniz toplanabilir. Bu veriler, size daha iyi hizmet sunmak, uygulamanın fonksiyonlarını geliştirmek ve kullanıcı memnuniyetini artırmak amacıyla işlenecektir.
+
+**2. Kişisel Verilerin Kullanım Amacı:**
+Toplanan veriler, size sunulan hizmetlerin geliştirilmesi, uygulamanın etkin şekilde çalışması, iletişim kurulması ve yasal yükümlülüklerin yerine getirilmesi gibi amaçlarla kullanılacaktır.
+
+**3. Kişisel Verilerin Paylaşımı:**
+Toplanan veriler, yasal merciler ve iş ortaklarımız dışında üçüncü şahıslarla paylaşılmayacak, gizliliği sağlanacaktır. Hukuki gereklilikler doğrultusunda kişisel veriler resmi mercilerle paylaşılabilir.
+
+**4. Kişisel Verilerin Korunması:**
+Verilerinizin gizliliği ve güvenliği bizim için önemlidir. Bu veriler, yasal düzenlemelere uygun şekilde korunmakta ve izinsiz erişimlere karşı güvenlik önlemleri alınmaktadır.
+
+**5. Haklarınız:**
+KVKK kapsamında, kişisel verilerinizin işlenmesi ile ilgili olarak verilerinize erişme, düzeltme, silme veya anonim hale getirilmesini talep etme haklarınız bulunmaktadır. Bu haklarınızı kullanmak için bize başvurabilirsiniz.
+
+**6. Veri Saklama Süresi:**
+Kişisel verileriniz, ilgili yasal mevzuat doğrultusunda veya işlenme amacının ortadan kalkması halinde silinecek veya anonim hale getirilecektir.
+
+KVKK'ya dair daha fazla bilgi almak ya da taleplerinizi iletmek için bizimle iletişime geçebilirsiniz. 
+
+Saygılarımızla,
+Felvera Ekibi
+                      """,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Kapat"),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Text(
+              "KVKK metnini kabul ediyorum",
+              style: TextStyle(
+                color: Color(0xFF933A8E),
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _rulesCheckbox() {
+    return Row(
+      children: [
+        Checkbox(
+          value: _isRulesAccepted,
+          onChanged: (bool? newValue) {
+            setState(() {
+              _isRulesAccepted = newValue!;
+            });
+          },
+          checkColor: Colors.white,
+          activeColor: Color(0xFF933A8E),
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text("Kullanım Kuralları"),
+                  content: SingleChildScrollView(
+                    child: Text(
+                      """
+Değerli Kullanıcı,
+
+Aşağıda belirtilen kullanım kuralları, uygulamamızın kullanımına dair kuralları ve politikaları içermektedir:
+
+**1. Genel Kurallar:**
+Uygulamamızı kullanırken tüm kurallara ve yasal düzenlemelere uygun davranmanız gerekmektedir. Kullanım sırasında herhangi bir yasa dışı veya zararlı faaliyetlerde bulunmamalısınız.
+
+**2. Hesap Güvenliği:**
+Hesap bilgilerinizin güvenliğini sağlamak sizin sorumluluğunuzdadır. Şifrenizi kimseyle paylaşmamalı ve güvenliğinizi tehlikeye atabilecek davranışlardan kaçınmalısınız.
+
+**3. İçerik Paylaşımı:**
+Uygulama üzerinden paylaştığınız içerikler, yasalara uygun olmalı ve başkalarının haklarını ihlal etmemelidir. Kötü amaçlı içeriklerin paylaşılması yasaktır.
+
+**4. Kullanıcı Hakları:**
+Kullanıcılar, uygulamanın sunduğu hizmetleri adil ve yasal şekilde kullanmalıdır. Şüpheli veya kötü niyetli davranışlar tespit edildiğinde hesap askıya alınabilir veya silinebilir.
+
+**5. Veri Koruma:**
+Kişisel verilerinizin korunması, KVKK ve diğer yasal düzenlemelere uygun şekilde yapılacaktır. Verilerinizi nasıl topladığımız ve kullandığımız hakkında bilgi almak için KVKK metnini inceleyebilirsiniz.
+
+**6. Değişiklikler:**
+Kullanım kuralları zaman zaman güncellenebilir. Güncellemeler hakkında bilgilendirileceksiniz ve değişiklikleri kabul etmek durumunda kalabilirsiniz.
+
+Kurallarımızı okuduğunuz ve kabul ettiğiniz için teşekkür ederiz.
+
+Saygılarımızla,
+Felvera Ekibi
+                      """,
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Kapat"),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Text(
+              "Kullanım kurallarını kabul ediyorum",
+              style: TextStyle(
+                color: Color(0xFF933A8E),
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _signupButton(BuildContext context) {
     return ElevatedButton(
       onPressed: _signup,
+      child: Text("Kayıt Ol"),
       style: ElevatedButton.styleFrom(
-        shape: const StadiumBorder(), // Yuvarlak köşeler
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        backgroundColor: Color(0xFF933A8E), // Renk kodu
-      ),
-      child: const Text(
-        "Üye Ol",
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.white,
+        backgroundColor: Color(0xFF933A8E), // Buton arka plan rengi
+        foregroundColor: Colors.white, // Yazı rengi
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
         ),
+        padding: EdgeInsets.symmetric(vertical: 15),
       ),
     );
   }
@@ -191,7 +364,7 @@ class _SignupPageState extends State<SignupPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Üye misiniz? "),
+        Text("Hesabınız var mı? ", style: TextStyle(fontSize: 14)),
         TextButton(
           onPressed: () {
             Navigator.push(
@@ -199,11 +372,9 @@ class _SignupPageState extends State<SignupPage> {
               MaterialPageRoute(builder: (context) => LoginPage()),
             );
           },
-          child: const Text(
+          child: Text(
             "Giriş Yap",
-            style: TextStyle(
-                color: Color(0xFF933A8E), // Renk kodu
-                fontWeight: FontWeight.bold),
+            style: TextStyle(color: Color(0xFF933A8E), fontSize: 14),
           ),
         ),
       ],
