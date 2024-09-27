@@ -29,7 +29,9 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Future<String?> _uploadImage() async {
     if (_imageFile == null) return null;
 
-    final storageRef = FirebaseStorage.instance.ref().child('event_images/${DateTime.now().toString()}');
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('event_images/${DateTime.now().toString()}');
     final uploadTask = storageRef.putFile(_imageFile!);
     final snapshot = await uploadTask.whenComplete(() => {});
     final downloadUrl = await snapshot.ref.getDownloadURL();
@@ -74,7 +76,8 @@ class _CreateEventPageState extends State<CreateEventPage> {
 
     if (picked != null && picked != DateTime.now()) {
       setState(() {
-        _dateController.text = "${picked.toLocal()}".split(' ')[0]; // YYYY-MM-DD formatında tarih
+        _dateController.text =
+            "${picked.toLocal()}".split(' ')[0]; // YYYY-MM-DD formatında tarih
       });
     }
   }
@@ -131,7 +134,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   child: TextFormField(
                     controller: _dateController,
                     decoration: InputDecoration(
-                      labelText: 'Tarih (YYYY-MM-DD)',
+                      labelText: 'Tarih',
                       suffixIcon: Icon(Icons.calendar_today),
                     ),
                     validator: (value) {

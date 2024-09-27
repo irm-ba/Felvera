@@ -6,6 +6,7 @@ import 'package:felvera/blogPage.dart';
 import 'package:felvera/chatList.dart';
 import 'package:felvera/constants.dart';
 import 'package:felvera/models/pet_data.dart';
+import 'package:felvera/privacy.dart';
 import 'package:felvera/widgets/CustomBottomNavigationBar.dart';
 import 'package:felvera/widgets/lostanimalpge.dart';
 import 'package:flutter/material.dart';
@@ -120,6 +121,18 @@ class _HomeState extends State<Home> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ChatListPage()),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.wysiwyg_outlined,
+                          color: Color.fromARGB(255, 147, 58, 142)),
+                      title: Text('Gizlilik sözleşmesi'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PrivacyPolicyPage()),
                         );
                       },
                     ),

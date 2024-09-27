@@ -65,8 +65,6 @@ class _SignupPageState extends State<SignupPage> {
         'lastName': lastName,
         'email': email,
         'profileImageUrl': '', // Default or empty initially
-        'location': '', // Default or empty initially
-        'phoneNumber': '', // Default or empty initially
         'isKvkkAccepted': _isKvkkAccepted, // KVKK onay durumu
         'isRulesAccepted': _isRulesAccepted, // Kullanım kuralları onay durumu
         'isSuspended': false, // Varsayılan olarak false
@@ -294,27 +292,30 @@ Felvera Ekibi
                       """
 Değerli Kullanıcı,
 
-Aşağıda belirtilen kullanım kuralları, uygulamamızın kullanımına dair kuralları ve politikaları içermektedir:
+Felvera'nın kullanım kuralları ve şartları aşağıda yer almaktadır:
 
-**1. Genel Kurallar:**
-Uygulamamızı kullanırken tüm kurallara ve yasal düzenlemelere uygun davranmanız gerekmektedir. Kullanım sırasında herhangi bir yasa dışı veya zararlı faaliyetlerde bulunmamalısınız.
+**1. Kullanım Amacı:**
+Felvera, evcil hayvanlar için bir sahiplendirme ve sağlık kaydı platformudur. Platformun amacı, evcil hayvanların sahiplendirilmesi ve sağlık bilgileri ile ilgili kullanıcılar arasında bilgi paylaşımını sağlamaktır.
 
 **2. Hesap Güvenliği:**
-Hesap bilgilerinizin güvenliğini sağlamak sizin sorumluluğunuzdadır. Şifrenizi kimseyle paylaşmamalı ve güvenliğinizi tehlikeye atabilecek davranışlardan kaçınmalısınız.
+Kullanıcılar, hesaplarının güvenliğinden sorumludur. Şifreler gizli tutulmalı ve hesabın izinsiz erişimlere karşı korunması sağlanmalıdır.
 
 **3. İçerik Paylaşımı:**
-Uygulama üzerinden paylaştığınız içerikler, yasalara uygun olmalı ve başkalarının haklarını ihlal etmemelidir. Kötü amaçlı içeriklerin paylaşılması yasaktır.
+Platformda paylaşılan içerikler (resimler, açıklamalar vb.) doğru ve ilgili olmalıdır. Yanıltıcı, yanlış veya başka amaçlar için kullanılacak içerikler paylaşılmamalıdır.
 
-**4. Kullanıcı Hakları:**
-Kullanıcılar, uygulamanın sunduğu hizmetleri adil ve yasal şekilde kullanmalıdır. Şüpheli veya kötü niyetli davranışlar tespit edildiğinde hesap askıya alınabilir veya silinebilir.
+**4. Gizlilik ve Güvenlik:**
+Kullanıcıların kişisel verileri ve paylaşımları gizli tutulur. Kullanıcılar, KVKK kapsamında kişisel verilerinin nasıl işlendiğini ve korunduğunu bilmelidir.
 
-**5. Veri Koruma:**
-Kişisel verilerinizin korunması, KVKK ve diğer yasal düzenlemelere uygun şekilde yapılacaktır. Verilerinizi nasıl topladığımız ve kullandığımız hakkında bilgi almak için KVKK metnini inceleyebilirsiniz.
+**5. Yasa Dışılıklar:**
+Platformda yasadışı içerikler veya faaliyetler kesinlikle yasaktır. Kullanıcılar, platformun kurallarına ve ilgili yasal düzenlemelere uymak zorundadır.
 
-**6. Değişiklikler:**
-Kullanım kuralları zaman zaman güncellenebilir. Güncellemeler hakkında bilgilendirileceksiniz ve değişiklikleri kabul etmek durumunda kalabilirsiniz.
+**6. Sorumluluk:**
+Felvera, platformda paylaşılan bilgilerin doğruluğu ve güvenliği konusunda sorumluluk üstlenmez. Kullanıcılar, kendi paylaşımlarından ve hesap güvenliklerinden sorumludur.
 
-Kurallarımızı okuduğunuz ve kabul ettiğiniz için teşekkür ederiz.
+**7. Kurallarda Değişiklik:**
+Kullanım kuralları zaman zaman güncellenebilir. Kullanıcılar, bu değişiklikleri takip etmeli ve kabul etmelidir.
+
+Daha fazla bilgi veya sorularınız için bizimle iletişime geçebilirsiniz. 
 
 Saygılarımızla,
 Felvera Ekibi
@@ -348,14 +349,19 @@ Felvera Ekibi
   Widget _signupButton(BuildContext context) {
     return ElevatedButton(
       onPressed: _signup,
-      child: Text("Kayıt Ol"),
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF933A8E), // Buton arka plan rengi
-        foregroundColor: Colors.white, // Yazı rengi
+        backgroundColor: Color(0xFF933A8E),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
         ),
-        padding: EdgeInsets.symmetric(vertical: 15),
+        padding: const EdgeInsets.symmetric(vertical: 15),
+      ),
+      child: const Text(
+        "Üye Ol",
+        style: TextStyle(
+          fontSize: 16,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -364,17 +370,20 @@ Felvera Ekibi
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("Hesabınız var mı? ", style: TextStyle(fontSize: 14)),
+        const Text("Zaten bir hesabınız var mı?"),
         TextButton(
           onPressed: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
             );
           },
-          child: Text(
+          child: const Text(
             "Giriş Yap",
-            style: TextStyle(color: Color(0xFF933A8E), fontSize: 14),
+            style: TextStyle(
+              color: Color(0xFF933A8E),
+              fontSize: 16,
+            ),
           ),
         ),
       ],
