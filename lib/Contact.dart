@@ -11,16 +11,14 @@ class ContactPage extends StatefulWidget {
 class _ContactPageState extends State<ContactPage> {
   String? selectedSubject;
   final _bodyController = TextEditingController();
-  final _emailController =
-      TextEditingController(); // Kullanıcı e-posta girişi için controller
+  final _emailController = TextEditingController();
+  bool isLoading = false;
 
-  // Kullanıcıya yanıt e-posta gönderme
   Future<void> sendEmail(
       String recipientMail, String userEmail, String userMessage) async {
-    String senderEmail =
-        'irembaysal1@outlook.com'; // Uygulamanın e-posta adresi
-    String senderPassword = '3irem4.3Baysal7'; // Uygulamanın e-posta şifresi
-    String emailSubject = "İrem Mail Doğrulama"; // E-posta konusu
+    String senderEmail = 'felveraa@gmail.com';
+    String senderPassword = 'erch ktrz vexs qvcs'; // Uygulama şifresi
+    String emailSubject = "Felvera Uygulaması Üzerinden Yeni Mesaj";
 
     String emailBody = """
 Merhaba,
@@ -43,38 +41,36 @@ Felvera Ekibi
 Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
 """;
 
-    final smtpServer = SmtpServer(
-      'smtp.office365.com',
-      port: 587,
-      username: senderEmail,
-      password: senderPassword,
-      ignoreBadCertificate: true,
-      ssl: false,
-      allowInsecure: true,
-    );
+    final smtpServer =
+        gmail(senderEmail, senderPassword); // Gmail SMTP sunucusu
 
     final message = Message()
       ..from = Address(senderEmail, 'Felvera Uygulaması Üzerinden')
-      ..recipients.add(recipientMail) // Alıcı e-posta adresi
+      ..recipients.add(recipientMail)
       ..subject = emailSubject
-      ..text = emailBody; // Yanıt adresi mesaj içinde belirtilir
+      ..text = emailBody;
 
     try {
+      setState(() {
+        isLoading = true;
+      });
       final sendReport = await send(message, smtpServer);
       print('Mesaj gönderildi: ' + sendReport.toString());
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("E-posta başarıyla gönderildi")),
       );
     } catch (e) {
-      print('Mesaj gönderilemedi.');
-      print(e);
+      print('Mesaj gönderilemedi: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("E-posta gönderilemedi: $e")),
+        SnackBar(content: Text("E-posta gönderilemedi: ${e.toString()}")),
       );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
-  // Kullanıcının mesajlarını Firestore'a kaydetme
   void _saveToFirestore(String mail, String metin) async {
     try {
       await FirebaseFirestore.instance.collection('contact').add({
@@ -88,8 +84,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
         SnackBar(content: Text("Veri başarıyla kaydedildi")),
       );
     } catch (e) {
-      print('Veri kaydedilemedi.');
-      print(e);
+      print('Veri kaydedilemedi: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Veri kaydedilemedi")),
       );
@@ -97,7 +92,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
   }
 
   void _handleSubmit() {
-    String userMail = _emailController.text; // Kullanıcıdan alınan e-posta
+    String userMail = _emailController.text;
     String userMessage = _bodyController.text;
 
     if (selectedSubject == null || userMessage.isEmpty || userMail.isEmpty) {
@@ -107,11 +102,10 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
       return;
     }
 
-    _saveToFirestore(userMail, userMessage); // Kullanıcı e-postası kaydedilir
-    sendEmail('irembaysal1@outlook.com', userMail,
-        userMessage); // Kullanıcıya yanıt e-posta gönderilir
+    _saveToFirestore(userMail, userMessage);
+    sendEmail('felveraa@gmail.com', userMail, userMessage);
     _bodyController.clear();
-    _emailController.clear(); // E-posta alanını temizler
+    _emailController.clear();
   }
 
   @override
@@ -123,7 +117,6 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
       ),
       body: Stack(
         children: [
-          // Background shapes
           Positioned.fill(
             child: CustomPaint(
               painter: BackgroundPainter(),
@@ -227,7 +220,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                 SizedBox(height: 30),
                 Center(
                   child: ElevatedButton(
-                    onPressed: _handleSubmit,
+                    onPressed: isLoading ? null : _handleSubmit,
                     style: ElevatedButton.styleFrom(
                       padding:
                           EdgeInsets.symmetric(horizontal: 50, vertical: 15),
@@ -236,10 +229,12 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                       ),
                       backgroundColor: Color.fromARGB(255, 147, 58, 142),
                     ),
-                    child: Text(
-                      'Gönder',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
+                    child: isLoading
+                        ? CircularProgressIndicator()
+                        : Text(
+                            'Gönder',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
                   ),
                 ),
               ],
