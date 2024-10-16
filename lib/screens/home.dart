@@ -42,222 +42,219 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 30),
-      child: Scaffold(
-        bottomNavigationBar: CustomBottomNavigationBar(),
-        drawer: Drawer(
-          child: Column(
-            children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color.fromARGB(255, 147, 58, 142), // Kbrown rengi
-                      Color.fromARGB(255, 169, 85, 210) // İkinci renk
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0.3, 0.7], // Geçişlerin belirgin olduğu noktalar
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'Menu',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.person,
-                          color: Color.fromARGB(255, 147, 58, 142)),
-                      title: Text('Profil'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AccountPage()),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.announcement_outlined,
-                          color: Color.fromARGB(255, 147, 58, 142)),
-                      title: Text('Bize Ulaşın'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ContactPage()),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.accessibility_new_sharp,
-                          color: Color.fromARGB(255, 147, 58, 142)),
-                      title: Text('Hakkımızda'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AboutUsPage()),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.chat_outlined,
-                          color: Color.fromARGB(255, 147, 58, 142)),
-                      title: Text('Mesaj'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatListPage()),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.wysiwyg_outlined,
-                          color: Color.fromARGB(255, 147, 58, 142)),
-                      title: Text('Gizlilik sözleşmesi'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PrivacyPolicyPage()),
-                        );
-                      },
-                    ),
-                    Divider(),
-                    ListTile(
-                      leading: Icon(Icons.logout_rounded,
-                          color: Color.fromARGB(255, 147, 58, 142)),
-                      title: Text('Çıkış yap'),
-                      onTap: () async {
-                        try {
-                          // Firebase Authentication ile çıkış yapma
-                          await FirebaseAuth.instance.signOut();
-                          // Çıkış yaptıktan sonra LoginPage'e yönlendirme
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                          );
-                        } catch (e) {
-                          // Hata durumunda kullanıcıyı bilgilendirmek için bir yöntem ekleyebilirsiniz
-                          print('Çıkış yapma hatası: $e');
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (context) => Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                radius: 20,
-                child: IconButton(
-                  icon: Icon(Icons.menu_rounded, color: kBrownColor),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                ),
-              ),
-            ),
-          ),
-          title: Align(
-            alignment: Alignment.center, // Yazıyı ortalar
-            child: Text(
-              'Felvera',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.star, color: Color.fromARGB(255, 147, 58, 142)),
-              onPressed: _showRatingDialog,
-            ),
-          ],
-        ),
-        body: Column(
+    return Scaffold(
+      bottomNavigationBar: CustomBottomNavigationBar(),
+      drawer: Drawer(
+        child: Column(
           children: [
-            /// Kategoriler
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(255, 147, 58, 142), // Kbrown rengi
+                    Color.fromARGB(255, 169, 85, 210) // İkinci renk
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [0.3, 0.7], // Geçişlerin belirgin olduğu noktalar
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  'Menu',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
                 children: [
-                  _buildCategoryButton('Tüm İlanlar'),
-                  _buildCategoryButton('Kayıp İlanları'),
-                  _buildCategoryButton('Gönüllülük Etkinlikleri'),
-                  _buildCategoryButton('Forum'),
-                  _buildCategoryButton('Blog'),
+                  ListTile(
+                    leading: Icon(Icons.person,
+                        color: Color.fromARGB(255, 147, 58, 142)),
+                    title: Text('Profil'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AccountPage()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.announcement_outlined,
+                        color: Color.fromARGB(255, 147, 58, 142)),
+                    title: Text('Bize Ulaşın'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ContactPage()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.accessibility_new_sharp,
+                        color: Color.fromARGB(255, 147, 58, 142)),
+                    title: Text('Hakkımızda'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AboutUsPage()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.chat_outlined,
+                        color: Color.fromARGB(255, 147, 58, 142)),
+                    title: Text('Mesaj'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatListPage()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.wysiwyg_outlined,
+                        color: Color.fromARGB(255, 147, 58, 142)),
+                    title: Text('Gizlilik sözleşmesi'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PrivacyPolicyPage()),
+                      );
+                    },
+                  ),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.logout_rounded,
+                        color: Color.fromARGB(255, 147, 58, 142)),
+                    title: Text('Çıkış yap'),
+                    onTap: () async {
+                      try {
+                        // Firebase Authentication ile çıkış yapma
+                        await FirebaseAuth.instance.signOut();
+                        // Çıkış yaptıktan sonra LoginPage'e yönlendirme
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginPage()),
+                        );
+                      } catch (e) {
+                        // Hata durumunda kullanıcıyı bilgilendirmek için bir yöntem ekleyebilirsiniz
+                        print('Çıkış yapma hatası: $e');
+                      }
+                    },
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
-
-            Expanded(
-              child: selectedCategory == 'Blog'
-                  ? BlogPage()
-                  : selectedCategory == 'Forum'
-                      ? ForumPage()
-                      : selectedCategory == 'Gönüllülük Etkinlikleri'
-                          ? EventPage()
-                          : selectedCategory == 'Kayıp İlanları'
-                              ? LostAnimalsPage()
-                              : StreamBuilder(
-                                  stream: _getCategoryStream(selectedCategory),
-                                  builder: (context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    }
-                                    if (snapshot.hasError) {
-                                      return Center(
-                                          child: Text(
-                                              'Hata oluştu: ${snapshot.error}'));
-                                    }
-                                    if (!snapshot.hasData ||
-                                        snapshot.data!.docs.isEmpty) {
-                                      return Center(
-                                        child: Text(
-                                          selectedCategory ==
-                                                  'Gönüllülük Etkinlikleri'
-                                              ? 'Henüz gönüllülük etkinliği bulunmamaktadır.'
-                                              : 'Hiç hayvan bulunamadı.',
-                                        ),
-                                      );
-                                    }
-
-                                    // Firestore'dan gelen verileri PetData listesine dönüştürme
-                                    List<PetData> pets = snapshot.data!.docs
-                                        .map((DocumentSnapshot doc) {
-                                      return PetData.fromSnapshot(doc);
-                                    }).toList();
-
-                                    return PetGridList(
-                                        pets:
-                                            pets); // Burada pets parametresini geçiyoruz
-                                  },
-                                ),
-            ),
           ],
         ),
+      ),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (context) => Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              radius: 20,
+              child: IconButton(
+                icon: Icon(Icons.menu_rounded, color: kBrownColor),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            ),
+          ),
+        ),
+        title: Align(
+          alignment: Alignment.center, // Yazıyı ortalar
+          child: Text(
+            'Felvera',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.star, color: Color.fromARGB(255, 147, 58, 142)),
+            onPressed: _showRatingDialog,
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          /// Kategoriler
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _buildCategoryButton('Tüm İlanlar'),
+                _buildCategoryButton('Kayıp İlanları'),
+                _buildCategoryButton('Gönüllülük Etkinlikleri'),
+                _buildCategoryButton('Forum'),
+                _buildCategoryButton('Blog'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+    
+          Expanded(
+            child: selectedCategory == 'Blog'
+                ? BlogPage()
+                : selectedCategory == 'Forum'
+                    ? ForumPage()
+                    : selectedCategory == 'Gönüllülük Etkinlikleri'
+                        ? EventPage()
+                        : selectedCategory == 'Kayıp İlanları'
+                            ? LostAnimalsPage()
+                            : StreamBuilder(
+                                stream: _getCategoryStream(selectedCategory),
+                                builder: (context,
+                                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.hasError) {
+                                    return Center(
+                                        child: Text(
+                                            'Hata oluştu: ${snapshot.error}'));
+                                  }
+                                  if (!snapshot.hasData ||
+                                      snapshot.data!.docs.isEmpty) {
+                                    return Center(
+                                      child: Text(
+                                        selectedCategory ==
+                                                'Gönüllülük Etkinlikleri'
+                                            ? 'Henüz gönüllülük etkinliği bulunmamaktadır.'
+                                            : 'Hiç hayvan bulunamadı.',
+                                      ),
+                                    );
+                                  }
+    
+                                  // Firestore'dan gelen verileri PetData listesine dönüştürme
+                                  List<PetData> pets = snapshot.data!.docs
+                                      .map((DocumentSnapshot doc) {
+                                    return PetData.fromSnapshot(doc);
+                                  }).toList();
+    
+                                  return PetGridList(
+                                      pets:
+                                          pets); // Burada pets parametresini geçiyoruz
+                                },
+                              ),
+          ),
+        ],
       ),
     );
   }
