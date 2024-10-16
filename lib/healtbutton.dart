@@ -4,6 +4,7 @@ import 'package:felvera/vet_visit_add.dart';
 import 'package:felvera/vet_visit_list.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'size_config.dart'; // SizeConfig dosyasını projeye dahil et
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,9 +65,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context); // SizeConfig'i burada başlat
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sağlık Kaydı'), // Ana Sayfa yerine Sağlık Kaydı
+        title: Text('Sağlık Kaydı'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -117,20 +120,24 @@ class HomePage extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(
+              SizeConfig.blockSizeHorizontal * 4), // Dinamik padding
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
                 icon,
-                size: 50,
+                size:
+                    SizeConfig.blockSizeHorizontal * 12, // Dinamik ikon boyutu
                 color: Color.fromARGB(255, 147, 58, 142),
               ),
-              SizedBox(height: 16),
+              SizedBox(
+                  height: SizeConfig.blockSizeVertical * 2), // Dinamik boşluk
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize:
+                      SizeConfig.blockSizeHorizontal * 5, // Dinamik yazı boyutu
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 147, 58, 142),
                 ),

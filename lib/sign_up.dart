@@ -2,6 +2,7 @@ import 'package:felvera/login.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'size_config.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -93,30 +94,35 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context); // Ekran boyutlarını hesapla
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(
+              SizeConfig.blockSizeHorizontal * 4), // Oranlı padding
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _header(context),
-              const SizedBox(height: 20),
+              SizedBox(
+                  height: SizeConfig.blockSizeVertical * 2), // Oranlı boşluk
               _inputFields(),
-              const SizedBox(height: 4), // Daha da küçültüldü
+              SizedBox(
+                  height: SizeConfig.blockSizeVertical * 1), // Oranlı boşluk
               _kvkkCheckbox(),
-              const SizedBox(height: 4), // Daha da küçültüldü
+              SizedBox(
+                  height: SizeConfig.blockSizeVertical * 1), // Oranlı boşluk
               _rulesCheckbox(),
-              const SizedBox(height: 10),
+              SizedBox(height: SizeConfig.blockSizeVertical * 2),
               if (_errorMessage != null)
                 Text(
                   _errorMessage!,
-                  style: const TextStyle(color: Colors.red),
+                  style: TextStyle(color: Colors.red),
                 ),
-              const SizedBox(height: 20),
+              SizedBox(height: SizeConfig.blockSizeVertical * 2),
               _signupButton(context),
-              const SizedBox(height: 10),
+              SizedBox(height: SizeConfig.blockSizeVertical * 1),
               _login(context),
             ],
           ),
@@ -129,23 +135,24 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 5),
-          child: Image.asset('assets/images/felvera.png', height: 160),
+          padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical * 1),
+          child: Image.asset('assets/images/felvera.png',
+              height: SizeConfig.blockSizeVertical * 20),
         ),
-        const SizedBox(height: 10),
-        const Text(
+        SizedBox(height: SizeConfig.blockSizeVertical * 1),
+        Text(
           "Üye Ol",
           style: TextStyle(
-            fontSize: 28,
+            fontSize: SizeConfig.blockSizeHorizontal * 7, // Oranlı font
             fontWeight: FontWeight.bold,
             color: Color(0xFF933A8E),
           ),
         ),
-        const SizedBox(height: 5),
-        const Text(
+        SizedBox(height: SizeConfig.blockSizeVertical * 1),
+        Text(
           "Hesabınızı oluşturun",
           style: TextStyle(
-            fontSize: 14,
+            fontSize: SizeConfig.blockSizeHorizontal * 4,
             color: Color(0xFF707070),
           ),
         ),
@@ -352,14 +359,16 @@ Felvera Ekibi
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xFF933A8E),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(
+              SizeConfig.blockSizeHorizontal * 5), // Oranlı radius
         ),
-        padding: const EdgeInsets.symmetric(vertical: 15),
+        padding:
+            EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 2),
       ),
-      child: const Text(
+      child: Text(
         "Üye Ol",
         style: TextStyle(
-          fontSize: 16,
+          fontSize: SizeConfig.blockSizeHorizontal * 4, // Oranlı font
           color: Colors.white,
         ),
       ),
