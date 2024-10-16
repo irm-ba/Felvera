@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '347423456853',
     projectId: 'felvera37',
     storageBucket: 'felvera37.appspot.com',
-    iosBundleId: 'com.example.felvera',
+    iosBundleId: 'com.felvera.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '347423456853',
     projectId: 'felvera37',
     storageBucket: 'felvera37.appspot.com',
-    iosBundleId: 'com.example.felvera',
+    iosBundleId: 'com.felvera.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

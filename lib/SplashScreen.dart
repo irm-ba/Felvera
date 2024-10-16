@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(
-      Duration(seconds: 3), // 3 saniye sonra hedef sayfaya geçiş yapar
+      Duration(seconds: 2), // 3 saniye sonra hedef sayfaya geçiş yapar
           () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => AuthWrapper()), // `AuthWrapper` widget'ını yönlendirin
       ),

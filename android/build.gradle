@@ -1,3 +1,16 @@
+// build.gradle (proje seviyesindeki)
+buildscript {
+    ext.kotlin_version = '1.8.0' // Kotlin versiyonunu buraya ekleyin
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.0.2" // Uygun Android Gradle eklentisini kontrol edin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 allprojects {
     repositories {
         google()
