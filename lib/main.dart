@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:felvera/authWarapper.dart';
 import 'package:felvera/constants.dart';
-import 'package:felvera/login.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'splashscreen.dart';

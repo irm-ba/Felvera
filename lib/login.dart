@@ -1,41 +1,72 @@
 import 'package:felvera/Contact.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Firestore'u kullanmak için
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felvera/screens/home.dart';
 import 'sign_up.dart';
+import 'size_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Burada kontrolörleri tanımlıyoruz
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _rememberMe = false; // Checkbox durumu için değişken
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus(); // Uygulama açıldığında oturum kontrolü yap
+    _loadSavedCredentials(); // Kayıtlı e-posta ve şifreyi yükle
+  }
+
+  void _checkLoginStatus() async {
+    // Oturum durumunu kontrol et
+  }
+
+  void _loadSavedCredentials() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? email = prefs.getString('email');
+    String? password = prefs.getString('password');
+
+    if (email != null) {
+      emailController.text = email;
+    }
+    if (password != null) {
+      passwordController.text = password;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _header(context),
-            const SizedBox(height: 30),
+            SizedBox(height: SizeConfig.blockSizeVertical * 3),
             _inputField(context),
-            const SizedBox(height: 20),
+            SizedBox(height: SizeConfig.blockSizeVertical * 2),
             _forgotPassword(context),
-            const SizedBox(height: 20),
+            SizedBox(height: SizeConfig.blockSizeVertical * 2),
             _loginButton(context),
-            const SizedBox(height: 10),
+            SizedBox(height: SizeConfig.blockSizeVertical),
             _guestLogin(context),
-            const SizedBox(height: 20),
+            SizedBox(height: SizeConfig.blockSizeVertical * 2),
             _signup(context),
-            const SizedBox(height: 20),
-            _contactPage(context), // Yeni butonu ekleyin
+            SizedBox(height: SizeConfig.blockSizeVertical * 2),
+            _contactPage(context),
           ],
         ),
       ),
@@ -46,26 +77,26 @@ class LoginPage extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 5), // Üstten boşluk
+          padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical!),
           child: Image.asset('assets/images/felvera.png',
-              height: 180), // Daha büyük resim
+              height: SizeConfig.blockSizeVertical! * 25),
         ),
-        const SizedBox(height: 5),
+        SizedBox(height: SizeConfig.blockSizeVertical!),
         const Text(
           "HOŞGELDİNİZ",
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF933A8E), // Renk kodu
+            color: Color(0xFF933A8E),
           ),
         ),
-        const SizedBox(height: 5),
+        SizedBox(height: SizeConfig.blockSizeVertical!),
         const Text(
           "Hayvan dostlarımız yuva bulsun",
           style: TextStyle(
             fontSize: 16,
-            color: Color(0xFF707070), // Renk kodu
-            fontStyle: FontStyle.normal, // İtalik olmayan stil
+            color: Color(0xFF707070),
+            fontStyle: FontStyle.normal,
           ),
         ),
       ],
@@ -81,40 +112,56 @@ class LoginPage extends StatelessWidget {
           decoration: InputDecoration(
             hintText: "E-Posta",
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25), // Daha yuvarlak köşeler
+              borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor:
-                Color.fromARGB(255, 243, 234, 241), // Hafif pembe opak renk
+            fillColor: Color.fromARGB(255, 243, 234, 241),
             prefixIcon: const Icon(
               Icons.person,
-              color: Color(0xFF933A8E), // Renk kodu
+              color: Color(0xFF933A8E),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.blockSizeHorizontal! * 5,
+              vertical: SizeConfig.blockSizeVertical! * 2,
+            ),
           ),
         ),
-        const SizedBox(height: 15),
+        SizedBox(height: SizeConfig.blockSizeVertical * 1.5),
         TextField(
           controller: passwordController,
           decoration: InputDecoration(
             hintText: "Şifre",
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25), // Daha yuvarlak köşeler
+              borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor:
-                Color.fromARGB(255, 243, 234, 241), // Hafif pembe opak renk
+            fillColor: Color.fromARGB(255, 243, 234, 241),
             prefixIcon: const Icon(
               Icons.lock,
-              color: Color(0xFF933A8E), // Renk kodu
+              color: Color(0xFF933A8E),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.blockSizeHorizontal! * 5,
+              vertical: SizeConfig.blockSizeVertical! * 2,
+            ),
           ),
           obscureText: true,
+        ),
+        // Beni hatırla Checkbox'ı ekle
+        Row(
+          children: [
+            Checkbox(
+              value: _rememberMe,
+              onChanged: (value) {
+                setState(() {
+                  _rememberMe = value!;
+                });
+              },
+            ),
+            const Text("Beni Hatırla"),
+          ],
         ),
       ],
     );
@@ -122,7 +169,7 @@ class LoginPage extends StatelessWidget {
 
   Widget _forgotPassword(BuildContext context) {
     return Align(
-      alignment: Alignment.centerRight, // Yazıyı sağa hizalar
+      alignment: Alignment.centerRight,
       child: TextButton(
         onPressed: () {
           showDialog(
@@ -132,21 +179,40 @@ class LoginPage extends StatelessWidget {
                   TextEditingController();
 
               return AlertDialog(
-                title: const Text("Şifremi Unuttum"),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                backgroundColor: Colors.white,
+                title: const Text(
+                  "Şifremi Unuttum",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF933A8E),
+                    fontSize: 20,
+                  ),
+                ),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: _emailController,
+                      style: TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         hintText: "E-Posta",
+                        hintStyle: TextStyle(color: Colors.grey.shade500),
+                        filled: true,
+                        fillColor: Colors.grey.shade100,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.blockSizeVertical! * 2,
+                          horizontal: SizeConfig.blockSizeHorizontal! * 4,
+                        ),
                         border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(12), // Yuvarlak köşeler
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: SizeConfig.blockSizeVertical! * 2),
                     ElevatedButton(
                       onPressed: () async {
                         String email = _emailController.text.trim();
@@ -169,8 +235,7 @@ class LoginPage extends StatelessWidget {
                                   Text("Şifre sıfırlama e-postası gönderildi"),
                             ),
                           );
-                          Navigator.of(context)
-                              .pop(); // E-posta gönderildikten sonra dialog'ı kapat
+                          Navigator.of(context).pop();
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -181,14 +246,23 @@ class LoginPage extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(12), // Yuvarlak köşeler
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 24),
-                        backgroundColor: Color(0xFF933A8E), // Renk kodu
+                        padding: EdgeInsets.symmetric(
+                          vertical: SizeConfig.blockSizeVertical! * 1.5,
+                          horizontal: SizeConfig.blockSizeHorizontal! * 6,
+                        ),
+                        backgroundColor: const Color(0xFF933A8E),
+                        elevation: 5,
                       ),
-                      child: const Text("Gönder"),
+                      child: const Text(
+                        "Gönder",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -197,82 +271,10 @@ class LoginPage extends StatelessWidget {
           );
         },
         child: const Text(
-          "Şifremi unuttum",
-          style: TextStyle(color: Color(0xFF933A8E)), // Renk kodu
-        ),
-      ),
-    );
-  }
-
-  Widget _loginButton(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () async {
-        try {
-          final email = emailController.text.trim();
-          final password = passwordController.text.trim();
-
-          if (email.isEmpty || password.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Lütfen e-posta ve şifre girin"),
-              ),
-            );
-            return;
-          }
-
-          // Kullanıcıyı oturum açma
-          UserCredential userCredential =
-              await _auth.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
-
-          // Kullanıcı profilini Firestore'dan al
-          final userDoc = await FirebaseFirestore.instance
-              .collection('users')
-              .doc(userCredential.user?.uid)
-              .get();
-
-          if (userDoc.exists) {
-            final isSuspended = userDoc.data()?['isSuspended'] ?? false;
-
-            if (isSuspended) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                      "Hesabınız askıya alınmış. Lütfen destek ile iletişime geçin."),
-                ),
-              );
-              await _auth.signOut(); // Hesap askıya alınmışsa oturumu kapat
-              return;
-            }
-          }
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Home()), // Home sayfasına yönlendirme
-          );
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Giriş başarısız"),
-            ),
-          );
-        }
-      },
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25), // Daha yuvarlak köşeler
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        backgroundColor: Color(0xFF933A8E), // Renk kodu
-      ),
-      child: const Text(
-        "Giriş Yap",
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.white,
+          "Şifrenizi mi unuttunuz?",
+          style: TextStyle(
+            color: Color(0xFF933A8E),
+          ),
         ),
       ),
     );
@@ -282,22 +284,83 @@ class LoginPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Üye değil misiniz? "),
+        const Text("Hesabınız yok mu?"),
         TextButton(
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SignupPage()),
+              MaterialPageRoute(builder: (context) => SignupPage()),
             );
           },
           child: const Text(
-            "Üye ol",
+            "Kayıt Ol",
             style: TextStyle(
-                color: Color(0xFF933A8E), // Renk kodu
-                fontWeight: FontWeight.bold),
+              color: Color(0xFF933A8E),
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _loginButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        String email = emailController.text.trim();
+        String password = passwordController.text.trim();
+
+        try {
+          UserCredential userCredential =
+              await _auth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+
+          // "Beni Hatırla" seçeneği seçildiyse bilgileri kaydet
+          if (_rememberMe) {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('email', email);
+            await prefs.setString('password', password);
+          } else {
+            // Seçenek seçilmediyse bilgileri temizle
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.remove('email');
+            await prefs.remove('password');
+          }
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Home()),
+          );
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Giriş yapılamadı, lütfen tekrar deneyin."),
+            ),
+          );
+          print("Giriş hatası: $e"); // Debug
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
+        ),
+        padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.blockSizeVertical! * 1.5,
+          horizontal: SizeConfig.blockSizeHorizontal! * 6,
+        ),
+        backgroundColor: const Color(0xFF933A8E),
+        elevation: 5,
+      ),
+      child: const Text(
+        "Giriş Yap",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 
@@ -313,7 +376,7 @@ class LoginPage extends StatelessWidget {
         "Misafir Olarak Görüntüle",
         style: TextStyle(
           fontSize: 18,
-          color: Color(0xFF707070), // Renk kodu
+          color: Color(0xFF707070),
         ),
       ),
     );
@@ -324,16 +387,12 @@ class LoginPage extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => ContactPage()), // ContactPage yönlendirme
+          MaterialPageRoute(builder: (context) => ContactPage()),
         );
       },
       child: const Text(
-        "İletişime Geç",
-        style: TextStyle(
-          fontSize: 14,
-          color: Color(0xFF933A8E), // Renk kodu
-        ),
+        "Bize Ulaşın",
+        style: TextStyle(color: Color(0xFF933A8E)),
       ),
     );
   }

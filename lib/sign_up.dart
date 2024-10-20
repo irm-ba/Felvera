@@ -29,6 +29,18 @@ class _SignupPageState extends State<SignupPage> {
     final firstName = _firstNameController.text.trim();
     final lastName = _lastNameController.text.trim();
 
+    // Tüm alanların doldurulup doldurulmadığını kontrol et
+    if (email.isEmpty ||
+        password.isEmpty ||
+        confirmPassword.isEmpty ||
+        firstName.isEmpty ||
+        lastName.isEmpty) {
+      setState(() {
+        _errorMessage = "Lütfen tüm alanları doldurunuz.";
+      });
+      return;
+    }
+
     if (!_isKvkkAccepted) {
       setState(() {
         _errorMessage = "KVKK metnini kabul etmelisiniz.";
@@ -45,7 +57,7 @@ class _SignupPageState extends State<SignupPage> {
 
     if (password != confirmPassword) {
       setState(() {
-        _errorMessage = "Şifreler uyuşmuyor";
+        _errorMessage = "Şifreler uyuşmuyor.";
       });
       return;
     }
@@ -57,7 +69,7 @@ class _SignupPageState extends State<SignupPage> {
         password: password,
       );
 
-      // Add user data to Firestore
+      // Kullanıcı Firestore'a kaydediliyor
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userCredential.user?.uid)
@@ -65,9 +77,9 @@ class _SignupPageState extends State<SignupPage> {
         'firstName': firstName,
         'lastName': lastName,
         'email': email,
-        'profileImageUrl': '', // Default or empty initially
-        'isKvkkAccepted': _isKvkkAccepted, // KVKK onay durumu
-        'isRulesAccepted': _isRulesAccepted, // Kullanım kuralları onay durumu
+        'profileImageUrl': '', // Varsayılan olarak boş
+        'isKvkkAccepted': _isKvkkAccepted,
+        'isRulesAccepted': _isRulesAccepted,
         'isSuspended': false, // Varsayılan olarak false
       });
 
@@ -75,9 +87,22 @@ class _SignupPageState extends State<SignupPage> {
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        if (e.code == 'email-already-in-use') {
+          _errorMessage = "Bu e-posta adresi ile zaten bir hesap oluşturulmuş.";
+        } else if (e.code == 'weak-password') {
+          _errorMessage =
+              "Şifreniz çok zayıf. Lütfen daha güçlü bir şifre seçin.";
+        } else if (e.code == 'invalid-email') {
+          _errorMessage = "Geçersiz bir e-posta adresi girdiniz.";
+        } else {
+          _errorMessage = "Bir hata oluştu: ${e.message}";
+        }
+      });
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = "Bir hata oluştu: ${e.toString()}";
       });
     }
   }
@@ -360,7 +385,7 @@ Felvera Ekibi
         backgroundColor: Color(0xFF933A8E),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
-              SizeConfig.blockSizeHorizontal * 5), // Oranlı radius
+              SizeConfig.blockSizeHorizontal * 25), // Oranlı radius
         ),
         padding:
             EdgeInsets.symmetric(vertical: SizeConfig.blockSizeVertical * 2),
