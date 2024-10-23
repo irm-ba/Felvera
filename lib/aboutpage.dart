@@ -184,10 +184,3 @@ class AboutUsPage extends StatelessWidget {
     );
   }
 }
-
-void main() {
-  runApp(MaterialApp(
-    title: 'Hayvan Sahiplendirme Uygulaması',
-    home: AboutUsPage(),
-  ));
-}

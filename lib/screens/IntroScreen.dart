@@ -17,7 +17,7 @@ class IntroScreen extends StatelessWidget {
           PageViewModel(
             titleWidget: Container(
               alignment: Alignment.topCenter,
-              padding: EdgeInsets.only(top: 40), // Adjust padding as needed
+              padding: EdgeInsets.only(top: 40),
               child: Text(
                 "Felvera Evcil Hayvan Platformu",
                 style: TextStyle(

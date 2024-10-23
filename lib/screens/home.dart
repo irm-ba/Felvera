@@ -12,7 +12,7 @@ import 'package:felvera/widgets/lostanimalpge.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:shared_preferences/shared_preferences.dart'; // SharedPreferences ekle
 import '../widgets/pet_grid_list.dart';
 import '../login.dart';
 import '../forum.dart';
@@ -81,8 +81,7 @@ class _HomeState extends State<Home> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => AccountPage()),
+                        MaterialPageRoute(builder: (context) => AccountPage()),
                       );
                     },
                   ),
@@ -93,8 +92,7 @@ class _HomeState extends State<Home> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => ContactPage()),
+                        MaterialPageRoute(builder: (context) => ContactPage()),
                       );
                     },
                   ),
@@ -105,8 +103,7 @@ class _HomeState extends State<Home> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => AboutUsPage()),
+                        MaterialPageRoute(builder: (context) => AboutUsPage()),
                       );
                     },
                   ),
@@ -117,8 +114,7 @@ class _HomeState extends State<Home> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatListPage()),
+                        MaterialPageRoute(builder: (context) => ChatListPage()),
                       );
                     },
                   ),
@@ -143,18 +139,32 @@ class _HomeState extends State<Home> {
                       try {
                         // Firebase Authentication ile çıkış yapma
                         await FirebaseAuth.instance.signOut();
+
+                        // SharedPreferences'dan oturum durumunu sıfırlama
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.setBool(
+                            'isLoggedIn', false); // Oturum durumunu sıfırla
+                        await prefs.remove(
+                            'userEmail'); // E-posta bilgisini kaldır (varsa)
+
                         // Çıkış yaptıktan sonra LoginPage'e yönlendirme
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginPage()),
+                          MaterialPageRoute(builder: (context) => LoginPage()),
                         );
                       } catch (e) {
                         // Hata durumunda kullanıcıyı bilgilendirmek için bir yöntem ekleyebilirsiniz
                         print('Çıkış yapma hatası: $e');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content:
+                                Text("Çıkış yapma sırasında bir hata oluştu."),
+                          ),
+                        );
                       }
                     },
-                  ),
+                  )
                 ],
               ),
             ),
@@ -206,7 +216,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           const SizedBox(height: 24),
-    
+
           Expanded(
             child: selectedCategory == 'Blog'
                 ? BlogPage()
@@ -241,13 +251,13 @@ class _HomeState extends State<Home> {
                                       ),
                                     );
                                   }
-    
+
                                   // Firestore'dan gelen verileri PetData listesine dönüştürme
                                   List<PetData> pets = snapshot.data!.docs
                                       .map((DocumentSnapshot doc) {
                                     return PetData.fromSnapshot(doc);
                                   }).toList();
-    
+
                                   return PetGridList(
                                       pets:
                                           pets); // Burada pets parametresini geçiyoruz
