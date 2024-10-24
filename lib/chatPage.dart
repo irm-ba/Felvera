@@ -53,25 +53,26 @@ class _ChatPageState extends State<ChatPage> {
     return phoneNumberRegex.hasMatch(text);
   }
 
-  Future<void> _sendMessage() async {
-    final messageText = _messageController.text.trim();
-    if (messageText.isEmpty) return;
+Future<void> _sendMessage() async {
+  final messageText = _messageController.text.trim();
+  if (messageText.isEmpty) return;
 
-    if (_containsPhoneNumber(messageText)) {
-      // Telefon numarası içeriyorsa kullanıcıyı bilgilendir
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Telefon numarası paylaşmak yasaktır.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
+  final currentUserId = _auth.currentUser?.uid;
+  if (currentUserId == null) return;
+
+  try {
+    final chatDoc = await _firestore.collection('chats').doc(widget.conversationId).get();
+    if (!chatDoc.exists) {
+      // Sohbet belgesi yoksa oluştur
+      await _firestore.collection('chats').doc(widget.conversationId).set({
+        'participants': [currentUserId, widget.receiverId],
+        'lastMessage': messageText,
+        'lastMessageTimestamp': FieldValue.serverTimestamp(),
+        'timestamp': FieldValue.serverTimestamp(),
+      });
     }
 
-    final currentUserId = _auth.currentUser?.uid;
-    if (currentUserId == null) return;
-
-    // Mesajı sohbete ekleyin
+    // Mesajı sohbete ekle
     await _firestore
         .collection('chats')
         .doc(widget.conversationId)
@@ -82,15 +83,17 @@ class _ChatPageState extends State<ChatPage> {
       'timestamp': FieldValue.serverTimestamp(),
     });
 
-    // Sohbet listesindeki son mesajı güncelleyin
+    // Sohbet listesindeki son mesajı güncelle
     await _firestore.collection('chats').doc(widget.conversationId).update({
       'lastMessage': messageText,
       'lastMessageTimestamp': FieldValue.serverTimestamp(),
     });
 
     _messageController.clear();
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  } catch (e) {
+    print('Mesaj gönderme hatası: $e');
   }
+}
 
   @override
   Widget build(BuildContext context) {
