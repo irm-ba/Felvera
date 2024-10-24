@@ -325,7 +325,6 @@ class _AdminApplicationState extends State<AdminApplication> {
                   _applicationData?['userId']; // Onaylanan kişinin ID'si
 
               // Eğer chat için bir konuşma ID'si gerekiyorsa, bunu burada oluşturabilirsiniz
-              // Örneğin, receiverId ve currentUserId'yi birleştirerek oluşturabilirsiniz
               final conversationId = '${receiverId}_$currentUserId';
 
               Navigator.push(
@@ -346,8 +345,8 @@ class _AdminApplicationState extends State<AdminApplication> {
               foregroundColor: Colors.white,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
-            icon: Icon(Icons.chat),
-            label: Text('Mesajlaşmaya Git'),
+            icon: Icon(Icons.message),
+            label: Text('Mesajlaş'),
           ),
       ],
     );

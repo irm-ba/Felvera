@@ -9,6 +9,7 @@ import 'EditProfile.dart';
 import 'Change_Password_Page.dart';
 import 'dart:io';
 import 'adminaplication.dart'; // Import the AdminApplication page
+import 'size_config.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -37,7 +38,7 @@ class _AccountPageState extends State<AccountPage>
 
     if (currentUser == null) {
       // Kullanıcı oturum açmamışsa
-      _showNotLoggedInDialog(); // Uyarı göster
+      // Uyarı göster
       return;
     }
 
@@ -81,31 +82,6 @@ class _AccountPageState extends State<AccountPage>
     }
   }
 
-  // Kullanıcı oturum açmamışsa gösterilecek uyarı dialogu
-  void _showNotLoggedInDialog() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Oturum Açılmadı'),
-            content: const Text('Lütfen oturum açın.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Dialog'u kapat
-                  Navigator.pushReplacementNamed(
-                      context, '/login'); // Giriş sayfasına yönlendir
-                },
-                child: const Text('Tamam'),
-              ),
-            ],
-          );
-        },
-      );
-    });
-  }
-
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -137,6 +113,7 @@ class _AccountPageState extends State<AccountPage>
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context); // SizeConfig'i başlatıyoruz
     final currentUser = FirebaseAuth.instance.currentUser;
 
     // Kullanıcı giriş yapmamışsa otomatik olarak giriş sayfasına yönlendir
@@ -148,19 +125,21 @@ class _AccountPageState extends State<AccountPage>
             children: [
               Text(
                 'Oturum Açılmamış. Lütfen Giriş Yapın.',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 5),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: SizeConfig.blockSizeVertical * 2),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            LoginPage()), // LoginPage'i kendi giriş sayfanız ile değiştirin
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
-                child: Text('Giriş Yap'),
+                child: Text(
+                  'Giriş Yap',
+                  style:
+                      TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 4),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(
                       255, 147, 58, 142), // Buton arka plan rengi
@@ -175,7 +154,10 @@ class _AccountPageState extends State<AccountPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profil'),
+        title: Text(
+          'Profil',
+          style: TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 5),
+        ),
       ),
       body: _userData == null
           ? Center(child: CircularProgressIndicator())
@@ -193,18 +175,17 @@ class _AccountPageState extends State<AccountPage>
   Widget _buildHeader() {
     return Stack(
       children: [
-        // Arka plandaki resim
         Positioned.fill(
           child: Image.asset(
-            'assets/proarka.jpg', // Resmi projeye dahil ettiğinizde bu yolu kullanın
+            'assets/proarka.jpg',
             fit: BoxFit.cover,
           ),
         ),
-        // Üzerindeki içerikler
         Container(
-          padding: EdgeInsets.symmetric(vertical: 20),
-          color: Colors.white.withOpacity(
-              0.5), // Arka planı hafif şeffaf yaparak resmi göstermek için
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.blockSizeVertical * 5,
+          ),
+          color: Colors.white.withOpacity(0.5),
           child: Column(
             children: [
               Align(
@@ -212,7 +193,7 @@ class _AccountPageState extends State<AccountPage>
                 child: GestureDetector(
                   onTap: _pickImage,
                   child: CircleAvatar(
-                    radius: 50,
+                    radius: SizeConfig.blockSizeHorizontal * 12,
                     backgroundImage: _profileImage != null
                         ? FileImage(_profileImage!)
                         : NetworkImage(_userData?['profileImageUrl'] ??
@@ -220,11 +201,11 @@ class _AccountPageState extends State<AccountPage>
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: SizeConfig.blockSizeVertical * 1),
               Text(
                 _userData?['firstName'] ?? 'Kullanıcı Adı',
                 style: TextStyle(
-                  fontSize: 26,
+                  fontSize: SizeConfig.blockSizeHorizontal * 6,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -263,11 +244,11 @@ class _AccountPageState extends State<AccountPage>
         ? GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.75, // Kartlar için oran
+              crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
+              mainAxisSpacing: SizeConfig.blockSizeVertical * 2,
+              childAspectRatio: 0.75,
             ),
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
             itemCount: _userPets.length,
             itemBuilder: (context, index) {
               var pet = _userPets[index];
@@ -284,21 +265,20 @@ class _AccountPageState extends State<AccountPage>
                           BorderRadius.vertical(top: Radius.circular(15)),
                       child: Image.network(
                         pet.imageUrl,
-                        height: MediaQuery.of(context).size.width / 2 -
-                            32, // Kare yapacak şekilde ayarla
-                        width: MediaQuery.of(context).size.width / 2 -
-                            32, // Kare yapacak şekilde ayarla
+                        height: SizeConfig.screenWidth / 2 - 32,
+                        width: SizeConfig.screenWidth / 2 - 32,
                         fit: BoxFit.cover,
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:
+                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
                       child: Text(
                         pet.name ?? 'Hayvan Adı',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
+                          fontSize: SizeConfig.blockSizeHorizontal * 4,
                           color: Colors.black,
                         ),
                         maxLines: 1,
@@ -310,7 +290,14 @@ class _AccountPageState extends State<AccountPage>
               );
             },
           )
-        : Center(child: Text('Hayvanınız bulunmuyor'));
+        : Center(
+            child: Text(
+              'Hayvanınız bulunmuyor',
+              style: TextStyle(
+                fontSize: SizeConfig.blockSizeHorizontal * 4,
+              ),
+            ),
+          );
   }
 
   Widget _buildApplicationsList() {
@@ -318,11 +305,11 @@ class _AccountPageState extends State<AccountPage>
         ? GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.75, // Kartlar için oran
+              crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
+              mainAxisSpacing: SizeConfig.blockSizeVertical * 2,
+              childAspectRatio: 0.75,
             ),
-            padding: EdgeInsets.all(16),
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
             itemCount: _userApplications.length,
             itemBuilder: (context, index) {
               var application = _userApplications[index];
@@ -379,10 +366,9 @@ class _AccountPageState extends State<AccountPage>
                             child: Image.network(
                               petData?['imageUrl'] ??
                                   'https://via.placeholder.com/150',
-                              height: MediaQuery.of(context).size.width / 2 -
-                                  32, // Kare yapacak şekilde ayarla
-                              width: MediaQuery.of(context).size.width / 2 -
-                                  32, // Kare yapacak şekilde ayarla
+                              height:
+                                  MediaQuery.of(context).size.width / 2 - 32,
+                              width: MediaQuery.of(context).size.width / 2 - 32,
                               fit: BoxFit.cover,
                             ),
                           ),
