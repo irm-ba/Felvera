@@ -42,7 +42,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
 """;
 
     final smtpServer =
-        gmail(senderEmail, senderPassword); // Gmail SMTP sunucusu
+    gmail(senderEmail, senderPassword); // Gmail SMTP sunucusu
 
     final message = Message()
       ..from = Address(senderEmail, 'Felvera Uygulaması Üzerinden')
@@ -136,14 +136,44 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                   ),
                 ),
                 SizedBox(height: 20),
-                Text(
-                  'Geri bildiriminiz bizim için önemli. Aşağıdaki formu doldurarak bize öneri, şikayet veya dileklerinizi iletebilirsiniz.',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black87,
+                Material(
+                  elevation: 6,
+                  shadowColor: Colors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: double.infinity, // Genişliği tam boy yapar
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Destek Saatlerimiz: Hafta içi 09:00 - 18:00',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Telefon: +90 545 403 47 42',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'E-posta: felveraa@gmail.com',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 Material(
                   elevation: 6,
                   shadowColor: Colors.black.withOpacity(0.3),
@@ -223,7 +253,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     onPressed: isLoading ? null : _handleSubmit,
                     style: ElevatedButton.styleFrom(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -232,9 +262,9 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     child: isLoading
                         ? CircularProgressIndicator()
                         : Text(
-                            'Gönder',
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
+                      'Gönder',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
                   ),
                 ),
               ],
