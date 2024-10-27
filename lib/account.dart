@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'EditProfile.dart';
 import 'Change_Password_Page.dart';
 import 'dart:io';
-import 'adminaplication.dart'; // Import the AdminApplication page
+import 'adminaplication.dart';
 import 'size_config.dart';
 
 class AccountPage extends StatefulWidget {
@@ -79,6 +79,9 @@ class _AccountPageState extends State<AccountPage>
       }
     } catch (e) {
       print('Error initializing data: $e');
+      print("User Data: $_userData");
+      print("User Pets: $_userPets");
+      print("User Applications: $_userApplications");
     }
   }
 
@@ -166,7 +169,7 @@ class _AccountPageState extends State<AccountPage>
                 _buildHeader(),
                 _buildTabBar(),
                 Expanded(child: _buildTabBarView()),
-                _buildActionButtons(),
+                _buildActionButtons(context),
               ],
             ),
     );
@@ -327,12 +330,10 @@ class _AccountPageState extends State<AccountPage>
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
-                  }
-
-                  if (snapshot.hasError ||
-                      !snapshot.hasData ||
-                      snapshot.data!.length != 2) {
-                    return Center(child: Text('Veri yüklenemedi.'));
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Hata: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.length != 2) {
+                    return Center(child: Text('Veri yüklenemedi veya eksik.'));
                   }
 
                   DocumentSnapshot userDoc = snapshot.data![0];
@@ -411,40 +412,186 @@ class _AccountPageState extends State<AccountPage>
         : Center(child: Text('Başvurunuz bulunmuyor'));
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EditProfilePage()),
-              );
-            },
-            child: Text('Profil Düzenle'),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Color.fromARGB(255, 255, 255, 255),
-              backgroundColor: Color.fromARGB(255, 147, 58, 142),
+          // Profil Düzenle Butonu
+          SizedBox(
+            width: screenWidth * 0.3,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfilePage()),
+                );
+              },
+              icon: Icon(Icons.edit),
+              label: Text(
+                'Profil Düzenle',
+                style: TextStyle(fontSize: 13), // Yazı boyutu
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                foregroundColor: Colors.white,
+                backgroundColor: Color.fromARGB(255, 147, 58, 142),
+              ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ChangePasswordPage()),
-              );
-            },
-            child: Text('Şifre Değiştir'),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Color.fromARGB(255, 255, 255, 255),
-              backgroundColor: Color.fromARGB(255, 147, 58, 142),
+
+          // Şifre Değiştir Butonu
+          SizedBox(
+            width: screenWidth * 0.3,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChangePasswordPage()),
+                );
+              },
+              icon: Icon(Icons.lock),
+              label: Text(
+                'Şifre Değiştir',
+                style: TextStyle(fontSize: 13), // Yazı boyutu
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                foregroundColor: Colors.white,
+                backgroundColor: Color.fromARGB(255, 147, 58, 142),
+              ),
+            ),
+          ),
+
+          // Hesabımı Sil Butonu
+          SizedBox(
+            width: screenWidth * 0.3,
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                bool isDeleted = await _deleteAccount(context);
+                if (isDeleted) {
+                  Navigator.pushReplacementNamed(context, '/introScreen');
+                }
+              },
+              icon: Icon(Icons.delete),
+              label: Text(
+                'Hesabımı Sil',
+                style: TextStyle(fontSize: 13), // Yazı boyutu
+              ),
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<bool> _deleteAccount(BuildContext context) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Kullanıcının hayvanlarını sil
+        await _deleteUserPets(user.uid);
+
+        // Şifreyi kullanıcıdan al
+        String password = await _getPasswordFromUser(
+            context); // Şifreyi almak için diyalog çağrısı
+
+        if (password.isEmpty) {
+          // Eğer kullanıcı şifre girmeden çıkış yaptıysa
+          return false;
+        }
+
+        await _reauthenticateUser(
+            context, user, password); // 3. argümanı ekledik
+        await user.delete();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Hesabınız başarıyla silindi.')),
+        );
+        return true;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Kullanıcı bulunamadı.')),
+        );
+        return false;
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Hesap silme işlemi başarısız: $e')),
+      );
+      return false;
+    }
+  }
+
+  Future<void> _deleteUserPets(String userId) async {
+    try {
+      QuerySnapshot petSnapshot = await FirebaseFirestore.instance
+          .collection('pet')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      for (var petDoc in petSnapshot.docs) {
+        await FirebaseFirestore.instance
+            .collection('pet')
+            .doc(petDoc.id)
+            .delete(); // Hayvanı sil
+      }
+    } catch (e) {
+      print('Hayvan silme işlemi başarısız: $e');
+    }
+  }
+
+  Future<void> _reauthenticateUser(
+      BuildContext context, User user, String password) async {
+    try {
+      String email = user.email!;
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: email,
+        password: password,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Yeniden kimlik doğrulama başarısız')),
+      );
+      throw e; // Hata durumunda bir hata fırlat
+    }
+  }
+
+  Future<String> _getPasswordFromUser(BuildContext context) async {
+    String password = '';
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Şifrenizi girin'),
+          content: TextField(
+            obscureText: true,
+            onChanged: (value) {
+              password = value;
+            },
+            decoration: InputDecoration(hintText: 'Şifreniz'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Tamam'),
+            ),
+          ],
+        );
+      },
+    );
+    return password;
   }
 }
