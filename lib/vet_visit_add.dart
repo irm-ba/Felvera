@@ -63,7 +63,10 @@ class _VetVisitAddState extends State<VetVisitAdd> {
   Future<String?> _uploadImage(File image) async {
     try {
       final storageRef = FirebaseStorage.instance.ref();
-      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final fileName = DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString();
       final imageRef = storageRef.child('vet_visit_images/$fileName');
       final uploadTask = imageRef.putFile(image);
       final snapshot = await uploadTask.whenComplete(() {});
@@ -102,7 +105,7 @@ class _VetVisitAddState extends State<VetVisitAdd> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content:
-                    Text('Veteriner ziyareti eklenirken bir hata oluştu.')),
+                Text('Veteriner ziyareti eklenirken bir hata oluştu.')),
           );
         }
       }
@@ -158,50 +161,51 @@ class _VetVisitAddState extends State<VetVisitAdd> {
                       children: [
                         Text(
                           'Veteriner ziyareti bilgilerini doldurun.',
-                          style: Theme.of(context)
+                          style: Theme
+                              .of(context)
                               .textTheme
                               .headlineSmall
                               ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 147, 58, 142),
-                              ),
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 147, 58, 142),
+                          ),
                         ),
                         SizedBox(height: 20),
                         GestureDetector(
                           onTap: _pickImage,
                           child: _selectedImage == null
                               ? Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.add_a_photo,
-                                            color: Colors.grey[600]),
-                                        SizedBox(width: 8),
-                                        Text('Hayvan Resmi Ekle'),
-                                      ],
-                                    ),
-                                  ),
-                                )
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add_a_photo,
+                                      color: Colors.grey[600]),
+                                  SizedBox(width: 8),
+                                  Text('Hayvan Resmi Ekle'),
+                                ],
+                              ),
+                            ),
+                          )
                               : Column(
-                                  children: [
-                                    Image.file(
-                                      _selectedImage!,
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    SizedBox(height: 8),
-                                    TextButton(
-                                      onPressed: _pickImage,
-                                      child: Text('Resmi Değiştir'),
-                                    ),
-                                  ],
-                                ),
+                            children: [
+                              Image.file(
+                                _selectedImage!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                              SizedBox(height: 8),
+                              TextButton(
+                                onPressed: _pickImage,
+                                child: Text('Resmi Değiştir'),
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20),
                         _buildTextField(
@@ -228,9 +232,9 @@ class _VetVisitAddState extends State<VetVisitAdd> {
                               setState(() {
                                 _selectedDate = pickedDate;
                                 _visitDateController.text = _selectedDate
-                                        ?.toLocal()
-                                        .toString()
-                                        .split(' ')[0] ??
+                                    ?.toLocal()
+                                    .toString()
+                                    .split(' ')[0] ??
                                     '';
                               });
                             }
@@ -263,9 +267,9 @@ class _VetVisitAddState extends State<VetVisitAdd> {
                       backgroundColor: Color.fromARGB(255, 147, 58, 142),
                       foregroundColor: Colors.white,
                       padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                       textStyle:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
