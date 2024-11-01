@@ -128,9 +128,9 @@ class _AccountPageState extends State<AccountPage>
             children: [
               Text(
                 'Oturum Açılmamış. Lütfen Giriş Yapın.',
-                style: TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 5),
+                style: TextStyle(fontSize: SizeConfig.screenWidth * 0.02),
               ),
-              SizedBox(height: SizeConfig.blockSizeVertical * 2),
+              SizedBox(height: SizeConfig.screenWidth * 0.02 * 2),
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushReplacement(
@@ -154,23 +154,27 @@ class _AccountPageState extends State<AccountPage>
         ),
       );
     }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Profil',
-          style: TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 5),
+          style: TextStyle(fontSize: SizeConfig.screenWidth * 0.02),
         ),
       ),
       body: _userData == null
           ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                _buildHeader(),
-                _buildTabBar(),
-                Expanded(child: _buildTabBarView()),
-                _buildActionButtons(context),
-              ],
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildHeader(),
+                  _buildTabBar(),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: _buildTabBarView(),
+                  ),
+                  _buildActionButtons(context),
+                ],
+              ),
             ),
     );
   }
@@ -186,7 +190,7 @@ class _AccountPageState extends State<AccountPage>
         ),
         Container(
           padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.blockSizeVertical * 5,
+            vertical: SizeConfig.screenWidth * 0.02 * 5,
           ),
           color: Colors.white.withOpacity(0.5),
           child: Column(
@@ -204,11 +208,11 @@ class _AccountPageState extends State<AccountPage>
                   ),
                 ),
               ),
-              SizedBox(height: SizeConfig.blockSizeVertical * 1),
+              SizedBox(height: SizeConfig.screenWidth * 0.02 * 1),
               Text(
                 _userData?['firstName'] ?? 'Kullanıcı Adı',
                 style: TextStyle(
-                  fontSize: SizeConfig.blockSizeHorizontal * 6,
+                  fontSize: SizeConfig.screenWidth * 0.02,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -244,54 +248,60 @@ class _AccountPageState extends State<AccountPage>
 
   Widget _buildPetsList() {
     return _userPets.isNotEmpty
-        ? GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
-              mainAxisSpacing: SizeConfig.blockSizeVertical * 2,
-              childAspectRatio: 0.75,
-            ),
+        ? Padding(
             padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-            itemCount: _userPets.length,
-            itemBuilder: (context, index) {
-              var pet = _userPets[index];
-              return Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(15)),
-                      child: Image.network(
-                        pet.imageUrl,
-                        height: SizeConfig.screenWidth / 2 - 32,
-                        width: SizeConfig.screenWidth / 2 - 32,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                      child: Text(
-                        pet.name ?? 'Hayvan Adı',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: SizeConfig.blockSizeHorizontal * 4,
-                          color: Colors.black,
+            child: GridView.builder(
+              physics:
+                  NeverScrollableScrollPhysics(), // TabBarView ile uyumlu olması için
+              shrinkWrap:
+                  true, // İçeriğin sadece ihtiyacı olan kadar alan kaplaması için
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
+                mainAxisSpacing: SizeConfig.screenWidth * 0.02 * 2,
+                childAspectRatio: 0.75,
+              ),
+              itemCount: _userPets.length,
+              itemBuilder: (context, index) {
+                var pet = _userPets[index];
+                return Card(
+                  elevation: 5,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(15)),
+                        child: Image.network(
+                          pet.imageUrl,
+                          height: SizeConfig.screenWidth / 2 - 32,
+                          width: SizeConfig.screenWidth / 2 - 32,
+                          fit: BoxFit.cover,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                      Padding(
+                        padding:
+                            EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                        child: Text(
+                          pet.name ?? 'Hayvan Adı',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: SizeConfig.blockSizeHorizontal * 4,
+                            color: Colors.black,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           )
         : Center(
             child: Text(
@@ -309,7 +319,7 @@ class _AccountPageState extends State<AccountPage>
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
-              mainAxisSpacing: SizeConfig.blockSizeVertical * 2,
+              mainAxisSpacing: SizeConfig.screenWidth * 0.02 * 2,
               childAspectRatio: 0.75,
             ),
             padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
