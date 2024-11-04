@@ -525,7 +525,7 @@ class _AccountPageState extends State<AccountPage>
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Hesap silme işlemi başarısız: $e')),
+        SnackBar(content: Text('Hesap silme işlemi başarısız')),
       );
       return false;
     }
@@ -545,7 +545,7 @@ class _AccountPageState extends State<AccountPage>
             .delete(); // Hayvanı sil
       }
     } catch (e) {
-      print('Hayvan silme işlemi başarısız: $e');
+      print('Hayvan silme işlemi başarısız:');
     }
   }
 
