@@ -158,7 +158,9 @@ class _AccountPageState extends State<AccountPage>
       appBar: AppBar(
         title: Text(
           'Profil',
-          style: TextStyle(fontSize: SizeConfig.screenWidth * 0.02),
+          style: TextStyle(
+              fontSize:
+                  SizeConfig.scaledFontSize(10)), // 16 burada temel font boyutu
         ),
       ),
       body: _userData == null
