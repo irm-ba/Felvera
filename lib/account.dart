@@ -160,7 +160,7 @@ class _AccountPageState extends State<AccountPage>
           'Profil',
           style: TextStyle(
               fontSize:
-                  SizeConfig.scaledFontSize(10)), // 16 burada temel font boyutu
+                  SizeConfig.scaledFontSize(14)), // 16 burada temel font boyutu
         ),
       ),
       body: _userData == null
