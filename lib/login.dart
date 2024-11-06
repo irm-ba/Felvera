@@ -47,9 +47,33 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
+    //buradan-------------------------------------
+        // Ekran genişliğini alıyoruz
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double horizontalPadding = screenWidth;
+if (screenWidth <= 400) {
+    // Küçük ekranlar için boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 5;
+} else if (screenWidth <= 600) {
+    // Orta büyüklükte ekranlar için boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 10;
+} else if (screenWidth <= 800) {
+    // Büyük ekranlar için boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 15;
+} else if (screenWidth <= 1200) {
+    // Daha büyük ekranlar için boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 20;
+} else {
+    // Çok geniş ekranlar için maksimum boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 25;
+}
+
+//buraya recep ---------------------------------------
+
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 5),
+       padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -353,11 +377,12 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: const Color(0xFF933A8E),
         elevation: 5,
       ),
-      child: const Text(
+      child:  Text(
         "Giriş Yap",
         style: TextStyle(
           color: Colors.white,
-          fontSize: 16,
+          fontSize:
+                  SizeConfig.scaledFontSize(14),
           fontWeight: FontWeight.bold,
         ),
       ),

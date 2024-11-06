@@ -120,11 +120,32 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context); // Ekran boyutlarını hesapla
+
+        // Ekran genişliğini alıyoruz
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double horizontalPadding = screenWidth;
+if (screenWidth <= 400) {
+    // Küçük ekranlar için boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 5;
+} else if (screenWidth <= 600) {
+    // Orta büyüklükte ekranlar için boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 10;
+} else if (screenWidth <= 800) {
+    // Büyük ekranlar için boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 15;
+} else if (screenWidth <= 1200) {
+    // Daha büyük ekranlar için boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 20;
+} else {
+    // Çok geniş ekranlar için maksimum boşluk
+    horizontalPadding = SizeConfig.blockSizeHorizontal * 25;
+}
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(
-              SizeConfig.blockSizeHorizontal * 4), // Oranlı padding
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -168,7 +189,8 @@ class _SignupPageState extends State<SignupPage> {
         Text(
           "Üye Ol",
           style: TextStyle(
-            fontSize: SizeConfig.blockSizeHorizontal * 7, // Oranlı font
+            fontSize:
+                  SizeConfig.scaledFontSize(14), // Oranlı font
             fontWeight: FontWeight.bold,
             color: Color(0xFF933A8E),
           ),
@@ -393,7 +415,8 @@ Felvera Ekibi
       child: Text(
         "Üye Ol",
         style: TextStyle(
-          fontSize: SizeConfig.blockSizeHorizontal * 4, // Oranlı font
+          fontSize:
+                  SizeConfig.scaledFontSize(14), // Oranlı font
           color: Colors.white,
         ),
       ),
