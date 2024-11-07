@@ -48,32 +48,32 @@ class _LoginPageState extends State<LoginPage> {
     SizeConfig().init(context);
 
     //buradan-------------------------------------
-        // Ekran genişliğini alıyoruz
+    // Ekran genişliğini alıyoruz
     double screenWidth = MediaQuery.of(context).size.width;
 
     double horizontalPadding = screenWidth;
-if (screenWidth <= 400) {
-    // Küçük ekranlar için boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 5;
-} else if (screenWidth <= 600) {
-    // Orta büyüklükte ekranlar için boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 10;
-} else if (screenWidth <= 800) {
-    // Büyük ekranlar için boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 15;
-} else if (screenWidth <= 1200) {
-    // Daha büyük ekranlar için boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 20;
-} else {
-    // Çok geniş ekranlar için maksimum boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 25;
-}
+    if (screenWidth <= 400) {
+      // Küçük ekranlar için boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 5;
+    } else if (screenWidth <= 600) {
+      // Orta büyüklükte ekranlar için boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 10;
+    } else if (screenWidth <= 800) {
+      // Büyük ekranlar için boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 15;
+    } else if (screenWidth <= 1200) {
+      // Daha büyük ekranlar için boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 20;
+    } else {
+      // Çok geniş ekranlar için maksimum boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 25;
+    }
 
 //buraya recep ---------------------------------------
 
     return Scaffold(
       body: Container(
-       padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -346,6 +346,7 @@ if (screenWidth <= 400) {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString('email', email);
             await prefs.setString('password', password);
+            await prefs.setBool('hasSeenIntro', true);
           } else {
             // Seçenek seçilmediyse bilgileri temizle
             SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -377,12 +378,11 @@ if (screenWidth <= 400) {
         backgroundColor: const Color(0xFF933A8E),
         elevation: 5,
       ),
-      child:  Text(
+      child: Text(
         "Giriş Yap",
         style: TextStyle(
           color: Colors.white,
-          fontSize:
-                  SizeConfig.scaledFontSize(14),
+          fontSize: SizeConfig.scaledFontSize(14),
           fontWeight: FontWeight.bold,
         ),
       ),

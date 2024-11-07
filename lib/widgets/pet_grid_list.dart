@@ -160,8 +160,12 @@ class _PetGridListState extends State<PetGridList> {
         // Yaş aralığı kontrolü
         final int petAge = pet.age;
         final bool matchesAge = ageRange.isEmpty ||
-            (petAge >= (int.tryParse(ageRange.split('-')[0].trim()) ?? 0) &&
-                petAge <= (int.tryParse(ageRange.split('-')[1].trim()) ?? 100));
+            (ageRange.contains('-')
+                ? (petAge >=
+                        (int.tryParse(ageRange.split('-')[0].trim()) ?? 0) &&
+                    petAge <=
+                        (int.tryParse(ageRange.split('-')[1].trim()) ?? 100))
+                : petAge == (int.tryParse(ageRange.trim()) ?? -1));
 
         // Konum kontrolü
         final bool matchesLocation =
@@ -176,6 +180,7 @@ class _PetGridListState extends State<PetGridList> {
     });
   }
 
+//bak bak
   void _showFilterDialog() {
     showDialog(
       context: context,
@@ -187,6 +192,7 @@ class _PetGridListState extends State<PetGridList> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Hayvan türü seçimi
                   DropdownButton<String>(
                     value: selectedAnimalType.isNotEmpty
                         ? selectedAnimalType
@@ -217,9 +223,10 @@ class _PetGridListState extends State<PetGridList> {
                       );
                     }).toList(),
                   ),
+                  // Yaş aralığı seçimi
                   TextField(
                     decoration: InputDecoration(
-                      labelText: 'Yaş Aralığı (ör. 1-5)',
+                      labelText: 'Yaş (ör. 1-5 , 2 )',
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -227,6 +234,7 @@ class _PetGridListState extends State<PetGridList> {
                       });
                     },
                   ),
+                  // Konum seçimi
                   DropdownButton<String>(
                     value: location.isNotEmpty ? location : null,
                     hint: Text('Konum'),

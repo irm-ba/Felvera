@@ -36,8 +36,10 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
           .collection('users')
           .doc(currentUserId)
           .get();
+
       setState(() {
-        final userData = userDoc.data() as Map<String, dynamic>;
+        final userData =
+            userDoc.data() as Map<String, dynamic>? ?? {}; // Kontrol eklendi
         currentUserName =
             '${userData['firstName'] ?? ''} ${userData['lastName'] ?? ''}'
                 .trim();
@@ -49,8 +51,10 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
         .collection('users')
         .doc(widget.lostAnimal.userId)
         .get();
+
     setState(() {
-      final receiverData = receiverDoc.data() as Map<String, dynamic>;
+      final receiverData =
+          receiverDoc.data() as Map<String, dynamic>? ?? {}; // Kontrol eklendi
       receiverName =
           '${receiverData['firstName'] ?? ''} ${receiverData['lastName'] ?? ''}'
               .trim();

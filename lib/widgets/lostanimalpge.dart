@@ -149,24 +149,12 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
 
   Stream<QuerySnapshot> _getFilteredLostAnimalsStream() {
     CollectionReference lostAnimalsRef =
-    FirebaseFirestore.instance.collection('lost_animals');
+        FirebaseFirestore.instance.collection('lost_animals');
 
     Query query = lostAnimalsRef;
 
     if (selectedAnimalType.isNotEmpty) {
       query = query.where('animalType', isEqualTo: selectedAnimalType);
-    }
-
-    if (ageRange.isNotEmpty) {
-      // Yaş aralığını işleme
-      List<String> ageRangeParts = ageRange.split('-');
-      if (ageRangeParts.length == 2) {
-        int minAge = int.tryParse(ageRangeParts[0].trim()) ?? 0;
-        int maxAge = int.tryParse(ageRangeParts[1].trim()) ?? 0;
-        query = query
-            .where('age', isGreaterThanOrEqualTo: minAge)
-            .where('age', isLessThanOrEqualTo: maxAge);
-      }
     }
 
     if (location.isNotEmpty) {
@@ -217,17 +205,6 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
                         child: Text(value),
                       );
                     }).toList(),
-                  ),
-                  // Yaş aralığı seçimi
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Yaş Aralığı (ör. 1-5)',
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        ageRange = value;
-                      });
-                    },
                   ),
                   // Konum seçimi
                   DropdownButton<String>(
@@ -288,7 +265,6 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
                       'Kırıkkale',
                       'Kırklareli',
                       'Kırşehir',
-                      'Kilis',
                       'Kocaeli',
                       'Konya',
                       'Kütahya',
@@ -305,11 +281,11 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
                       'Rize',
                       'Sakarya',
                       'Samsun',
-                      'Şanlıurfa',
-                      'Şırnak',
                       'Siirt',
                       'Sinop',
                       'Sivas',
+                      'Şanlıurfa',
+                      'Şırnak',
                       'Tekirdağ',
                       'Tokat',
                       'Trabzon',
@@ -318,7 +294,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
                       'Van',
                       'Yalova',
                       'Yozgat',
-                      'Zonguldak',
+                      'Zonguldak'
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

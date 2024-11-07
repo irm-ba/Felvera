@@ -1,3 +1,4 @@
+import 'package:felvera/AuthWarapper.dart';
 import 'package:felvera/Contact.dart';
 import 'package:felvera/screens/IntroScreen.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'package:url_strategy/url_strategy.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  setPathUrlStrategy();  // Temiz URL stratejisini kullan
+  setPathUrlStrategy(); // Temiz URL stratejisini kullan
 
   try {
     await Firebase.initializeApp(
@@ -24,6 +25,7 @@ void main() async {
     print("Error initializing Firebase: $e");
   }
 }
+
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class MyApp extends StatelessWidget {
@@ -52,13 +54,12 @@ class MyApp extends StatelessWidget {
       initialRoute: '/', // Başlangıç rotasını ana sayfa yapın
       onGenerateRoute: (settings) {
         switch (settings.name) {
-
           case '/support':
             return MaterialPageRoute(
                 builder: (context) => ContactPage(), settings: settings);
           default:
             return MaterialPageRoute(
-                builder: (context) => IntroScreen(), settings: settings);
+                builder: (context) => AuthWrapper(), settings: settings);
         }
       },
       localizationsDelegates: [

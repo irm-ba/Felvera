@@ -27,7 +27,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
     if (user != null) {
       // Kullanıcı giriş yapmışsa, ana sayfayı göster
       return Home();
-    } else if (hasSeenIntro) {
+    } else if (!hasSeenIntro) {
       // Tanıtım ekranı daha önce gösterildiyse, giriş ekranını göster
       return LoginPage();
     } else {
