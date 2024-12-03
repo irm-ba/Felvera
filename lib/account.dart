@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felvera/login.dart';
 import 'package:felvera/models/pet_data.dart';
+import 'package:felvera/screens/edit_pet_page.dart';
+import 'package:felvera/screens/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -140,13 +142,12 @@ class _AccountPageState extends State<AccountPage>
                 },
                 child: Text(
                   'Giriş Yap',
-                  style:
-                      TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 4),
+                  style: TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 4),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(
-                      255, 147, 58, 142), // Buton arka plan rengi
-                  foregroundColor: Colors.white, // Buton metin rengi
+                  backgroundColor:
+                  const Color.fromARGB(255, 147, 58, 142), // Buton rengi
+                  foregroundColor: Colors.white, // Metin rengi
                 ),
               ),
             ],
@@ -154,32 +155,39 @@ class _AccountPageState extends State<AccountPage>
         ),
       );
     }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Profil',
-          style: TextStyle(
-              fontSize:
-                  SizeConfig.scaledFontSize(14)), // 16 burada temel font boyutu
+          style: TextStyle(fontSize: SizeConfig.scaledFontSize(14)),
         ),
+        leading: IconButton(onPressed: (){Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Home(),
+          ),
+        );}, icon: Icon(Icons.arrow_back)),
       ),
       body: _userData == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  _buildTabBar(),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    child: _buildTabBarView(),
-                  ),
-                  _buildActionButtons(context),
-                ],
-              ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            _buildTabBar(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: _buildTabBarView(),
             ),
+            _buildActionButtons(context),
+          ],
+        ),
+      ),
     );
   }
+
 
   Widget _buildHeader() {
     return Stack(
@@ -247,72 +255,107 @@ class _AccountPageState extends State<AccountPage>
       ],
     );
   }
-
   Widget _buildPetsList() {
     return _userPets.isNotEmpty
         ? Padding(
-            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-            child: GridView.builder(
-              physics:
-                  NeverScrollableScrollPhysics(), // TabBarView ile uyumlu olması için
-              shrinkWrap:
-                  true, // İçeriğin sadece ihtiyacı olan kadar alan kaplaması için
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
-                mainAxisSpacing: SizeConfig.screenWidth * 0.02 * 2,
-                childAspectRatio: 0.75,
-              ),
-              itemCount: _userPets.length,
-              itemBuilder: (context, index) {
-                var pet = _userPets[index];
-                return Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(15)),
-                        child: Image.network(
-                          pet.imageUrl,
-                          height: SizeConfig.screenWidth / 2 - 32,
-                          width: SizeConfig.screenWidth / 2 - 32,
-                          fit: BoxFit.cover,
-                        ),
+      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+      child: GridView.builder(
+        physics: BouncingScrollPhysics(),
+        shrinkWrap: false,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
+          mainAxisSpacing: SizeConfig.screenWidth * 0.02 * 2,
+          childAspectRatio: 0.75,
+        ),
+        itemCount: _userPets.length,
+        itemBuilder: (context, index) {
+          var pet = _userPets[index];
+          return Stack(
+            children: [
+              Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(15)),
+                      child: Image.network(
+                        pet.imageUrl,
+                        height: SizeConfig.screenWidth / 2 - 32,
+                        width: SizeConfig.screenWidth / 2 - 32,
+                        fit: BoxFit.cover,
                       ),
-                      Padding(
-                        padding:
-                            EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                        child: Text(
-                          pet.name ?? 'Hayvan Adı',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: SizeConfig.blockSizeHorizontal * 4,
-                            color: Colors.black,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                    ),
+                    Padding(
+                      padding:
+                      EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
+                      child: Text(
+                        pet.name ?? 'Hayvan Adı',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: SizeConfig.blockSizeHorizontal * 4,
+                          color: Colors.black,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          )
-        : Center(
-            child: Text(
-              'Hayvanınız bulunmuyor',
-              style: TextStyle(
-                fontSize: SizeConfig.blockSizeHorizontal * 4,
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Positioned(
+                top: 8,
+                right: 8,
+                child: GestureDetector(
+                  onTap: () {
+                    // Düzenleme sayfasına yönlendirme
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditPetPage(pet: pet),
+                      ),
+                    );
+
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.blue,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           );
+        },
+      ),
+    )
+        : Center(
+      child: Text(
+        'Hayvanınız bulunmuyor',
+        style: TextStyle(
+          fontSize: SizeConfig.blockSizeHorizontal * 4,
+        ),
+      ),
+    );
   }
 
   Widget _buildApplicationsList() {

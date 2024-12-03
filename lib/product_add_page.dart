@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:felvera/firebase/petimage.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
@@ -60,6 +62,17 @@ class ProductAdd extends StatefulWidget {
 }
 
 class _ProductAddState extends State<ProductAdd> {
+  void uploadPetImage(String imagePath) async {
+    bool isValid = await isPetImage(imagePath);
+    if (isValid) {
+      print('Geçerli hayvan resmi. Yükleniyor...');
+      // Resmi Firebase Storage'a yükleyin
+    } else {
+      print('Bu resim hayvan resmi değil.');
+      // Uyarı mesajı göster
+    }
+  }
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController breedController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
@@ -105,7 +118,7 @@ class _ProductAddState extends State<ProductAdd> {
 
   Future<String?> _uploadFile(File file, String folder) async {
     final storageRef =
-        FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
+    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
     try {
       await storageRef.putFile(file);
       return await storageRef.getDownloadURL();
@@ -136,7 +149,7 @@ class _ProductAddState extends State<ProductAdd> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:
-              Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
+          Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
         ),
       );
       return;
@@ -147,9 +160,17 @@ class _ProductAddState extends State<ProductAdd> {
     // Fotoğrafları ve sağlık kartını Firebase Storage'a yükleyin
     List<String> imageUrls = [];
     for (var image in _images) {
-      var imageUrl = await _uploadFile(image, 'pet_images');
-      if (imageUrl != null) imageUrls.add(imageUrl);
+      bool isValid = await isPetImage(image.path); // Hayvan resmi doğrulama
+      if (isValid) {
+        print('Geçerli hayvan resmi. Yükleniyor...');
+        var imageUrl = await _uploadFile(image, 'pet_images');
+        if (imageUrl != null) imageUrls.add(imageUrl);
+      } else {
+        print('Bu resim hayvan resmi değil.');
+        // İsteğe bağlı olarak kullanıcıya uyarı gösterin
+      }
     }
+
     String? healthCardUrl = _healthCardImage != null
         ? await _uploadFile(_healthCardImage!, 'health_card_images')
         : null;
@@ -170,7 +191,7 @@ class _ProductAddState extends State<ProductAdd> {
       status: 'Available', // Status alanını ekleyin
     );
 
-    // Firestore'a veri ekleme
+// Firestore'a veri ekleme
     final firestore = FirebaseFirestore.instance;
     await firestore.collection('pet').doc(petId).set({
       'name': newPet.name,
@@ -307,6 +328,10 @@ class _ProductAddState extends State<ProductAdd> {
             controller: ageController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(labelText: 'Yaşı'),
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(2), // En fazla 2 karakter
+            ],
           ),
           TextField(
             controller: descriptionController,
@@ -367,27 +392,27 @@ class _ProductAddState extends State<ProductAdd> {
           _images.isEmpty
               ? Text('Resim seçilmedi')
               : Wrap(
-                  spacing: 8.0,
-                  children: List.generate(_images.length, (index) {
-                    return Stack(
-                      children: [
-                        Image.file(
-                          _images[index],
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
-                        ),
-                        Positioned(
-                          right: 0,
-                          child: IconButton(
-                            icon: Icon(Icons.remove_circle),
-                            onPressed: () => _removeImage(index),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
+            spacing: 8.0,
+            children: List.generate(_images.length, (index) {
+              return Stack(
+                children: [
+                  Image.file(
+                    _images[index],
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    right: 0,
+                    child: IconButton(
+                      icon: Icon(Icons.remove_circle),
+                      onPressed: () => _removeImage(index),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _getHealthCardImage,
@@ -396,11 +421,11 @@ class _ProductAddState extends State<ProductAdd> {
           _healthCardImage == null
               ? Text('Sağlık kartı resmi seçilmedi')
               : Image.file(
-                  _healthCardImage!,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
+            _healthCardImage!,
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _submitForm,
@@ -484,7 +509,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
 
   Future<String?> _uploadFile(File file, String folder) async {
     final storageRef =
-        FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
+    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
     try {
       await storageRef.putFile(file);
       return await storageRef.getDownloadURL();
@@ -515,7 +540,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content:
-                Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.')),
+            Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.')),
       );
       return;
     }
@@ -728,27 +753,27 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
         _images.isEmpty
             ? Text('Resim seçilmedi')
             : Wrap(
-                spacing: 8.0,
-                children: List.generate(_images.length, (index) {
-                  return Stack(
-                    children: [
-                      Image.file(
-                        _images[index],
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: IconButton(
-                          icon: Icon(Icons.remove_circle),
-                          onPressed: () => _removeImage(index),
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-              ),
+          spacing: 8.0,
+          children: List.generate(_images.length, (index) {
+            return Stack(
+              children: [
+                Image.file(
+                  _images[index],
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  right: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.remove_circle),
+                    onPressed: () => _removeImage(index),
+                  ),
+                ),
+              ],
+            );
+          }),
+        ),
         SizedBox(height: 16.0),
         ElevatedButton(
           onPressed: _submitForm,
