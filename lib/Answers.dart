@@ -69,10 +69,47 @@ class _AnswersPageState extends State<AnswersPage> {
             "Soran: ${widget.questionData['userName'] ?? 'Anonim'}",
             style: TextStyle(color: Colors.grey[600]),
           ),
+          SizedBox(height: 10.0),
+          if (widget.questionData['imageUrls'] != null &&
+              widget.questionData['imageUrls'] is List &&
+              (widget.questionData['imageUrls'] as List).isNotEmpty)
+            Container(
+              height: 200.0, // Görsellerin yüksekliği
+              margin: EdgeInsets.only(top: 10.0),
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: (widget.questionData['imageUrls'] as List).length,
+                itemBuilder: (context, index) {
+                  String imageUrl =
+                  (widget.questionData['imageUrls'] as List)[index];
+                  return Padding(
+                    padding: EdgeInsets.only(right: 10.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        imageUrl,
+                        width: 200.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) =>
+                            Icon(Icons.broken_image, size: 50),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
         ],
       ),
     );
   }
+
 
   Widget _buildAnswersList() {
     return StreamBuilder<QuerySnapshot>(
