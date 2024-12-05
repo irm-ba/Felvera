@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ApplicationDetailPage extends StatelessWidget {
-  ApplicationDetailPage({required this.applicationId});
+  const ApplicationDetailPage({required this.applicationId});
 
   final String applicationId;
 
@@ -10,7 +10,7 @@ class ApplicationDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Başvuru Detayı',
           style: TextStyle(
             color: Color.fromARGB(255, 147, 58, 142),
@@ -28,18 +28,19 @@ class ApplicationDetailPage extends StatelessWidget {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData || !snapshot.data!.exists) {
-            return Center(child: Text('Başvuru bulunamadı.'));
+            return const Center(child: Text('Başvuru bulunamadı.'));
           }
 
           var application = snapshot.data!.data() as Map<String, dynamic>;
 
           return Container(
-            color: Color(0xFFF2F2F2), // Arka plan rengini hafif gri yaptık
-            padding: EdgeInsets.all(16.0),
+            color:
+                const Color(0xFFF2F2F2), // Arka plan rengini hafif gri yaptık
+            padding: const EdgeInsets.all(16.0),
             child: ListView(
               children: [
                 // Başvuru Bilgileri Kartı
@@ -56,7 +57,7 @@ class ApplicationDetailPage extends StatelessWidget {
                   ],
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 // Başvuru Durumu Kartı
                 InfoCard(
@@ -67,7 +68,7 @@ class ApplicationDetailPage extends StatelessWidget {
                   ],
                 ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
               ],
             ),
           );
@@ -78,7 +79,8 @@ class ApplicationDetailPage extends StatelessWidget {
 }
 
 class InfoCard extends StatelessWidget {
-  InfoCard({required this.title, required this.icon, required this.content});
+  const InfoCard(
+      {required this.title, required this.icon, required this.content});
 
   final List<Widget> content;
   final IconData icon;
@@ -92,9 +94,9 @@ class InfoCard extends StatelessWidget {
         borderRadius:
             BorderRadius.circular(16), // Kenarları daha yuvarlak yaptık
       ),
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
-        padding: EdgeInsets.all(20.0), // İçeriği biraz daha geniş tuttuk
+        padding: const EdgeInsets.all(20.0), // İçeriği biraz daha geniş tuttuk
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -103,12 +105,12 @@ class InfoCard extends StatelessWidget {
                 Icon(
                   icon,
                   size: 28, // İkonun boyutunu biraz büyüttük
-                  color: Color.fromARGB(255, 147, 58, 142),
+                  color: const Color.fromARGB(255, 147, 58, 142),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20, // Başlık fontunu büyüttük
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 147, 58, 142),
@@ -116,7 +118,7 @@ class InfoCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
                 height: 12), // Başlık ve içerik arasındaki boşluğu artırdık
             ...content,
           ],
@@ -127,7 +129,7 @@ class InfoCard extends StatelessWidget {
 }
 
 class InfoRow extends StatelessWidget {
-  InfoRow({required this.label, required this.value});
+  const InfoRow({required this.label, required this.value});
 
   final String label;
   final String? value;
@@ -135,8 +137,8 @@ class InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.only(bottom: 12.0), // Satırlar arasındaki boşluğu artırdık
+      padding: const EdgeInsets.only(
+          bottom: 12.0), // Satırlar arasındaki boşluğu artırdık
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -144,7 +146,7 @@ class InfoRow extends StatelessWidget {
             flex: 2,
             child: Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Color.fromARGB(255, 147, 58, 142),
@@ -155,7 +157,7 @@ class InfoRow extends StatelessWidget {
             flex: 3,
             child: Text(
               value ?? 'Beklemede',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
               ),

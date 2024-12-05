@@ -75,7 +75,7 @@ class PetDetailsScreen extends StatelessWidget {
                     buildHealthCard(context)
                   else
                     buildNoHealthCardMessage(),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   Center(
                     child: buildAdoptionButton(context, petOwnerId),
                   ),
@@ -97,7 +97,7 @@ class PetDetailsScreen extends StatelessWidget {
           image: NetworkImage(pet.imageUrl),
           fit: BoxFit.cover,
         ),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
       ),
       child: Align(
         alignment: Alignment.bottomLeft,
@@ -109,11 +109,12 @@ class PetDetailsScreen extends StatelessWidget {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
             ),
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+            borderRadius:
+                const BorderRadius.vertical(bottom: Radius.circular(30)),
           ),
           child: Text(
             pet.name,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -136,7 +137,7 @@ class PetDetailsScreen extends StatelessWidget {
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: ListTile(
-          contentPadding: EdgeInsets.all(16),
+          contentPadding: const EdgeInsets.all(16),
           leading: CircleAvatar(
             backgroundColor: iconColor!.withOpacity(0.2),
             child: Icon(icon, color: iconColor),
@@ -165,7 +166,7 @@ class PetDetailsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 24),
+        const SizedBox(height: 24),
         Text(
           'Sağlık Kartı:',
           style: TextStyle(
@@ -174,7 +175,7 @@ class PetDetailsScreen extends StatelessWidget {
             color: Colors.purple[800],
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -228,20 +229,20 @@ class PetDetailsScreen extends StatelessWidget {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Kullanıcı oturum açmamış.')),
+            const SnackBar(content: Text('Kullanıcı oturum açmamış.')),
           );
         }
       },
-      icon: Icon(Icons.favorite, color: Colors.white),
-      label: Text('Sahiplen'),
+      icon: const Icon(Icons.favorite, color: Colors.white),
+      label: const Text('Sahiplen'),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.purple[700],
         foregroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 120),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 120),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30),
         ),
-        textStyle: TextStyle(
+        textStyle: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
         ),
@@ -253,7 +254,7 @@ class PetDetailsScreen extends StatelessWidget {
 class FullScreenImage extends StatelessWidget {
   final String imageUrl;
 
-  FullScreenImage({required this.imageUrl});
+  const FullScreenImage({required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

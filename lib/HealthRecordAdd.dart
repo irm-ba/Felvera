@@ -48,7 +48,7 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController treatmentController = TextEditingController();
   final TextEditingController veterinarianNameController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController healthStatusController = TextEditingController();
 
   void _submitForm() async {
@@ -56,7 +56,7 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Lütfen giriş yapın.'),
         ),
       );
@@ -69,7 +69,7 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
         veterinarianNameController.text.isEmpty ||
         healthStatusController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Lütfen tüm alanları doldurun.'),
         ),
       );
@@ -93,7 +93,7 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
           .add(healthRecord.toMap());
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Sağlık kaydı başarıyla eklendi!'),
         ),
       );
@@ -107,7 +107,7 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
     } catch (e) {
       print('Firebase veri eklerken hata oluştu: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Sağlık kaydı eklenirken bir hata oluştu.'),
         ),
       );
@@ -130,7 +130,7 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
                 "Tarih",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: dateController,
                 decoration: InputDecoration(
@@ -140,12 +140,12 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "Açıklama",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: descriptionController,
                 decoration: InputDecoration(
@@ -155,12 +155,12 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "Tedavi",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: treatmentController,
                 decoration: InputDecoration(
@@ -170,12 +170,12 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "Veterinerin Adı",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: veterinarianNameController,
                 decoration: InputDecoration(
@@ -185,12 +185,12 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 "Sağlık Durumu",
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: healthStatusController,
                 decoration: InputDecoration(
@@ -200,14 +200,16 @@ class _HealthRecordAddState extends State<HealthRecordAdd> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: Text("Ekle",),
+                child: const Text(
+                  "Ekle",
+                ),
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Color.fromARGB(255, 255, 255, 255),
-                  backgroundColor: Color.fromARGB(255, 147, 58, 142),
-              ),
+                  foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                  backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+                ),
               ),
             ],
           ),

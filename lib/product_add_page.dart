@@ -34,10 +34,10 @@ class _MainScreenState extends State<MainScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hayvan İlanları"),
+        title: const Text("Hayvan İlanları"),
         bottom: TabBar(
           controller: _tabController,
-          tabs: [
+          tabs: const [
             Tab(text: "İlan Ekle"),
             Tab(text: "Kayıp İlan Ekle"),
           ],
@@ -46,7 +46,7 @@ class _MainScreenState extends State<MainScreen>
       body: TabBarView(
         controller: _tabController,
         children: [
-          ProductAdd(),
+          const ProductAdd(),
           LostAnimalAdd(),
         ],
       ),
@@ -118,7 +118,7 @@ class _ProductAddState extends State<ProductAdd> {
 
   Future<String?> _uploadFile(File file, String folder) async {
     final storageRef =
-    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
+        FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
     try {
       await storageRef.putFile(file);
       return await storageRef.getDownloadURL();
@@ -132,7 +132,7 @@ class _ProductAddState extends State<ProductAdd> {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Kullanıcı oturum açmamış.'),
         ),
       );
@@ -147,15 +147,15 @@ class _ProductAddState extends State<ProductAdd> {
         animalTypeController.text.isEmpty ||
         descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content:
-          Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
+              Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
         ),
       );
       return;
     }
     String userId = user.uid; // Kullanıcının ID'sini al
-    String petId = Uuid().v4(); // Benzersiz bir kimlik
+    String petId = const Uuid().v4(); // Benzersiz bir kimlik
 
     // Fotoğrafları ve sağlık kartını Firebase Storage'a yükleyin
     List<String> imageUrls = [];
@@ -210,7 +210,7 @@ class _ProductAddState extends State<ProductAdd> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Hayvan başarıyla eklendi!'),
       ),
     );
@@ -313,21 +313,21 @@ class _ProductAddState extends State<ProductAdd> {
     ];
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
           TextField(
             controller: nameController,
-            decoration: InputDecoration(labelText: 'Hayvan Adı'),
+            decoration: const InputDecoration(labelText: 'Hayvan Adı'),
           ),
           TextField(
             controller: breedController,
-            decoration: InputDecoration(labelText: 'Cinsi'),
+            decoration: const InputDecoration(labelText: 'Cinsi'),
           ),
           TextField(
             controller: ageController,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(labelText: 'Yaşı'),
+            decoration: const InputDecoration(labelText: 'Yaşı'),
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(2), // En fazla 2 karakter
@@ -335,19 +335,19 @@ class _ProductAddState extends State<ProductAdd> {
           ),
           TextField(
             controller: descriptionController,
-            decoration: InputDecoration(labelText: 'Açıklama'),
+            decoration: const InputDecoration(labelText: 'Açıklama'),
           ),
           TextField(
             controller: healthStatusController,
-            decoration: InputDecoration(labelText: 'Sağlık Durumu'),
+            decoration: const InputDecoration(labelText: 'Sağlık Durumu'),
           ),
           TextField(
             controller: animalTypeController,
-            decoration: InputDecoration(labelText: 'Hayvan Türü'),
+            decoration: const InputDecoration(labelText: 'Hayvan Türü'),
           ),
           DropdownButtonFormField<String>(
             value: selectedLocation,
-            decoration: InputDecoration(labelText: 'Konum'),
+            decoration: const InputDecoration(labelText: 'Konum'),
             items: cities.map((String city) {
               return DropdownMenuItem<String>(
                 value: city,
@@ -362,7 +362,7 @@ class _ProductAddState extends State<ProductAdd> {
           ),
           Row(
             children: [
-              Text('Cinsiyet: '),
+              const Text('Cinsiyet: '),
               Radio(
                 value: true,
                 groupValue: isGenderMale,
@@ -372,7 +372,7 @@ class _ProductAddState extends State<ProductAdd> {
                   });
                 },
               ),
-              Text('Erkek'),
+              const Text('Erkek'),
               Radio(
                 value: false,
                 groupValue: isGenderMale,
@@ -382,54 +382,54 @@ class _ProductAddState extends State<ProductAdd> {
                   });
                 },
               ),
-              Text('Dişi'),
+              const Text('Dişi'),
             ],
           ),
           ElevatedButton(
             onPressed: _getImage,
-            child: Text('Resim Seç'),
+            child: const Text('Resim Seç'),
           ),
           _images.isEmpty
-              ? Text('Resim seçilmedi')
+              ? const Text('Resim seçilmedi')
               : Wrap(
-            spacing: 8.0,
-            children: List.generate(_images.length, (index) {
-              return Stack(
-                children: [
-                  Image.file(
-                    _images[index],
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    right: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.remove_circle),
-                      onPressed: () => _removeImage(index),
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
-          SizedBox(height: 16.0),
+                  spacing: 8.0,
+                  children: List.generate(_images.length, (index) {
+                    return Stack(
+                      children: [
+                        Image.file(
+                          _images[index],
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: IconButton(
+                            icon: const Icon(Icons.remove_circle),
+                            onPressed: () => _removeImage(index),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
+          const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _getHealthCardImage,
-            child: Text('Sağlık Kartı Resmi Seç'),
+            child: const Text('Sağlık Kartı Resmi Seç'),
           ),
           _healthCardImage == null
-              ? Text('Sağlık kartı resmi seçilmedi')
+              ? const Text('Sağlık kartı resmi seçilmedi')
               : Image.file(
-            _healthCardImage!,
-            width: 100,
-            height: 100,
-            fit: BoxFit.cover,
-          ),
-          SizedBox(height: 16.0),
+                  _healthCardImage!,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+          const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _submitForm,
-            child: Text('İlanı Gönder'),
+            child: const Text('İlanı Gönder'),
           ),
         ],
       ),
@@ -495,7 +495,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
         _images.add(File(pickedFile.path));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Resim seçilmedi')),
+          const SnackBar(content: Text('Resim seçilmedi')),
         );
       }
     });
@@ -509,14 +509,15 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
 
   Future<String?> _uploadFile(File file, String folder) async {
     final storageRef =
-    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
+        FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
     try {
       await storageRef.putFile(file);
       return await storageRef.getDownloadURL();
     } catch (e) {
       print('Dosya yükleme hatası: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Dosya yükleme sırasında bir hata oluştu.')),
+        const SnackBar(
+            content: Text('Dosya yükleme sırasında bir hata oluştu.')),
       );
       return null;
     }
@@ -526,7 +527,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Kullanıcı oturum açmamış.')),
+        const SnackBar(content: Text('Kullanıcı oturum açmamış.')),
       );
       return;
     }
@@ -538,15 +539,15 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
         selectedLocation == null ||
         ageController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
             content:
-            Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.')),
+                Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.')),
       );
       return;
     }
 
     String userId = user.uid;
-    String lostAnimalId = Uuid().v4();
+    String lostAnimalId = const Uuid().v4();
 
     List<String> imageUrls = [];
     for (var image in _images) {
@@ -584,7 +585,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Kayıp hayvan ilanı başarıyla eklendi!')),
+      const SnackBar(content: Text('Kayıp hayvan ilanı başarıyla eklendi!')),
     );
 
     // Formu sıfırlama
@@ -683,32 +684,32 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
     ];
 
     return ListView(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       children: [
         TextField(
           controller: nameController,
-          decoration: InputDecoration(labelText: 'Hayvan Adı'),
+          decoration: const InputDecoration(labelText: 'Hayvan Adı'),
         ),
         TextField(
           controller: breedController,
-          decoration: InputDecoration(labelText: 'Cinsi'),
+          decoration: const InputDecoration(labelText: 'Cinsi'),
         ),
         TextField(
           controller: ageController,
           keyboardType: TextInputType.number,
-          decoration: InputDecoration(labelText: 'Yaşı'),
+          decoration: const InputDecoration(labelText: 'Yaşı'),
         ),
         TextField(
           controller: descriptionController,
-          decoration: InputDecoration(labelText: 'Açıklama'),
+          decoration: const InputDecoration(labelText: 'Açıklama'),
         ),
         TextField(
           controller: animalTypeController,
-          decoration: InputDecoration(labelText: 'Hayvan Türü'),
+          decoration: const InputDecoration(labelText: 'Hayvan Türü'),
         ),
         DropdownButtonFormField<String>(
           value: selectedLocation,
-          decoration: InputDecoration(labelText: 'Konum'),
+          decoration: const InputDecoration(labelText: 'Konum'),
           items: cities.map((String city) {
             return DropdownMenuItem<String>(
               value: city,
@@ -723,7 +724,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
         ),
         Row(
           children: [
-            Text('Cinsiyet: '),
+            const Text('Cinsiyet: '),
             Radio(
               value: true,
               groupValue: isGenderMale,
@@ -733,7 +734,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
                 });
               },
             ),
-            Text('Erkek'),
+            const Text('Erkek'),
             Radio(
               value: false,
               groupValue: isGenderMale,
@@ -743,41 +744,41 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
                 });
               },
             ),
-            Text('Dişi'),
+            const Text('Dişi'),
           ],
         ),
         ElevatedButton(
           onPressed: _getImage,
-          child: Text('Resim Seç'),
+          child: const Text('Resim Seç'),
         ),
         _images.isEmpty
-            ? Text('Resim seçilmedi')
+            ? const Text('Resim seçilmedi')
             : Wrap(
-          spacing: 8.0,
-          children: List.generate(_images.length, (index) {
-            return Stack(
-              children: [
-                Image.file(
-                  _images[index],
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  right: 0,
-                  child: IconButton(
-                    icon: Icon(Icons.remove_circle),
-                    onPressed: () => _removeImage(index),
-                  ),
-                ),
-              ],
-            );
-          }),
-        ),
-        SizedBox(height: 16.0),
+                spacing: 8.0,
+                children: List.generate(_images.length, (index) {
+                  return Stack(
+                    children: [
+                      Image.file(
+                        _images[index],
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      Positioned(
+                        right: 0,
+                        child: IconButton(
+                          icon: const Icon(Icons.remove_circle),
+                          onPressed: () => _removeImage(index),
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+              ),
+        const SizedBox(height: 16.0),
         ElevatedButton(
           onPressed: _submitForm,
-          child: Text('İlanı Gönder'),
+          child: const Text('İlanı Gönder'),
         ),
       ],
     );

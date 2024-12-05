@@ -12,7 +12,7 @@ class IntroScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 241, 213, 239),
+        color: const Color.fromARGB(255, 241, 213, 239),
         padding: EdgeInsets.only(top: screenWidth * 0.1),
         child: IntroductionScreen(
           pages: [
@@ -44,17 +44,17 @@ class IntroScreen extends StatelessWidget {
           onDone: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => SignupPage()),
+              MaterialPageRoute(builder: (context) => const SignupPage()),
             );
           },
           onSkip: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => SignupPage()),
+              MaterialPageRoute(builder: (context) => const SignupPage()),
             );
           },
           showSkipButton: true,
-          skip: Text(
+          skip: const Text(
             "Atla",
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -62,8 +62,8 @@ class IntroScreen extends StatelessWidget {
               color: Color(0xFF933A8E),
             ),
           ),
-          next: Icon(Icons.arrow_forward, color: Color(0xFF933A8E)),
-          done: Text(
+          next: const Icon(Icons.arrow_forward, color: Color(0xFF933A8E)),
+          done: const Text(
             "Devam et",
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -72,24 +72,24 @@ class IntroScreen extends StatelessWidget {
             ),
           ),
           dotsDecorator: DotsDecorator(
-            size: Size.square(10.0),
-            activeSize: Size(20.0, 10.0),
+            size: const Size.square(10.0),
+            activeSize: const Size(20.0, 10.0),
             color: Colors.black26,
-            activeColor: Color(0xFF933A8E),
-            spacing: EdgeInsets.symmetric(horizontal: 3.0),
+            activeColor: const Color(0xFF933A8E),
+            spacing: const EdgeInsets.symmetric(horizontal: 3.0),
             activeShape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25.0),
             ),
           ),
           // Setting the background color for the bottom bar
-          globalBackgroundColor: Color.fromARGB(255, 240, 222, 238),
+          globalBackgroundColor: const Color.fromARGB(255, 240, 222, 238),
         ),
       ),
     );
   }
 
   // Helper method for styling each page
-  PageDecoration getPageDecoration() => PageDecoration(
+  PageDecoration getPageDecoration() => const PageDecoration(
         titleTextStyle: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,

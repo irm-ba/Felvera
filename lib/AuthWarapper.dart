@@ -26,7 +26,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
     if (user != null) {
       // Kullanıcı giriş yapmışsa, ana sayfayı göster
-      return Home();
+      return const Home();
     } else if (!hasSeenIntro) {
       // Tanıtım ekranı daha önce gösterildiyse, giriş ekranını göster
       return LoginPage();
@@ -42,13 +42,13 @@ class _AuthWrapperState extends State<AuthWrapper> {
       future: _initialPage,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
+          return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot.hasData) {
           return snapshot.data!;
         } else {
-          return Scaffold(
+          return const Scaffold(
             body: Center(child: Text('Error loading page')),
           );
         }

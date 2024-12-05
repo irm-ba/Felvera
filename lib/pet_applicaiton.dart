@@ -5,7 +5,7 @@ import 'models/pet_data.dart'; // PetData model import
 class PetApplicationsPage extends StatefulWidget {
   final PetData pet;
 
-  PetApplicationsPage({required this.pet});
+  const PetApplicationsPage({required this.pet});
 
   @override
   _PetApplicationsPageState createState() => _PetApplicationsPageState();
@@ -54,7 +54,7 @@ class _PetApplicationsPageState extends State<PetApplicationsPage> {
                     applicationDoc.data() as Map<String, dynamic>?;
 
                 return ListTile(
-                  contentPadding: EdgeInsets.all(8.0),
+                  contentPadding: const EdgeInsets.all(8.0),
                   title: Text(applicationData?['applicantName'] ?? 'No Name'),
                   subtitle: Text(applicationData?['status'] ?? 'No Status'),
                   onTap: () {
@@ -63,7 +63,7 @@ class _PetApplicationsPageState extends State<PetApplicationsPage> {
                 );
               },
             )
-          : Center(child: Text('No applications available.')),
+          : const Center(child: Text('No applications available.')),
     );
   }
 }

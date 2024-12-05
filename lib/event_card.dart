@@ -21,11 +21,11 @@ class EventCard extends StatelessWidget {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Etkinliğe katıldınız!')),
+        const SnackBar(content: Text('Etkinliğe katıldınız!')),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Katılmak için giriş yapmalısınız.')),
+        const SnackBar(content: Text('Katılmak için giriş yapmalısınız.')),
       );
     }
   }
@@ -34,46 +34,47 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Etkinlik resmi
           ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
             child: eventData.imageUrl != null
                 ? Image.network(eventData.imageUrl!, fit: BoxFit.cover)
-                : Placeholder(fallbackHeight: 200),
+                : const Placeholder(fallbackHeight: 200),
           ),
           Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   eventData.title ?? 'Başlık Yok',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(eventData.date ?? 'Tarih Yok',
-                    style: TextStyle(color: Colors.grey)),
-                SizedBox(height: 10),
+                    style: const TextStyle(color: Colors.grey)),
+                const SizedBox(height: 10),
                 Text(eventData.description ?? 'Açıklama Yok'),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   children: [
-                    Icon(Icons.people, color: Colors.grey),
-                    SizedBox(width: 5),
+                    const Icon(Icons.people, color: Colors.grey),
+                    const SizedBox(width: 5),
                     Text(
                       "${eventData.participants?.length ?? 0} katılımcı",
-                      style: TextStyle(fontSize: 16),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () => joinEvent(context),
-                  child: Text('Etkinliğe Katıl'),
+                  child: const Text('Etkinliğe Katıl'),
                 ),
               ],
             ),

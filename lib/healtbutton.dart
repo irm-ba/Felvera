@@ -9,7 +9,7 @@ import 'size_config.dart'; // SizeConfig dosyasını projeye dahil et
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -26,10 +26,11 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Color.fromARGB(255, 147, 58, 142),
+            backgroundColor: const Color.fromARGB(255, 147, 58, 142),
             foregroundColor: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            textStyle:
+                const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
             ),
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           color: Colors.white,
           iconTheme: IconThemeData(
             color: Color.fromARGB(255, 147, 58, 142),
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
@@ -69,7 +70,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sağlık Kaydı'),
+        title: const Text('Sağlık Kaydı'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -86,7 +87,8 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => VaccinationScheduleHomePage()),
+                      builder: (context) =>
+                          const VaccinationScheduleHomePage()),
                 );
               },
             ),
@@ -97,7 +99,8 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => VetVisitHomePage()),
+                  MaterialPageRoute(
+                      builder: (context) => const VetVisitHomePage()),
                 );
               },
             ),
@@ -129,7 +132,7 @@ class HomePage extends StatelessWidget {
                 icon,
                 size:
                     SizeConfig.blockSizeHorizontal * 12, // Dinamik ikon boyutu
-                color: Color.fromARGB(255, 147, 58, 142),
+                color: const Color.fromARGB(255, 147, 58, 142),
               ),
               SizedBox(
                   height: SizeConfig.blockSizeVertical * 2), // Dinamik boşluk
@@ -139,7 +142,7 @@ class HomePage extends StatelessWidget {
                   fontSize:
                       SizeConfig.blockSizeHorizontal * 5, // Dinamik yazı boyutu
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 147, 58, 142),
+                  color: const Color.fromARGB(255, 147, 58, 142),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -158,7 +161,7 @@ class VaccinationScheduleHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Aşı Takvimi'),
+        title: const Text('Aşı Takvimi'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -172,11 +175,11 @@ class VaccinationScheduleHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => VaccinationScheduleAdd()),
+                      builder: (context) => const VaccinationScheduleAdd()),
                 );
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildActionButton(
               context,
               title: 'Aşı Takvimlerini Görüntüle',
@@ -185,7 +188,7 @@ class VaccinationScheduleHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => VaccinationScheduleList()),
+                      builder: (context) => const VaccinationScheduleList()),
                 );
               },
             ),
@@ -206,14 +209,14 @@ class VaccinationScheduleHomePage extends StatelessWidget {
         icon: Icon(icon, size: 20),
         label: Text(title),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 147, 58, 142),
+          backgroundColor: const Color.fromARGB(255, 147, 58, 142),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           elevation: 5,
-          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -227,7 +230,7 @@ class VetVisitHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Veteriner Ziyareti'),
+        title: const Text('Veteriner Ziyareti'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -244,7 +247,7 @@ class VetVisitHomePage extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildActionButton(
               context,
               title: 'Veteriner Ziyaretlerini Görüntüle',
@@ -273,14 +276,14 @@ class VetVisitHomePage extends StatelessWidget {
         icon: Icon(icon, size: 20),
         label: Text(title),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromARGB(255, 147, 58, 142),
+          backgroundColor: const Color.fromARGB(255, 147, 58, 142),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           elevation: 5,
-          textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );

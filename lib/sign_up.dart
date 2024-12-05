@@ -121,26 +121,26 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context); // Ekran boyutlarını hesapla
 
-        // Ekran genişliğini alıyoruz
+    // Ekran genişliğini alıyoruz
     double screenWidth = MediaQuery.of(context).size.width;
 
     double horizontalPadding = screenWidth;
-if (screenWidth <= 400) {
-    // Küçük ekranlar için boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 5;
-} else if (screenWidth <= 600) {
-    // Orta büyüklükte ekranlar için boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 10;
-} else if (screenWidth <= 800) {
-    // Büyük ekranlar için boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 15;
-} else if (screenWidth <= 1200) {
-    // Daha büyük ekranlar için boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 20;
-} else {
-    // Çok geniş ekranlar için maksimum boşluk
-    horizontalPadding = SizeConfig.blockSizeHorizontal * 25;
-}
+    if (screenWidth <= 400) {
+      // Küçük ekranlar için boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 5;
+    } else if (screenWidth <= 600) {
+      // Orta büyüklükte ekranlar için boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 10;
+    } else if (screenWidth <= 800) {
+      // Büyük ekranlar için boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 15;
+    } else if (screenWidth <= 1200) {
+      // Daha büyük ekranlar için boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 20;
+    } else {
+      // Çok geniş ekranlar için maksimum boşluk
+      horizontalPadding = SizeConfig.blockSizeHorizontal * 25;
+    }
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -164,7 +164,7 @@ if (screenWidth <= 400) {
               if (_errorMessage != null)
                 Text(
                   _errorMessage!,
-                  style: TextStyle(color: Colors.red),
+                  style: const TextStyle(color: Colors.red),
                 ),
               SizedBox(height: SizeConfig.blockSizeVertical * 2),
               _signupButton(context),
@@ -189,10 +189,9 @@ if (screenWidth <= 400) {
         Text(
           "Üye Ol",
           style: TextStyle(
-            fontSize:
-                  SizeConfig.scaledFontSize(14), // Oranlı font
+            fontSize: SizeConfig.scaledFontSize(14), // Oranlı font
             fontWeight: FontWeight.bold,
-            color: Color(0xFF933A8E),
+            color: const Color(0xFF933A8E),
           ),
         ),
         SizedBox(height: SizeConfig.blockSizeVertical * 1),
@@ -200,7 +199,7 @@ if (screenWidth <= 400) {
           "Hesabınızı oluşturun",
           style: TextStyle(
             fontSize: SizeConfig.blockSizeHorizontal * 4,
-            color: Color(0xFF707070),
+            color: const Color(0xFF707070),
           ),
         ),
       ],
@@ -236,8 +235,8 @@ if (screenWidth <= 400) {
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: Color.fromARGB(255, 243, 234, 241),
-        prefixIcon: Icon(icon, color: Color(0xFF933A8E)),
+        fillColor: const Color.fromARGB(255, 243, 234, 241),
+        prefixIcon: Icon(icon, color: const Color(0xFF933A8E)),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       ),
@@ -256,7 +255,7 @@ if (screenWidth <= 400) {
             });
           },
           checkColor: Colors.white,
-          activeColor: Color(0xFF933A8E),
+          activeColor: const Color(0xFF933A8E),
         ),
         Expanded(
           child: GestureDetector(
@@ -264,8 +263,8 @@ if (screenWidth <= 400) {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text("KVKK Metni"),
-                  content: SingleChildScrollView(
+                  title: const Text("KVKK Metni"),
+                  content: const SingleChildScrollView(
                     child: Text(
                       """
 Değerli Kullanıcı,
@@ -302,13 +301,13 @@ Felvera Ekibi
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text("Kapat"),
+                      child: const Text("Kapat"),
                     ),
                   ],
                 ),
               );
             },
-            child: Text(
+            child: const Text(
               "KVKK metnini kabul ediyorum",
               style: TextStyle(
                 color: Color(0xFF933A8E),
@@ -332,7 +331,7 @@ Felvera Ekibi
             });
           },
           checkColor: Colors.white,
-          activeColor: Color(0xFF933A8E),
+          activeColor: const Color(0xFF933A8E),
         ),
         Expanded(
           child: GestureDetector(
@@ -340,8 +339,8 @@ Felvera Ekibi
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text("Kullanım Kuralları"),
-                  content: SingleChildScrollView(
+                  title: const Text("Kullanım Kuralları"),
+                  content: const SingleChildScrollView(
                     child: Text(
                       """
 Değerli Kullanıcı,
@@ -381,13 +380,13 @@ Felvera Ekibi
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text("Kapat"),
+                      child: const Text("Kapat"),
                     ),
                   ],
                 ),
               );
             },
-            child: Text(
+            child: const Text(
               "Kullanım kurallarını kabul ediyorum",
               style: TextStyle(
                 color: Color(0xFF933A8E),
@@ -404,7 +403,7 @@ Felvera Ekibi
     return ElevatedButton(
       onPressed: _signup,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF933A8E),
+        backgroundColor: const Color(0xFF933A8E),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
               SizeConfig.blockSizeHorizontal * 25), // Oranlı radius
@@ -415,8 +414,7 @@ Felvera Ekibi
       child: Text(
         "Üye Ol",
         style: TextStyle(
-          fontSize:
-                  SizeConfig.scaledFontSize(14), // Oranlı font
+          fontSize: SizeConfig.scaledFontSize(14), // Oranlı font
           color: Colors.white,
         ),
       ),

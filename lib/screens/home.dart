@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
       drawer: Drawer(
         child: Column(
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -75,20 +75,21 @@ class _HomeState extends State<Home> {
                 padding: EdgeInsets.zero,
                 children: [
                   ListTile(
-                    leading: Icon(Icons.person,
+                    leading: const Icon(Icons.person,
                         color: Color.fromARGB(255, 147, 58, 142)),
-                    title: Text('Profil'),
+                    title: const Text('Profil'),
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => AccountPage()),
+                        MaterialPageRoute(
+                            builder: (context) => const AccountPage()),
                       );
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.announcement_outlined,
+                    leading: const Icon(Icons.announcement_outlined,
                         color: Color.fromARGB(255, 147, 58, 142)),
-                    title: Text('Bize Ulaşın'),
+                    title: const Text('Bize Ulaşın'),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -97,9 +98,9 @@ class _HomeState extends State<Home> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.accessibility_new_sharp,
+                    leading: const Icon(Icons.accessibility_new_sharp,
                         color: Color.fromARGB(255, 147, 58, 142)),
-                    title: Text('Hakkımızda'),
+                    title: const Text('Hakkımızda'),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -108,9 +109,9 @@ class _HomeState extends State<Home> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.chat_outlined,
+                    leading: const Icon(Icons.chat_outlined,
                         color: Color.fromARGB(255, 147, 58, 142)),
-                    title: Text('Mesaj'),
+                    title: const Text('Mesaj'),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -119,9 +120,9 @@ class _HomeState extends State<Home> {
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.wysiwyg_outlined,
+                    leading: const Icon(Icons.wysiwyg_outlined,
                         color: Color.fromARGB(255, 147, 58, 142)),
-                    title: Text('Gizlilik sözleşmesi'),
+                    title: const Text('Gizlilik sözleşmesi'),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -130,11 +131,11 @@ class _HomeState extends State<Home> {
                       );
                     },
                   ),
-                  Divider(),
+                  const Divider(),
                   ListTile(
-                    leading: Icon(Icons.logout_rounded,
+                    leading: const Icon(Icons.logout_rounded,
                         color: Color.fromARGB(255, 147, 58, 142)),
-                    title: Text('Çıkış yap'),
+                    title: const Text('Çıkış yap'),
                     onTap: () async {
                       try {
                         // Firebase Authentication ile çıkış yapma
@@ -157,7 +158,7 @@ class _HomeState extends State<Home> {
                         // Hata durumunda kullanıcıyı bilgilendirmek için bir yöntem ekleyebilirsiniz
                         print('Çıkış yapma hatası: $e');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content:
                                 Text("Çıkış yapma sırasında bir hata oluştu."),
                           ),
@@ -174,11 +175,11 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         leading: Builder(
           builder: (context) => Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: CircleAvatar(
               radius: 20,
               child: IconButton(
-                icon: Icon(Icons.menu_rounded, color: kBrownColor),
+                icon: const Icon(Icons.menu_rounded, color: kBrownColor),
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 },
@@ -186,7 +187,7 @@ class _HomeState extends State<Home> {
             ),
           ),
         ),
-        title: Align(
+        title: const Align(
           alignment: Alignment.center, // Yazıyı ortalar
           child: Text(
             'Felvera',
@@ -195,7 +196,8 @@ class _HomeState extends State<Home> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.star, color: Color.fromARGB(255, 147, 58, 142)),
+            icon: const Icon(Icons.star,
+                color: Color.fromARGB(255, 147, 58, 142)),
             onPressed: _showRatingDialog,
           ),
         ],
@@ -219,7 +221,7 @@ class _HomeState extends State<Home> {
 
           Expanded(
             child: selectedCategory == 'Blog'
-                ? BlogPage()
+                ? const BlogPage()
                 : selectedCategory == 'Forum'
                     ? ForumPage()
                     : selectedCategory == 'Gönüllülük Etkinlikleri'
@@ -232,7 +234,7 @@ class _HomeState extends State<Home> {
                                     AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return Center(
+                                    return const Center(
                                         child: CircularProgressIndicator());
                                   }
                                   if (snapshot.hasError) {
@@ -274,13 +276,14 @@ class _HomeState extends State<Home> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Uygulamayı Değerlendir'),
+          title: const Text('Uygulamayı Değerlendir'),
           content: StatefulBuilder(
             builder: (context, setState) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Uygulamamızı 1-5 arasında yıldızlarla değerlendirin:'),
+                  const Text(
+                      'Uygulamamızı 1-5 arasında yıldızlarla değerlendirin:'),
 
                   // Genel Yıldız Değerlendirme Kısmı
                   Row(
@@ -289,7 +292,7 @@ class _HomeState extends State<Home> {
                       return IconButton(
                         icon: Icon(
                           index < rating ? Icons.star : Icons.star_border,
-                          color: Color.fromARGB(255, 147, 58, 142),
+                          color: const Color.fromARGB(255, 147, 58, 142),
                         ),
                         onPressed: () {
                           setState(() {
@@ -302,7 +305,7 @@ class _HomeState extends State<Home> {
                   const SizedBox(height: 10),
 
                   // Soru 1: Hayvan Sahiplendirme Süreci
-                  Text(
+                  const Text(
                       '1. Hayvan sahiplendirme sürecini nasıl değerlendirirsiniz?'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -312,7 +315,7 @@ class _HomeState extends State<Home> {
                           index < adoptionProcessRating
                               ? Icons.star
                               : Icons.star_border,
-                          color: Color.fromARGB(255, 147, 58, 142),
+                          color: const Color.fromARGB(255, 147, 58, 142),
                         ),
                         onPressed: () {
                           setState(() {
@@ -325,7 +328,7 @@ class _HomeState extends State<Home> {
                   const SizedBox(height: 10),
 
                   // Soru 2: Sağlık Kontrolü Hizmeti
-                  Text(
+                  const Text(
                       '2. Sağlık kontrolü hizmetini nasıl değerlendirirsiniz?'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -335,7 +338,7 @@ class _HomeState extends State<Home> {
                           index < healthServiceRating
                               ? Icons.star
                               : Icons.star_border,
-                          color: Color.fromARGB(255, 147, 58, 142),
+                          color: const Color.fromARGB(255, 147, 58, 142),
                         ),
                         onPressed: () {
                           setState(() {
@@ -349,7 +352,7 @@ class _HomeState extends State<Home> {
 
                   // Geri Bildirim Metni
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Fikir ve görüşleriniz için',
                     ),
                     onChanged: (value) {
@@ -364,7 +367,7 @@ class _HomeState extends State<Home> {
           ),
           actions: [
             TextButton(
-              child: Text('İptal'),
+              child: const Text('İptal'),
               onPressed: () {
                 // Alanları temizle
                 setState(() {
@@ -377,7 +380,7 @@ class _HomeState extends State<Home> {
               },
             ),
             TextButton(
-              child: Text('Gönder'),
+              child: const Text('Gönder'),
               onPressed: () async {
                 await _submitFeedback(); // Geri bildirimi gönder
                 // Alanları temizle
@@ -430,11 +433,11 @@ class _HomeState extends State<Home> {
         }
       },
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
           color: selectedCategory == category
-              ? Color.fromARGB(255, 147, 58, 142)
+              ? const Color.fromARGB(255, 147, 58, 142)
               : Colors.grey[300],
           borderRadius: BorderRadius.circular(20),
         ),
@@ -490,7 +493,7 @@ class _HomeState extends State<Home> {
     return query.snapshots();
   }
 
-//kod kullanımda değil 
+//kod kullanımda değil
 //   void _showFilterDialog() {
 //     showDialog(
 //       context: context,

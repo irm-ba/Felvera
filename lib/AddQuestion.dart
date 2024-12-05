@@ -41,7 +41,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       } catch (e) {
         print("Error loading user data: $e");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
               content: Text('Kullanıcı bilgileri yüklenirken bir hata oluştu')),
         );
       }
@@ -52,7 +52,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Soru Ekle'),
+        title: const Text('Soru Ekle'),
       ),
       body: Stack(
         children: [
@@ -63,7 +63,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
             child: Container(
               width: 200,
               height: 200,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
                   colors: [
@@ -82,7 +82,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
             child: Container(
               width: 300,
               height: 300,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
                   colors: [
@@ -109,10 +109,10 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                         backgroundImage: NetworkImage(_profileImageUrl!),
                         backgroundColor: Colors.grey[200],
                       ),
-                      SizedBox(width: 10),
+                      const SizedBox(width: 10),
                       Text(
                         _userName ?? 'İsim Yok',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.black87,
@@ -120,25 +120,25 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                       ),
                     ],
                   ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 TextField(
                   controller: _questionController,
                   decoration: InputDecoration(
                     labelText: 'Sorunuzu giriniz',
-                    labelStyle: TextStyle(color: Colors.black54),
+                    labelStyle: const TextStyle(color: Colors.black54),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 147, 58, 142)),
+                      borderSide: const BorderSide(
+                          color: Color.fromARGB(255, 147, 58, 142)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   maxLines: 5,
                   keyboardType: TextInputType.multiline,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Wrap(
                   spacing: 10,
                   runSpacing: 10,
@@ -154,7 +154,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                           right: 0,
                           top: 0,
                           child: IconButton(
-                            icon: Icon(Icons.cancel, color: Colors.red),
+                            icon: const Icon(Icons.cancel, color: Colors.red),
                             onPressed: () {
                               setState(() {
                                 _selectedImages.remove(image);
@@ -166,26 +166,26 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton.icon(
-                  icon: Icon(Icons.photo_library, color: Colors.white),
-                  label: Text("Resim Ekle"),
+                  icon: const Icon(Icons.photo_library, color: Colors.white),
+                  label: const Text("Resim Ekle"),
                   onPressed: _pickImages,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 147, 58, 142),
-                    foregroundColor: Color.fromARGB(255, 255, 254, 255),
+                    backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+                    foregroundColor: const Color.fromARGB(255, 255, 254, 255),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _submitQuestion,
-                  child: Text('Gönder'),
+                  child: const Text('Gönder'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 147, 58, 142),
-                    foregroundColor: Color.fromARGB(255, 255, 254, 255),
+                    backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+                    foregroundColor: const Color.fromARGB(255, 255, 254, 255),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -207,7 +207,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('En fazla 3 resim seçebilirsiniz')),
+        const SnackBar(content: Text('En fazla 3 resim seçebilirsiniz')),
       );
     }
   }
@@ -215,7 +215,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
   Future<void> _submitQuestion() async {
     if (_questionController.text.isEmpty || _selectedImages.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Soru ve resimler gereklidir')),
+        const SnackBar(content: Text('Soru ve resimler gereklidir')),
       );
       return;
     }
@@ -236,7 +236,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
 
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Soru başarıyla gönderildi!')),
+          const SnackBar(content: Text('Soru başarıyla gönderildi!')),
         );
       } catch (e) {
         print("Error submitting question: $e");
@@ -259,7 +259,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       } catch (e) {
         print("Error uploading image: $e");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Resim yüklenirken bir hata oluştu')),
+          const SnackBar(content: Text('Resim yüklenirken bir hata oluştu')),
         );
       }
     }

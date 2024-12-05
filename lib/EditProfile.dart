@@ -66,10 +66,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profil Düzenle'),
+        title: const Text('Profil Düzenle'),
       ),
       body: _userData == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
@@ -79,7 +79,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   children: [
                     TextFormField(
                       controller: _firstNameController,
-                      decoration: InputDecoration(labelText: 'Ad'),
+                      decoration: const InputDecoration(labelText: 'Ad'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Bu alan boş bırakılamaz';
@@ -89,7 +89,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                     TextFormField(
                       controller: _lastNameController,
-                      decoration: InputDecoration(labelText: 'Soyad'),
+                      decoration: const InputDecoration(labelText: 'Soyad'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Bu alan boş bırakılamaz';
@@ -110,12 +110,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     //   },
                     // ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: _saveProfile,
-                      child: Text('Değişiklikleri Kaydet'),
+                      child: const Text('Değişiklikleri Kaydet'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromARGB(255, 147, 58, 142),
+                        backgroundColor:
+                            const Color.fromARGB(255, 147, 58, 142),
                         foregroundColor: Colors.white,
                       ),
                     ),

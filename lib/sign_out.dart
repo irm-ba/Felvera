@@ -10,15 +10,15 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Ayarlar"),
+        title: const Text("Ayarlar"),
       ),
       body: ListView(
         children: [
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.logout_rounded,
+            leading: const Icon(Icons.logout_rounded,
                 color: Color.fromARGB(255, 147, 58, 142)),
-            title: Text('Çıkış yap'),
+            title: const Text('Çıkış yap'),
             onTap: () async {
               try {
                 await _auth.signOut();

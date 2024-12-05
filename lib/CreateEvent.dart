@@ -65,9 +65,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
         return Theme(
           data: ThemeData.light().copyWith(
             primaryColor: Colors.purple, // Ana renk olarak moru ayarla
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
                 primary: Colors.purple), // İkincil renk olarak moru ayarla
-            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,
         );
@@ -86,10 +87,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Etkinlik Oluştur"),
+        title: const Text("Etkinlik Oluştur"),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -100,14 +101,14 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   height: 200,
                   color: Colors.grey[200],
                   child: _imageFile == null
-                      ? Center(child: Text('Resim Seç'))
+                      ? const Center(child: Text('Resim Seç'))
                       : Image.file(_imageFile!, fit: BoxFit.cover),
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'Başlık'),
+                decoration: const InputDecoration(labelText: 'Başlık'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Başlık boş olamaz';
@@ -115,10 +116,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextFormField(
                 controller: _descriptionController,
-                decoration: InputDecoration(labelText: 'Açıklama'),
+                decoration: const InputDecoration(labelText: 'Açıklama'),
                 maxLines: 4,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -127,13 +128,13 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               GestureDetector(
                 onTap: _selectDate,
                 child: AbsorbPointer(
                   child: TextFormField(
                     controller: _dateController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Tarih',
                       suffixIcon: Icon(Icons.calendar_today),
                     ),
@@ -146,10 +147,10 @@ class _CreateEventPageState extends State<CreateEventPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: _createEvent,
-                child: Text('Oluştur'),
+                child: const Text('Oluştur'),
               ),
             ],
           ),

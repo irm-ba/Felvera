@@ -53,47 +53,48 @@ class _ChatPageState extends State<ChatPage> {
     return phoneNumberRegex.hasMatch(text);
   }
 
-Future<void> _sendMessage() async {
-  final messageText = _messageController.text.trim();
-  if (messageText.isEmpty) return;
+  Future<void> _sendMessage() async {
+    final messageText = _messageController.text.trim();
+    if (messageText.isEmpty) return;
 
-  final currentUserId = _auth.currentUser?.uid;
-  if (currentUserId == null) return;
+    final currentUserId = _auth.currentUser?.uid;
+    if (currentUserId == null) return;
 
-  try {
-    final chatDoc = await _firestore.collection('chats').doc(widget.conversationId).get();
-    if (!chatDoc.exists) {
-      // Sohbet belgesi yoksa oluştur
-      await _firestore.collection('chats').doc(widget.conversationId).set({
-        'participants': [currentUserId, widget.receiverId],
-        'lastMessage': messageText,
-        'lastMessageTimestamp': FieldValue.serverTimestamp(),
+    try {
+      final chatDoc =
+          await _firestore.collection('chats').doc(widget.conversationId).get();
+      if (!chatDoc.exists) {
+        // Sohbet belgesi yoksa oluştur
+        await _firestore.collection('chats').doc(widget.conversationId).set({
+          'participants': [currentUserId, widget.receiverId],
+          'lastMessage': messageText,
+          'lastMessageTimestamp': FieldValue.serverTimestamp(),
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+
+      // Mesajı sohbete ekle
+      await _firestore
+          .collection('chats')
+          .doc(widget.conversationId)
+          .collection('messages')
+          .add({
+        'text': messageText,
+        'senderId': currentUserId,
         'timestamp': FieldValue.serverTimestamp(),
       });
+
+      // Sohbet listesindeki son mesajı güncelle
+      await _firestore.collection('chats').doc(widget.conversationId).update({
+        'lastMessage': messageText,
+        'lastMessageTimestamp': FieldValue.serverTimestamp(),
+      });
+
+      _messageController.clear();
+    } catch (e) {
+      print('Mesaj gönderme hatası: $e');
     }
-
-    // Mesajı sohbete ekle
-    await _firestore
-        .collection('chats')
-        .doc(widget.conversationId)
-        .collection('messages')
-        .add({
-      'text': messageText,
-      'senderId': currentUserId,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
-
-    // Sohbet listesindeki son mesajı güncelle
-    await _firestore.collection('chats').doc(widget.conversationId).update({
-      'lastMessage': messageText,
-      'lastMessageTimestamp': FieldValue.serverTimestamp(),
-    });
-
-    _messageController.clear();
-  } catch (e) {
-    print('Mesaj gönderme hatası: $e');
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -104,10 +105,10 @@ Future<void> _sendMessage() async {
             CircleAvatar(
               backgroundImage: _receiverProfileImageUrl != null
                   ? NetworkImage(_receiverProfileImageUrl!)
-                  : AssetImage('assets/default_profile_image.png')
+                  : const AssetImage('assets/default_profile_image.png')
                       as ImageProvider,
             ),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Text(widget.receiverName),
           ],
         ),
@@ -115,7 +116,7 @@ Future<void> _sendMessage() async {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(
+            image: const AssetImage(
                 'assets/images/paw_print_background.png'), // Arka plan resmi
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
@@ -136,7 +137,7 @@ Future<void> _sendMessage() async {
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       final messages = snapshot.data!.docs;
@@ -164,24 +165,25 @@ Future<void> _sendMessage() async {
                                             null
                                         ? NetworkImage(
                                             _receiverProfileImageUrl!)
-                                        : AssetImage(
+                                        : const AssetImage(
                                                 'assets/default_profile_image.png')
                                             as ImageProvider,
                                   ),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Flexible(
                                   child: Container(
-                                    padding: EdgeInsets.all(12),
+                                    padding: const EdgeInsets.all(12),
                                     margin: EdgeInsets.only(
                                         left: isMe ? 0 : 8,
                                         right: isMe ? 8 : 0),
                                     decoration: BoxDecoration(
                                       color: isMe
-                                          ? Color.fromARGB(255, 147, 58, 142)
+                                          ? const Color.fromARGB(
+                                              255, 147, 58, 142)
                                           : Colors.grey[200],
                                       borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(12),
-                                        topRight: Radius.circular(12),
+                                        topLeft: const Radius.circular(12),
+                                        topRight: const Radius.circular(12),
                                         bottomLeft:
                                             Radius.circular(isMe ? 12 : 0),
                                         bottomRight:
@@ -222,19 +224,20 @@ Future<void> _sendMessage() async {
                               borderSide: BorderSide.none,
                             ),
                             contentPadding:
-                                EdgeInsets.symmetric(horizontal: 16),
+                                const EdgeInsets.symmetric(horizontal: 16),
                           ),
                         ),
                       ),
-                      SizedBox(width: 8),
+                      const SizedBox(width: 8),
                       ElevatedButton(
                         onPressed: _sendMessage,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 147, 58, 142),
-                          shape: CircleBorder(),
-                          padding: EdgeInsets.all(12),
+                          backgroundColor:
+                              const Color.fromARGB(255, 147, 58, 142),
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(12),
                         ),
-                        child: Icon(Icons.send, color: Colors.white),
+                        child: const Icon(Icons.send, color: Colors.white),
                       ),
                     ],
                   ),

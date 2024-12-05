@@ -42,7 +42,7 @@ class _ExampleState extends State<Example> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Veritabanı Testi'),
+        title: const Text('Veritabanı Testi'),
       ),
       body: SafeArea(
         child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
@@ -56,7 +56,7 @@ class _ExampleState extends State<Example> {
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
             final data = snapshot.requireData;
@@ -78,7 +78,7 @@ class _ExampleState extends State<Example> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: Example(),
   ));
 }

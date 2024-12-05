@@ -4,13 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ApplicationStatusPage extends StatelessWidget {
   final String applicationId;
 
-  ApplicationStatusPage({required this.applicationId});
+  const ApplicationStatusPage({required this.applicationId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Başvuru Durumu'),
+        title: const Text('Başvuru Durumu'),
         backgroundColor: Colors.purple[800],
       ),
       body: FutureBuilder<DocumentSnapshot>(
@@ -24,17 +24,17 @@ class ApplicationStatusPage extends StatelessWidget {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData || !snapshot.data!.exists) {
-            return Center(child: Text('Başvuru bulunamadı.'));
+            return const Center(child: Text('Başvuru bulunamadı.'));
           }
 
           var application = snapshot.data!.data() as Map<String, dynamic>;
 
           return Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -49,7 +49,7 @@ class ApplicationStatusPage extends StatelessWidget {
                         value:
                             application['lastUpdated']?.toDate().toString() ??
                                 'Bilinmiyor'),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     if (application['status'] == 'Beklemede') ...[
                       ElevatedButton(
                         onPressed: () {
@@ -59,9 +59,9 @@ class ApplicationStatusPage extends StatelessWidget {
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,
                         ),
-                        child: Text('Onayla'),
+                        child: const Text('Onayla'),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {
                           _updateStatus(context, applicationId, 'Reddedildi');
@@ -70,7 +70,7 @@ class ApplicationStatusPage extends StatelessWidget {
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                         ),
-                        child: Text('Reddet'),
+                        child: const Text('Reddet'),
                       ),
                     ],
                   ],
@@ -110,7 +110,8 @@ class InfoCard extends StatelessWidget {
   final IconData icon;
   final List<Widget> content;
 
-  InfoCard({required this.title, required this.icon, required this.content});
+  const InfoCard(
+      {required this.title, required this.icon, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -119,9 +120,9 @@ class InfoCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -132,7 +133,7 @@ class InfoCard extends StatelessWidget {
                   size: 24,
                   color: Colors.purple[800],
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Text(
                   title,
                   style: TextStyle(
@@ -143,7 +144,7 @@ class InfoCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ...content,
           ],
         ),
@@ -161,7 +162,7 @@ class InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -180,7 +181,7 @@ class InfoRow extends StatelessWidget {
             flex: 3,
             child: Text(
               value ?? 'Bilinmiyor',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
               ),

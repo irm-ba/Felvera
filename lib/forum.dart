@@ -16,11 +16,11 @@ class _ForumPageState extends State<ForumPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Forum'),
+        title: const Text('Forum'),
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                 context,
@@ -41,7 +41,7 @@ class _ForumPageState extends State<ForumPage> {
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
 
               if (snapshot.hasError) {
@@ -50,7 +50,7 @@ class _ForumPageState extends State<ForumPage> {
               }
 
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return Center(child: Text('Henüz veri bulunmuyor.'));
+                return const Center(child: Text('Henüz veri bulunmuyor.'));
               }
 
               return ListView(
@@ -64,7 +64,7 @@ class _ForumPageState extends State<ForumPage> {
                     builder: (context, userSnapshot) {
                       if (userSnapshot.connectionState ==
                           ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
 
                       if (userSnapshot.hasError) {
@@ -93,7 +93,7 @@ class _ForumPageState extends State<ForumPage> {
                         },
                         child: Card(
                           elevation: 8,
-                          margin: EdgeInsets.symmetric(vertical: 8),
+                          margin: const EdgeInsets.symmetric(vertical: 8),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -105,11 +105,12 @@ class _ForumPageState extends State<ForumPage> {
                                 CircleAvatar(
                                   backgroundImage: profileImageUrl != null
                                       ? NetworkImage(profileImageUrl)
-                                      : AssetImage('assets/placeholder.png')
+                                      : const AssetImage(
+                                              'assets/placeholder.png')
                                           as ImageProvider,
                                   radius: 30,
                                 ),
-                                SizedBox(width: 12),
+                                const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -117,23 +118,23 @@ class _ForumPageState extends State<ForumPage> {
                                     children: [
                                       Text(
                                         userName,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                           color:
                                               Color.fromARGB(255, 147, 58, 142),
                                         ),
                                       ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Text(
                                         data['question'] ?? 'Soru yok',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           color:
                                               Color.fromARGB(255, 147, 58, 142),
                                         ),
                                       ),
-                                      SizedBox(height: 8),
+                                      const SizedBox(height: 8),
                                       Text(
                                         _getTimeAgo(data['timestamp']),
                                         style: TextStyle(

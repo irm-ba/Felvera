@@ -5,21 +5,21 @@ class PrivacyPolicyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gizlilik Politikası'),
+        title: const Text('Gizlilik Politikası'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Felvera Gizlilik Politikası',
               style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 147, 58, 142)),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildSection('1. Giriş',
                 'Felvera olarak, kullanıcılarımızın gizliliğine büyük önem veriyoruz. Bu Gizlilik Politikası, uygulamamızın kullanımında topladığımız kişisel bilgilerin nasıl işlendiğini, saklandığını ve korunduğunu açıklamaktadır.'),
             _buildSection('2. Toplanan Bilgiler',
@@ -46,15 +46,15 @@ class PrivacyPolicyPage extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 147, 58, 142)),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             content,
-            style: TextStyle(fontSize: 16, color: Colors.black87),
+            style: const TextStyle(fontSize: 16, color: Colors.black87),
           ),
         ],
       ),

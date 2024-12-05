@@ -16,10 +16,10 @@ class _EventPageState extends State<EventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gönüllük Etkinlikleri'),
+        title: const Text('Gönüllük Etkinlikleri'),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.push(
                 context,
@@ -33,19 +33,20 @@ class _EventPageState extends State<EventPage> {
         stream: FirebaseFirestore.instance.collection('events').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Hata oluştu: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('Henüz etkinlik bulunmamaktadır.'));
+            return const Center(child: Text('Henüz etkinlik bulunmamaktadır.'));
           }
 
           List<QueryDocumentSnapshot> docs = snapshot.data!.docs;
 
           return ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             itemCount: docs.length,
             itemBuilder: (context, index) {
               var doc = docs[index];
@@ -69,7 +70,7 @@ class EventCard extends StatelessWidget {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
       final eventDoc =
-      FirebaseFirestore.instance.collection('events').doc(eventData.id);
+          FirebaseFirestore.instance.collection('events').doc(eventData.id);
 
       // Katılımcı listesine UID ekle
       await eventDoc.update({
@@ -77,11 +78,11 @@ class EventCard extends StatelessWidget {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Etkinliğe katıldınız!')),
+        const SnackBar(content: Text('Etkinliğe katıldınız!')),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Katılmak için giriş yapmalısınız.')),
+        const SnackBar(content: Text('Katılmak için giriş yapmalısınız.')),
       );
     }
   }
@@ -92,7 +93,7 @@ class EventCard extends StatelessWidget {
       onTap: () => _showEventDetails(context),
       child: Card(
         elevation: 8,
-        margin: EdgeInsets.symmetric(vertical: 12.0),
+        margin: const EdgeInsets.symmetric(vertical: 12.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
@@ -101,35 +102,36 @@ class EventCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12.0)),
               child: eventData.imageUrl != null
                   ? Image.network(
-                eventData.imageUrl!,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              )
-                  : Placeholder(fallbackHeight: 200),
+                      eventData.imageUrl!,
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : const Placeholder(fallbackHeight: 200),
             ),
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     eventData.title ?? 'Başlık Yok',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
                       color: Color.fromARGB(255, 147, 58, 142),
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Row(
                     children: [
-                      Icon(Icons.date_range,
+                      const Icon(Icons.date_range,
                           color: Color.fromARGB(255, 170, 169, 170)),
-                      SizedBox(width: 4.0),
+                      const SizedBox(width: 4.0),
                       Text(
                         eventData.date ?? 'Tarih Yok',
                         style: TextStyle(
@@ -140,12 +142,12 @@ class EventCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 4.0),
+                  const SizedBox(height: 4.0),
                   Row(
                     children: [
-                      Icon(Icons.people,
+                      const Icon(Icons.people,
                           color: Color.fromARGB(255, 170, 169, 170)),
-                      SizedBox(width: 4.0),
+                      const SizedBox(width: 4.0),
                       Text(
                         "${eventData.participants?.length} katılımcı",
                         style: TextStyle(
@@ -156,21 +158,21 @@ class EventCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Text(
                     eventData.description ?? 'Açıklama Yok',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       height: 1.5,
                       color: Colors.black87,
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () => joinEvent(context),
-                    child: Text('Etkinliğe Katıl'),
+                    child: const Text('Etkinliğe Katıl'),
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: Color.fromARGB(255, 147, 58, 142),
+                      foregroundColor: const Color.fromARGB(255, 147, 58, 142),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
@@ -195,7 +197,7 @@ class EventCard extends StatelessWidget {
           ),
           title: Text(
             eventData.title ?? 'Başlık Yok',
-            style: TextStyle(
+            style: const TextStyle(
               color: Color.fromARGB(255, 147, 58, 142),
             ),
           ),
@@ -210,7 +212,7 @@ class EventCard extends StatelessWidget {
                     fontStyle: FontStyle.italic,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Text(
                   'Katılımcılar: ${eventData.participants?.length ?? 0}',
                   style: TextStyle(
@@ -219,10 +221,10 @@ class EventCard extends StatelessWidget {
                     fontStyle: FontStyle.italic,
                   ),
                 ),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Text(
                   eventData.description ?? 'Açıklama Yok',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     height: 1.5,
                     color: Colors.black87,
@@ -233,7 +235,7 @@ class EventCard extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              child: Text(
+              child: const Text(
                 'Kapat',
                 style: TextStyle(
                   color: Color.fromARGB(255, 147, 58, 142),

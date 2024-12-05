@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor: Color.fromARGB(255, 243, 234, 241),
+            fillColor: const Color.fromARGB(255, 243, 234, 241),
             prefixIcon: const Icon(
               Icons.person,
               color: Color(0xFF933A8E),
@@ -161,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
               borderSide: BorderSide.none,
             ),
             filled: true,
-            fillColor: Color.fromARGB(255, 243, 234, 241),
+            fillColor: const Color.fromARGB(255, 243, 234, 241),
             prefixIcon: const Icon(
               Icons.lock,
               color: Color(0xFF933A8E),
@@ -220,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     TextField(
                       controller: _emailController,
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                       decoration: InputDecoration(
                         hintText: "E-Posta",
                         hintStyle: TextStyle(color: Colors.grey.shade500),
@@ -243,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
 
                         if (email.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text("Lütfen e-posta adresinizi girin"),
                             ),
                           );
@@ -254,7 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                           await FirebaseAuth.instance
                               .sendPasswordResetEmail(email: email);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content:
                                   Text("Şifre sıfırlama e-postası gönderildi"),
                             ),
@@ -262,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.of(context).pop();
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text("E-posta gönderilemedi"),
                             ),
                           );

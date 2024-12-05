@@ -46,14 +46,14 @@ class _ChatListPageState extends State<ChatListPage> {
 
     // Eğer kullanıcı giriş yapmamışsa bir hata mesajı göster.
     if (currentUserId == null) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(child: Text('Kullanıcı giriş yapmamış.')),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sohbetler'),
+        title: const Text('Sohbetler'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         // Kullanıcının katıldığı sohbetleri Firestore'dan çek
@@ -63,18 +63,18 @@ class _ChatListPageState extends State<ChatListPage> {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           final chats = snapshot.data!.docs;
 
           // Eğer sohbet yoksa
           if (chats.isEmpty) {
-            return Center(child: Text('Henüz sohbet yok.'));
+            return const Center(child: Text('Henüz sohbet yok.'));
           }
 
           return ListView.builder(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
             itemCount: chats.length,
             itemBuilder: (context, index) {
               final chat = chats[index].data() as Map<String, dynamic>;
@@ -90,7 +90,7 @@ class _ChatListPageState extends State<ChatListPage> {
                 future: _getUserInfo(receiverId),
                 builder: (context, userSnapshot) {
                   if (!userSnapshot.hasData) {
-                    return ListTile(
+                    return const ListTile(
                       title: Text('Yükleniyor...'),
                     );
                   }
@@ -100,19 +100,20 @@ class _ChatListPageState extends State<ChatListPage> {
                   final receiverProfileImageUrl = user['profileImageUrl'];
 
                   return Card(
-                    margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
                     elevation: 5.0,
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundImage: receiverProfileImageUrl != null
                             ? NetworkImage(receiverProfileImageUrl)
-                            : AssetImage('assets/default_profile_image.png')
+                            : const AssetImage(
+                                    'assets/default_profile_image.png')
                                 as ImageProvider,
                       ),
                       title: Text(
                         receiverName,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
                         lastMessage,

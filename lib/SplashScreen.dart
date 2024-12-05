@@ -10,19 +10,22 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with RouteAware {
   Timer? _timer; // Zamanlayıcı referansı
-  bool _isNavigated = false; // Navigasyon yapılıp yapılmadığını kontrol eden bayrak
+  bool _isNavigated =
+      false; // Navigasyon yapılıp yapılmadığını kontrol eden bayrak
 
   @override
   void initState() {
     super.initState();
     // Zamanlayıcıyı başlatıyoruz
     _timer = Timer(
-      Duration(seconds: 2), // 10 saniye sonra hedef sayfaya geçiş yapar
-          () {
+      const Duration(seconds: 2), // 10 saniye sonra hedef sayfaya geçiş yapar
+      () {
         if (!_isNavigated) {
-          _isNavigated = true;  // Navigasyon yapılmış olarak işaretle
+          _isNavigated = true; // Navigasyon yapılmış olarak işaretle
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => AuthWrapper()), // `AuthWrapper` widget'ına yönlendirin
+            MaterialPageRoute(
+                builder: (context) =>
+                    AuthWrapper()), // `AuthWrapper` widget'ına yönlendirin
           );
         }
       },
@@ -57,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> with RouteAware {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -72,15 +75,16 @@ class _SplashScreenState extends State<SplashScreen> with RouteAware {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Color(0xFFE4C9E5), // Yuvarlağın rengi
                 ),
-                padding: EdgeInsets.all(60),
-                child: Image.asset('assets/images/logo_felveraa.png', width: 120),
+                padding: const EdgeInsets.all(60),
+                child:
+                    Image.asset('assets/images/logo_felveraa.png', width: 120),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'FELVERA',
                 style: TextStyle(
                   fontSize: 46,

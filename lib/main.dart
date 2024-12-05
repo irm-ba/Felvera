@@ -20,7 +20,7 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-    runApp(MyApp());
+    runApp(const MyApp());
   } catch (e) {
     print("Error initializing Firebase: $e");
   }
@@ -62,12 +62,12 @@ class MyApp extends StatelessWidget {
                 builder: (context) => AuthWrapper(), settings: settings);
         }
       },
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('tr', ''), // Türkçe
         Locale('en', ''), // İngilizce
       ],

@@ -7,7 +7,7 @@ class AdoptionApplicationForm extends StatefulWidget {
   final String petOwnerId;
   final String petId; // Add petId parameter
 
-  AdoptionApplicationForm({
+  const AdoptionApplicationForm({
     required this.petOwnerId,
     required this.petId, // Initialize petId
   });
@@ -30,13 +30,13 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
       TextEditingController();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final Uuid _uuid = Uuid(); // UUID oluşturucu
+  final Uuid _uuid = const Uuid(); // UUID oluşturucu
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Sahiplenme Başvurusu',
           style: TextStyle(
             fontSize: 20,
@@ -57,7 +57,7 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -77,26 +77,26 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
                     color: Colors.purple[800],
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildTextField(
                   controller: _nameController,
                   labelText: 'Adınız ve Soyadınız',
                   prefixIcon: Icons.person,
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildTextField(
                   controller: _emailController,
                   labelText: 'E-posta Adresiniz',
                   keyboardType: TextInputType.emailAddress,
                   prefixIcon: Icons.email,
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildTextField(
                   controller: _addressController,
                   labelText: 'Adresiniz',
                   prefixIcon: Icons.location_on,
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Text(
                   'Başvuru Bilgileri',
                   style: TextStyle(
@@ -105,39 +105,39 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
                     color: Colors.purple[800],
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildTextField(
                   controller: _livingConditionsController,
                   labelText: 'Yaşam Koşullarınız',
                   maxLines: 3,
                   prefixIcon: Icons.home,
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildTextField(
                   controller: _adoptionReasonController,
                   labelText: 'Sahiplenme Nedeni',
                   maxLines: 3,
                   prefixIcon: Icons.notes,
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Center(
                   child: ElevatedButton(
                     onPressed: _submitForm,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.purple[700],
                       foregroundColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 32),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
                       elevation: 8,
                     ),
-                    child: Text('Gönder'),
+                    child: const Text('Gönder'),
                   ),
                 ),
               ],
@@ -162,7 +162,7 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
             color: Colors.black.withOpacity(0.1),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -180,7 +180,8 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide(color: Colors.purple[800]!, width: 2),
           ),
-          contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
           labelStyle: TextStyle(color: Colors.purple[700]),
           fillColor: Colors.white,
           filled: true,
@@ -223,7 +224,7 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Başvurunuz gönderildi')),
+          const SnackBar(content: Text('Başvurunuz gönderildi')),
         );
 
         _nameController.clear();
@@ -233,7 +234,8 @@ class _AdoptionApplicationFormState extends State<AdoptionApplicationForm> {
         _adoptionReasonController.clear();
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Bir hata oluştu, lütfen tekrar deneyin')),
+          const SnackBar(
+              content: Text('Bir hata oluştu, lütfen tekrar deneyin')),
         );
       }
     }

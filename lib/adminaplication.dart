@@ -120,7 +120,7 @@ class _AdminApplicationState extends State<AdminApplication> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Başvuru Detayları',
           style: TextStyle(
             fontSize: 16.0,
@@ -131,7 +131,7 @@ class _AdminApplicationState extends State<AdminApplication> {
         elevation: 4.0,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : _errorMessage != null
               ? Center(child: Text(_errorMessage!))
               : Padding(
@@ -146,7 +146,7 @@ class _AdminApplicationState extends State<AdminApplication> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       _buildActionButtons(),
                     ],
                   ),
@@ -167,14 +167,14 @@ class _AdminApplicationState extends State<AdminApplication> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      margin: EdgeInsets.symmetric(vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
       color: Colors.white,
       child: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Başvuru Durumu',
               style: TextStyle(
                 fontSize: 18,
@@ -182,13 +182,13 @@ class _AdminApplicationState extends State<AdminApplication> {
                 color: Color.fromARGB(255, 147, 58, 142),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Chip(
                   label: Text(
                     status,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -198,7 +198,7 @@ class _AdminApplicationState extends State<AdminApplication> {
               ],
             ),
             Divider(color: Colors.grey[400], height: 30),
-            Text(
+            const Text(
               'Başvuran Detayları',
               style: TextStyle(
                 fontSize: 18,
@@ -206,7 +206,7 @@ class _AdminApplicationState extends State<AdminApplication> {
                 color: Color.fromARGB(255, 147, 58, 142),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             if (_showName)
               _buildDetailRow('İsim',
                   '${_userData?['firstName']} ${_userData?['lastName']}'),
@@ -214,7 +214,7 @@ class _AdminApplicationState extends State<AdminApplication> {
               _buildDetailRow(
                   'E-posta', _userData?['email'] ?? 'Bilgi mevcut değil'),
             Divider(color: Colors.grey[400], height: 30),
-            Text(
+            const Text(
               'Hayvan Detayları',
               style: TextStyle(
                 fontSize: 18,
@@ -222,7 +222,7 @@ class _AdminApplicationState extends State<AdminApplication> {
                 color: Color.fromARGB(255, 147, 58, 142),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             if (_showPetName)
               _buildDetailRow(
                   'Hayvan', _petData?['name'] ?? 'Bilgi mevcut değil'),
@@ -233,7 +233,7 @@ class _AdminApplicationState extends State<AdminApplication> {
               _buildDetailRow(
                   'Irk', _petData?['breed'] ?? 'Bilgi mevcut değil'),
             Divider(color: Colors.grey[400], height: 30),
-            Text(
+            const Text(
               'Başvuru Detayları',
               style: TextStyle(
                 fontSize: 18,
@@ -241,7 +241,7 @@ class _AdminApplicationState extends State<AdminApplication> {
                 color: Color.fromARGB(255, 147, 58, 142),
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             if (_showAdoptionReason)
               _buildDetailRow('Başvuru Nedeni',
                   _applicationData?['adoptionReason'] ?? 'Bilgi mevcut değil'),
@@ -264,7 +264,7 @@ class _AdminApplicationState extends State<AdminApplication> {
         children: [
           Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Color.fromARGB(255, 147, 58, 142),
@@ -274,7 +274,7 @@ class _AdminApplicationState extends State<AdminApplication> {
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black87,
               ),
@@ -298,24 +298,26 @@ class _AdminApplicationState extends State<AdminApplication> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
-              icon: Icon(Icons.check),
-              label: Text('Onayla'),
+              icon: const Icon(Icons.check),
+              label: const Text('Onayla'),
             ),
             ElevatedButton.icon(
               onPressed: () => _updateApplicationStatus('Reddedildi'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               ),
-              icon: Icon(Icons.close),
-              label: Text('Reddet'),
+              icon: const Icon(Icons.close),
+              label: const Text('Reddet'),
             ),
           ],
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         if (status == 'Onaylandı')
           ElevatedButton.icon(
             onPressed: () async {
@@ -341,12 +343,12 @@ class _AdminApplicationState extends State<AdminApplication> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 147, 58, 142),
+              backgroundColor: const Color.fromARGB(255, 147, 58, 142),
               foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
-            icon: Icon(Icons.message),
-            label: Text('Mesajlaş'),
+            icon: const Icon(Icons.message),
+            label: const Text('Mesajlaş'),
           ),
       ],
     );

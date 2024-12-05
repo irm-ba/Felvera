@@ -6,7 +6,7 @@ class AnswersPage extends StatefulWidget {
   final String questionId;
   final Map<String, dynamic> questionData;
 
-  AnswersPage({required this.questionId, required this.questionData});
+  const AnswersPage({required this.questionId, required this.questionData});
 
   @override
   _AnswersPageState createState() => _AnswersPageState();
@@ -24,7 +24,7 @@ class _AnswersPageState extends State<AnswersPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Yanıtlar'),
+        title: const Text('Yanıtlar'),
       ),
       body: Column(
         children: [
@@ -40,12 +40,12 @@ class _AnswersPageState extends State<AnswersPage> {
 
   Widget _buildQuestionCard() {
     return Container(
-      padding: EdgeInsets.all(20.0),
-      margin: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(20.0),
+      margin: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.0),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 8.0,
@@ -58,32 +58,32 @@ class _AnswersPageState extends State<AnswersPage> {
         children: [
           Text(
             widget.questionData['question'] ?? 'Soru bulunamadı',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
               color: Color.fromARGB(255, 147, 58, 142), // Main theme color
             ),
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           Text(
             "Soran: ${widget.questionData['userName'] ?? 'Anonim'}",
             style: TextStyle(color: Colors.grey[600]),
           ),
-          SizedBox(height: 10.0),
+          const SizedBox(height: 10.0),
           if (widget.questionData['imageUrls'] != null &&
               widget.questionData['imageUrls'] is List &&
               (widget.questionData['imageUrls'] as List).isNotEmpty)
             Container(
               height: 200.0, // Görsellerin yüksekliği
-              margin: EdgeInsets.only(top: 10.0),
+              margin: const EdgeInsets.only(top: 10.0),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: (widget.questionData['imageUrls'] as List).length,
                 itemBuilder: (context, index) {
                   String imageUrl =
-                  (widget.questionData['imageUrls'] as List)[index];
+                      (widget.questionData['imageUrls'] as List)[index];
                   return Padding(
-                    padding: EdgeInsets.only(right: 10.0),
+                    padding: const EdgeInsets.only(right: 10.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: Image.network(
@@ -93,12 +93,12 @@ class _AnswersPageState extends State<AnswersPage> {
                         fit: BoxFit.cover,
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
-                          return Center(
+                          return const Center(
                             child: CircularProgressIndicator(),
                           );
                         },
                         errorBuilder: (context, error, stackTrace) =>
-                            Icon(Icons.broken_image, size: 50),
+                            const Icon(Icons.broken_image, size: 50),
                       ),
                     ),
                   );
@@ -110,7 +110,6 @@ class _AnswersPageState extends State<AnswersPage> {
     );
   }
 
-
   Widget _buildAnswersList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
@@ -121,7 +120,7 @@ class _AnswersPageState extends State<AnswersPage> {
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.hasError) {
@@ -129,7 +128,7 @@ class _AnswersPageState extends State<AnswersPage> {
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return Center(child: Text('Henüz yanıt bulunmuyor.'));
+          return const Center(child: Text('Henüz yanıt bulunmuyor.'));
         }
 
         return ListView(
@@ -144,7 +143,7 @@ class _AnswersPageState extends State<AnswersPage> {
                   .get(),
               builder: (context, userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (userSnapshot.hasError) {
@@ -167,12 +166,12 @@ class _AnswersPageState extends State<AnswersPage> {
   Widget _buildAnswerCard(
       Map<String, dynamic> data, Map<String, dynamic>? userData) {
     return Container(
-      padding: EdgeInsets.all(15.0),
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.all(15.0),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.0),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 8.0,
@@ -184,10 +183,10 @@ class _AnswersPageState extends State<AnswersPage> {
         leading: CircleAvatar(
           backgroundImage: userData?['profileImageUrl'] != null
               ? NetworkImage(userData!['profileImageUrl'])
-              : AssetImage('assets/default_avatar.png') as ImageProvider,
-          backgroundColor: Color.fromARGB(255, 147, 58, 142),
+              : const AssetImage('assets/default_avatar.png') as ImageProvider,
+          backgroundColor: const Color.fromARGB(255, 147, 58, 142),
           child: userData?['profileImageUrl'] == null
-              ? Icon(Icons.person, color: Colors.white)
+              ? const Icon(Icons.person, color: Colors.white)
               : null,
         ),
         title: Text(data['answer'] ?? 'Yanıt bulunamadı'),
@@ -201,8 +200,8 @@ class _AnswersPageState extends State<AnswersPage> {
 
   Widget _buildAnswerInputSection() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      color: Color.fromARGB(255, 147, 58, 142),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+      color: const Color.fromARGB(255, 147, 58, 142),
       child: Row(
         children: [
           Expanded(
@@ -210,7 +209,7 @@ class _AnswersPageState extends State<AnswersPage> {
               controller: _answerController,
               decoration: InputDecoration(
                 hintText: 'Cevabınızı yazın...',
-                hintStyle: TextStyle(color: Colors.white70),
+                hintStyle: const TextStyle(color: Colors.white70),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -219,23 +218,23 @@ class _AnswersPageState extends State<AnswersPage> {
                 fillColor: Colors.white.withOpacity(0.1),
               ),
               maxLines: null,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           ElevatedButton(
             onPressed: _isSubmitting ? null : _submitAnswer,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
-              foregroundColor: Color.fromARGB(255, 147, 58, 142),
+              foregroundColor: const Color.fromARGB(255, 147, 58, 142),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
             child: _isSubmitting
-                ? CircularProgressIndicator(
+                ? const CircularProgressIndicator(
                     color: Color.fromARGB(255, 147, 58, 142))
-                : Text('Gönder'),
+                : const Text('Gönder'),
           ),
         ],
       ),
@@ -245,7 +244,7 @@ class _AnswersPageState extends State<AnswersPage> {
   Future<void> _submitAnswer() async {
     if (_answerController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Yanıt boş bırakılamaz.')),
+        const SnackBar(content: Text('Yanıt boş bırakılamaz.')),
       );
       return;
     }
@@ -271,12 +270,13 @@ class _AnswersPageState extends State<AnswersPage> {
 
         _answerController.clear();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Yanıtınız gönderildi!')),
+          const SnackBar(content: Text('Yanıtınız gönderildi!')),
         );
       } catch (e) {
         print("Yanıt gönderme hatası: $e");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Bir hata oluştu, lütfen tekrar deneyin.')),
+          const SnackBar(
+              content: Text('Bir hata oluştu, lütfen tekrar deneyin.')),
         );
       } finally {
         setState(() {
@@ -288,7 +288,7 @@ class _AnswersPageState extends State<AnswersPage> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     title: 'Forum Yanıtları',
     home: AnswersPage(
       questionId: 'exampleQuestionId',

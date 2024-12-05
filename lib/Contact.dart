@@ -42,7 +42,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
 """;
 
     final smtpServer =
-    gmail(senderEmail, senderPassword); // Gmail SMTP sunucusu
+        gmail(senderEmail, senderPassword); // Gmail SMTP sunucusu
 
     final message = Message()
       ..from = Address(senderEmail, 'Felvera Uygulaması Üzerinden')
@@ -57,7 +57,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
       final sendReport = await send(message, smtpServer);
       print('Mesaj gönderildi: ' + sendReport.toString());
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("E-posta başarıyla gönderildi")),
+        const SnackBar(content: Text("E-posta başarıyla gönderildi")),
       );
     } catch (e) {
       print('Mesaj gönderilemedi: $e');
@@ -81,12 +81,12 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
         'timestamp': FieldValue.serverTimestamp(),
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Veri başarıyla kaydedildi")),
+        const SnackBar(content: Text("Veri başarıyla kaydedildi")),
       );
     } catch (e) {
       print('Veri kaydedilemedi: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Veri kaydedilemedi")),
+        const SnackBar(content: Text("Veri kaydedilemedi")),
       );
     }
   }
@@ -97,7 +97,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
 
     if (selectedSubject == null || userMessage.isEmpty || userMail.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Lütfen tüm alanları doldurun")),
+        const SnackBar(content: Text("Lütfen tüm alanları doldurun")),
       );
       return;
     }
@@ -112,7 +112,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bize Ulaşın'),
+        title: const Text('Bize Ulaşın'),
         elevation: 0,
       ),
       body: Stack(
@@ -127,7 +127,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Bizimle İletişime Geçin',
                   style: TextStyle(
                     fontSize: 28,
@@ -135,7 +135,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     color: Color.fromARGB(255, 147, 58, 142),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Material(
                   elevation: 6,
                   shadowColor: Colors.black.withOpacity(0.3),
@@ -143,7 +143,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                   child: Container(
                     width: double.infinity, // Genişliği tam boy yapar
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
+                    child: const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -173,7 +173,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Material(
                   elevation: 6,
                   shadowColor: Colors.black.withOpacity(0.3),
@@ -182,7 +182,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: DropdownButtonFormField<String>(
                       value: selectedSubject,
-                      hint: Text('Konu Seçin'),
+                      hint: const Text('Konu Seçin'),
                       onChanged: (String? newValue) {
                         setState(() {
                           selectedSubject = newValue;
@@ -198,7 +198,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                           child: Text(value),
                         );
                       }).toList(),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.topic,
                             color: Color.fromARGB(255, 147, 58, 142)),
                         labelText: 'Konu',
@@ -208,7 +208,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Material(
                   elevation: 6,
                   shadowColor: Colors.black.withOpacity(0.3),
@@ -217,7 +217,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: TextField(
                       controller: _emailController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.email,
                             color: Color.fromARGB(255, 147, 58, 142)),
                         labelText: 'E-posta Adresiniz',
@@ -227,7 +227,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Material(
                   elevation: 6,
                   shadowColor: Colors.black.withOpacity(0.3),
@@ -237,7 +237,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     child: TextField(
                       controller: _bodyController,
                       maxLines: 5,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.message,
                             color: Color.fromARGB(255, 147, 58, 142)),
                         labelText: 'Mesajınız',
@@ -247,24 +247,24 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                     ),
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Center(
                   child: ElevatedButton(
                     onPressed: isLoading ? null : _handleSubmit,
                     style: ElevatedButton.styleFrom(
-                      padding:
-                      EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 50, vertical: 15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      backgroundColor: Color.fromARGB(255, 147, 58, 142),
+                      backgroundColor: const Color.fromARGB(255, 147, 58, 142),
                     ),
                     child: isLoading
-                        ? CircularProgressIndicator()
-                        : Text(
-                      'Gönder',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
+                        ? const CircularProgressIndicator()
+                        : const Text(
+                            'Gönder',
+                            style: TextStyle(fontSize: 18, color: Colors.white),
+                          ),
                   ),
                 ),
               ],
@@ -280,7 +280,7 @@ class BackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color.fromARGB(255, 239, 229, 245)
+      ..color = const Color.fromARGB(255, 239, 229, 245)
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(Offset(size.width * 0.2, size.height * 0.3), 150, paint);

@@ -5,14 +5,14 @@ class AboutUsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hakkımızda'),
+        title: const Text('Hakkımızda'),
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _buildHeroSection(),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             _buildSection(
               title: 'Misyonumuz',
               content:
@@ -20,7 +20,7 @@ class AboutUsPage extends StatelessWidget {
               color: Colors.orange,
               icon: Icons.pets,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             _buildSection(
               title: 'Vizyonumuz',
               content:
@@ -28,7 +28,7 @@ class AboutUsPage extends StatelessWidget {
               color: Colors.blue,
               icon: Icons.visibility,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             _buildSection(
               title: 'Neden Biz?',
               content:
@@ -36,7 +36,7 @@ class AboutUsPage extends StatelessWidget {
               color: Colors.green,
               icon: Icons.favorite,
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             _buildContactSection(),
           ],
         ),
@@ -46,8 +46,8 @@ class AboutUsPage extends StatelessWidget {
 
   Widget _buildHeroSection() {
     return Container(
-      padding: EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.all(20.0),
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
             Color.fromARGB(255, 147, 58, 142),
@@ -68,7 +68,7 @@ class AboutUsPage extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -98,12 +98,12 @@ class AboutUsPage extends StatelessWidget {
       required Color color,
       required IconData icon}) {
     return Container(
-      padding: EdgeInsets.all(15.0),
-      margin: EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.all(15.0),
+      margin: const EdgeInsets.symmetric(horizontal: 15.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15.0),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 8.0,
@@ -115,14 +115,14 @@ class AboutUsPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               color: color.withOpacity(0.2),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, size: 30.0, color: color),
           ),
-          SizedBox(width: 15.0),
+          const SizedBox(width: 15.0),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,10 +135,10 @@ class AboutUsPage extends StatelessWidget {
                     color: color,
                   ),
                 ),
-                SizedBox(height: 10.0),
+                const SizedBox(height: 10.0),
                 Text(
                   content,
-                  style: TextStyle(fontSize: 16.0, color: Colors.black87),
+                  style: const TextStyle(fontSize: 16.0, color: Colors.black87),
                 ),
               ],
             ),
@@ -150,12 +150,12 @@ class AboutUsPage extends StatelessWidget {
 
   Widget _buildContactSection() {
     return Container(
-      padding: EdgeInsets.all(15.0),
-      margin: EdgeInsets.symmetric(horizontal: 15.0),
+      padding: const EdgeInsets.all(15.0),
+      margin: const EdgeInsets.symmetric(horizontal: 15.0),
       decoration: BoxDecoration(
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(15.0),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 8.0,
@@ -163,7 +163,7 @@ class AboutUsPage extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(

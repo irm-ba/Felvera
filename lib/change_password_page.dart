@@ -25,10 +25,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           // Şifreyi güncelle
           await user.updatePassword(_newPasswordController.text);
           await user.reload(); // Kullanıcı oturumunu yeniden yükleyin
-          FirebaseAuth.instance.currentUser?.getIdToken(true); // Token'ı yenileyin
+          FirebaseAuth.instance.currentUser
+              ?.getIdToken(true); // Token'ı yenileyin
 
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Şifre başarıyla değiştirildi')),
+            const SnackBar(content: Text('Şifre başarıyla değiştirildi')),
           );
           Navigator.pop(context); // Geri dön
         }
@@ -44,8 +45,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Şifre Değiştir'),
-
+        title: const Text('Şifre Değiştir'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -55,7 +55,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             children: [
               TextFormField(
                 controller: _currentPasswordController,
-                decoration: InputDecoration(labelText: 'Mevcut Şifre'),
+                decoration: const InputDecoration(labelText: 'Mevcut Şifre'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -66,7 +66,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               TextFormField(
                 controller: _newPasswordController,
-                decoration: InputDecoration(labelText: 'Yeni Şifre'),
+                decoration: const InputDecoration(labelText: 'Yeni Şifre'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -80,7 +80,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ),
               TextFormField(
                 controller: _confirmPasswordController,
-                decoration: InputDecoration(labelText: 'Yeni Şifre (Tekrar)'),
+                decoration:
+                    const InputDecoration(labelText: 'Yeni Şifre (Tekrar)'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -92,12 +93,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _changePassword,
-                child: Text('Şifreyi Değiştir'),
+                child: const Text('Şifreyi Değiştir'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 147, 58,142),
+                  backgroundColor: const Color.fromARGB(255, 147, 58, 142),
                   foregroundColor: Colors.white,
                 ),
               ),

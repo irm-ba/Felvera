@@ -10,14 +10,14 @@ class AdoptionApplicationsPage extends StatelessWidget {
     final userId = FirebaseAuth.instance.currentUser?.uid;
 
     if (userId == null) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(child: Text('Kullanıcı oturum açmamış.')),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Başvuru Listesi',
           style: TextStyle(
             color: Color.fromARGB(255, 147, 58, 142),
@@ -36,11 +36,11 @@ class AdoptionApplicationsPage extends StatelessWidget {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('Başvuru bulunamadı.'));
+            return const Center(child: Text('Başvuru bulunamadı.'));
           }
 
           var applications = snapshot.data!.docs;
@@ -49,7 +49,7 @@ class AdoptionApplicationsPage extends StatelessWidget {
             future: _fetchPetsDetails(applications),
             builder: (context, petsSnapshot) {
               if (petsSnapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               }
 
               if (petsSnapshot.hasError) {
@@ -58,7 +58,7 @@ class AdoptionApplicationsPage extends StatelessWidget {
               }
 
               if (!petsSnapshot.hasData || petsSnapshot.data!.isEmpty) {
-                return Center(child: Text('Hayvan bilgileri alınamadı.'));
+                return const Center(child: Text('Hayvan bilgileri alınamadı.'));
               }
 
               var petsDetails = petsSnapshot.data!;
@@ -67,7 +67,7 @@ class AdoptionApplicationsPage extends StatelessWidget {
                 itemCount: applications.length,
                 itemBuilder: (context, index) {
                   if (index >= petsDetails.length) {
-                    return Center(child: Text('Hayvan bilgileri eksik.'));
+                    return const Center(child: Text('Hayvan bilgileri eksik.'));
                   }
 
                   var application = applications[index];
@@ -78,14 +78,14 @@ class AdoptionApplicationsPage extends StatelessWidget {
                   String petName = petDetails?.name ?? 'Bilinmiyor';
 
                   return Card(
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
                     elevation: 5.0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.0),
                     ),
                     child: ListTile(
-                      contentPadding: EdgeInsets.all(16.0),
+                      contentPadding: const EdgeInsets.all(16.0),
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: imageUrl.isNotEmpty
@@ -95,16 +95,17 @@ class AdoptionApplicationsPage extends StatelessWidget {
                                 height: 60,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
-                                  return Icon(Icons.error, color: Colors.red);
+                                  return const Icon(Icons.error,
+                                      color: Colors.red);
                                 },
                               )
-                            : Icon(Icons.pets,
+                            : const Icon(Icons.pets,
                                 color: Color.fromARGB(255, 147, 58, 142),
                                 size: 60.0),
                       ),
                       title: Text(
                         petName,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18.0,
                         ),
@@ -113,7 +114,7 @@ class AdoptionApplicationsPage extends StatelessWidget {
                         'Başvuru Sahibi: ${application['name'] ?? 'Bilinmiyor'}\n' +
                             (application['adoptionReason'] ??
                                 'Neden belirtilmemiş'),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14.0,
                           color: Colors.black54,
                         ),

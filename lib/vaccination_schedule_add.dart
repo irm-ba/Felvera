@@ -71,13 +71,14 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
           });
 
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Aşı takvimi eklendi!')),
+            const SnackBar(content: Text('Aşı takvimi eklendi!')),
           );
           Navigator.pop(context);
         } catch (e) {
           print('Error adding vaccination schedule: $e');
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Aşı takvimi eklenirken bir hata oluştu.')),
+            const SnackBar(
+                content: Text('Aşı takvimi eklenirken bir hata oluştu.')),
           );
         } finally {
           setState(() {
@@ -120,10 +121,10 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                               .headlineSmall
                               ?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 147, 58, 142),
+                                color: const Color.fromARGB(255, 147, 58, 142),
                               ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         GestureDetector(
                           onTap: _pickImage, // Resim ekleme fonksiyonu
                           child: _selectedImage == null
@@ -138,8 +139,8 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                                       children: [
                                         Icon(Icons.add_a_photo,
                                             color: Colors.grey[600]),
-                                        SizedBox(width: 8),
-                                        Text('Hayvan Resmi Ekle'),
+                                        const SizedBox(width: 8),
+                                        const Text('Hayvan Resmi Ekle'),
                                       ],
                                     ),
                                   ),
@@ -152,15 +153,15 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                                       height: 100,
                                       fit: BoxFit.cover,
                                     ),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     TextButton(
                                       onPressed: _pickImage,
-                                      child: Text('Resmi Değiştir'),
+                                      child: const Text('Resmi Değiştir'),
                                     ),
                                   ],
                                 ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         _buildTextField(
                           controller: _descriptionController,
                           label: 'Açıklama',
@@ -171,7 +172,7 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                             return null;
                           },
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         GestureDetector(
                           onTap: _selectDateRange,
                           child: AbsorbPointer(
@@ -188,24 +189,25 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Center(
                   child: _isLoading
-                      ? CircularProgressIndicator()
+                      ? const CircularProgressIndicator()
                       : ElevatedButton(
                           onPressed: _saveVaccinationSchedule,
                           child: const Text('Kaydet'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 147, 58, 142),
+                            backgroundColor:
+                                const Color.fromARGB(255, 147, 58, 142),
                             foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 24, vertical: 12),
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
@@ -262,7 +264,8 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
         ),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       validator: validator,
     );

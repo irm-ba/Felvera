@@ -99,30 +99,30 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
                     title: 'Açıklama',
                     content: widget.lostAnimal.description,
                     icon: Icons.description,
-                    iconColor: Color(0xFFC478D1), // Ana renk
+                    iconColor: const Color(0xFFC478D1), // Ana renk
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   buildInfoCard(
                     title: 'Yaş',
                     content: '${widget.lostAnimal.age} yaşında',
                     icon: Icons.calendar_today,
                     iconColor: Colors.orange[800]!,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   buildInfoCard(
                     title: 'Cinsiyet',
                     content: widget.lostAnimal.isGenderMale ? 'Erkek' : 'Dişi',
                     icon: Icons.pets,
                     iconColor: Colors.blue[800]!,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   buildInfoCard(
                     title: 'Konum',
                     content: widget.lostAnimal.location,
                     icon: Icons.location_on,
                     iconColor: Colors.red[800]!,
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   buildContactInfo(context, currentUserId),
                 ],
               ),
@@ -146,7 +146,7 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
           ),
           fit: BoxFit.cover,
         ),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
       ),
       child: Align(
         alignment: Alignment.bottomLeft,
@@ -158,11 +158,12 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
               begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
             ),
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+            borderRadius:
+                const BorderRadius.vertical(bottom: Radius.circular(30)),
           ),
           child: Text(
             widget.lostAnimal.name,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 26,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -187,7 +188,7 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
           borderRadius: BorderRadius.circular(20),
         ),
         child: ListTile(
-          contentPadding: EdgeInsets.all(16),
+          contentPadding: const EdgeInsets.all(16),
           leading: CircleAvatar(
             backgroundColor: iconColor.withOpacity(0.2),
             child: Icon(icon, color: iconColor),
@@ -223,7 +224,7 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 8,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -238,7 +239,7 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
               color: Colors.purple[800],
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             'E-posta: ${receiverEmail ?? 'Bilgi mevcut değil'}',
             style: TextStyle(
@@ -246,7 +247,7 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
               color: Colors.grey[700],
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           // Kodun mevcut haline ek olarak değiştirilecek kısım
           ElevatedButton(
             onPressed: () async {
@@ -287,7 +288,7 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
               } else {
                 // Kullanıcı bilgileri mevcut değilse bir uyarı göster
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text(
                         'Mesaj gönderebilmek için oturum açmış olmalısınız.'),
                   ),
@@ -295,19 +296,20 @@ class _LostAnimalDetailsScreenState extends State<LostAnimalDetailsScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFC478D1), // Ana renk (mor tonları)
+              backgroundColor:
+                  const Color(0xFFC478D1), // Ana renk (mor tonları)
               foregroundColor: Colors.white, // Yazı rengi beyaz
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   vertical: 16.0, horizontal: 24.0), // Düğme içi boşluklar
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12), // Köşe yuvarlama
               ),
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 fontSize: 16, // Yazı boyutu
                 fontWeight: FontWeight.bold, // Yazı kalınlığı
               ),
             ),
-            child: Text('Mesaj Gönder'),
+            child: const Text('Mesaj Gönder'),
           )
         ],
       ),
