@@ -153,14 +153,7 @@ Yanıtlamak için lütfen bu e-posta adresini kullanın: $userEmail
                             color: Colors.black87,
                           ),
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Telefon: +90 545 403 47 42',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.black87,
-                          ),
-                        ),
+
                         SizedBox(height: 8),
                         Text(
                           'E-posta: felveraa@gmail.com',

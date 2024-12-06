@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:felvera/models/pet_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../account.dart';
 
@@ -15,13 +18,15 @@ class EditPetPage extends StatefulWidget {
 
 class _EditPetPageState extends State<EditPetPage> {
   final _formKey = GlobalKey<FormState>();
-
   late TextEditingController _nameController;
   late TextEditingController _ageController;
   late TextEditingController _healthStatusController;
   late TextEditingController _animalTypeController;
   late TextEditingController _locationController;
   late TextEditingController _descriptionController;
+
+  File? _selectedImage;
+  String? _uploadedImageUrl;
 
   @override
   void initState() {
@@ -34,6 +39,7 @@ class _EditPetPageState extends State<EditPetPage> {
     _locationController = TextEditingController(text: widget.pet.location);
     _descriptionController =
         TextEditingController(text: widget.pet.description);
+    _uploadedImageUrl = widget.pet.imageUrl; // Mevcut resim URL'sini al
   }
 
   @override
@@ -47,9 +53,40 @@ class _EditPetPageState extends State<EditPetPage> {
     super.dispose();
   }
 
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    if (_selectedImage != null) {
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('pet_images/${widget.pet.petId}');
+      final uploadTask = storageRef.putFile(_selectedImage!);
+
+      final snapshot = await uploadTask.whenComplete(() {});
+      final imageUrl = await snapshot.ref.getDownloadURL();
+
+      setState(() {
+        _uploadedImageUrl = imageUrl;
+      });
+    }
+  }
+
   Future<void> _saveChanges() async {
     if (_formKey.currentState!.validate()) {
       try {
+        if (_selectedImage != null) {
+          await _uploadImage();
+        }
+
         await FirebaseFirestore.instance
             .collection('pet')
             .doc(widget.pet.petId)
@@ -60,6 +97,7 @@ class _EditPetPageState extends State<EditPetPage> {
           'animalType': _animalTypeController.text.trim(),
           'location': _locationController.text.trim(),
           'description': _descriptionController.text.trim(),
+          'imageUrl': _uploadedImageUrl,
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -80,8 +118,9 @@ class _EditPetPageState extends State<EditPetPage> {
     }
   }
 
-  Future<void> _deletePet() async {
+  void _deletePet() async {
     try {
+      // Firestore'dan hayvan kaydını sil
       await FirebaseFirestore.instance
           .collection('pet')
           .doc(widget.pet.petId)
@@ -91,18 +130,14 @@ class _EditPetPageState extends State<EditPetPage> {
         SnackBar(content: Text('Hayvan başarıyla silindi!')),
       );
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AccountPage(),
-        ),
-      );// Kullanıcıyı önceki ekrana yönlendir
+      Navigator.pop(context); // Silme işleminden sonra geri dön
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Silme sırasında hata oluştu: $e')),
+        SnackBar(content: Text('Hayvan silinirken bir hata oluştu: $e')),
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -110,11 +145,11 @@ class _EditPetPageState extends State<EditPetPage> {
       appBar: AppBar(
         title: Text(
           'Hayvanı Düzenle',
-          style: TextStyle(color: Colors.purple[800]),
+          style: TextStyle(color: Color.fromARGB(255, 147, 58, 142)),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: Colors.purple[800]),
+        iconTheme: IconThemeData(color: Color.fromARGB(255, 147, 58, 142)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -122,6 +157,32 @@ class _EditPetPageState extends State<EditPetPage> {
           key: _formKey,
           child: ListView(
             children: [
+              GestureDetector(
+                onTap: _pickImage,
+                child: Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: _selectedImage != null
+                      ? Image.file(
+                    _selectedImage!,
+                    fit: BoxFit.cover,
+                  )
+                      : _uploadedImageUrl != null
+                      ? Image.network(
+                    _uploadedImageUrl!,
+                    fit: BoxFit.cover,
+                  )
+                      : Icon(
+                    Icons.add_a_photo,
+                    color: Colors.grey,
+                    size: 50,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
               _buildTextField(
                 controller: _nameController,
                 label: 'Adı',
@@ -157,8 +218,9 @@ class _EditPetPageState extends State<EditPetPage> {
                 onPressed: _saveChanges,
                 child: Text('Değişiklikleri Kaydet'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple[800],
+                  backgroundColor: Color.fromARGB(255, 147, 58, 142),
                   padding: EdgeInsets.symmetric(vertical: 16),
+                  foregroundColor: Colors.white,
                   textStyle: TextStyle(fontSize: 18),
                 ),
               ),
@@ -169,6 +231,7 @@ class _EditPetPageState extends State<EditPetPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   padding: EdgeInsets.symmetric(vertical: 16),
+                  foregroundColor: Colors.white,
                   textStyle: TextStyle(fontSize: 18),
                 ),
               ),

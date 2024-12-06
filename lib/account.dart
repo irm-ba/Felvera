@@ -222,7 +222,7 @@ class _AccountPageState extends State<AccountPage>
               Text(
                 _userData?['firstName'] ?? 'Kullanıcı Adı',
                 style: TextStyle(
-                  fontSize: SizeConfig.screenWidth * 0.02,
+                  fontSize: SizeConfig.screenWidth * 0.05,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -337,7 +337,7 @@ class _AccountPageState extends State<AccountPage>
                     padding: EdgeInsets.all(8),
                     child: Icon(
                       Icons.edit,
-                      color: Colors.blue,
+                      color: Color.fromARGB(255, 147, 58, 142),
                       size: 20,
                     ),
                   ),
