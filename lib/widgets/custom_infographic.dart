@@ -20,20 +20,20 @@ class CustomInfographic extends StatelessWidget {
         CircleAvatar(
           backgroundColor: color,
           radius: 24,
-          child: Icon(Icons.pets, color: Colors.white),
+          child: const Icon(Icons.pets, color: Colors.white),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             color: Colors.grey,
           ),

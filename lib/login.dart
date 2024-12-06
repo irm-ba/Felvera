@@ -1,13 +1,14 @@
 import 'package:felvera/Contact.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felvera/screens/home.dart';
 import 'sign_up.dart';
 import 'size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -47,8 +48,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    //buradan-------------------------------------
-    // Ekran genişliğini alıyoruz
     double screenWidth = MediaQuery.of(context).size.width;
 
     double horizontalPadding = screenWidth;
@@ -101,11 +100,11 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical!),
+          padding: EdgeInsets.only(top: SizeConfig.blockSizeVertical),
           child: Image.asset('assets/images/felvera.png',
-              height: SizeConfig.blockSizeVertical! * 25),
+              height: SizeConfig.blockSizeVertical * 25),
         ),
-        SizedBox(height: SizeConfig.blockSizeVertical!),
+        SizedBox(height: SizeConfig.blockSizeVertical),
         const Text(
           "HOŞGELDİNİZ",
           style: TextStyle(
@@ -114,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
             color: Color(0xFF933A8E),
           ),
         ),
-        SizedBox(height: SizeConfig.blockSizeVertical!),
+        SizedBox(height: SizeConfig.blockSizeVertical),
         const Text(
           "Hayvan dostlarımız yuva bulsun",
           style: TextStyle(
@@ -146,8 +145,8 @@ class _LoginPageState extends State<LoginPage> {
               color: Color(0xFF933A8E),
             ),
             contentPadding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.blockSizeHorizontal! * 5,
-              vertical: SizeConfig.blockSizeVertical! * 2,
+              horizontal: SizeConfig.blockSizeHorizontal * 5,
+              vertical: SizeConfig.blockSizeVertical * 2,
             ),
           ),
         ),
@@ -167,8 +166,8 @@ class _LoginPageState extends State<LoginPage> {
               color: Color(0xFF933A8E),
             ),
             contentPadding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.blockSizeHorizontal! * 5,
-              vertical: SizeConfig.blockSizeVertical! * 2,
+              horizontal: SizeConfig.blockSizeHorizontal * 5,
+              vertical: SizeConfig.blockSizeVertical * 2,
             ),
           ),
           obscureText: true,
@@ -227,8 +226,8 @@ class _LoginPageState extends State<LoginPage> {
                         filled: true,
                         fillColor: Colors.grey.shade100,
                         contentPadding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.blockSizeVertical! * 2,
-                          horizontal: SizeConfig.blockSizeHorizontal! * 4,
+                          vertical: SizeConfig.blockSizeVertical * 2,
+                          horizontal: SizeConfig.blockSizeHorizontal * 4,
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
@@ -236,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: SizeConfig.blockSizeVertical! * 2),
+                    SizedBox(height: SizeConfig.blockSizeVertical * 2),
                     ElevatedButton(
                       onPressed: () async {
                         String email = _emailController.text.trim();
@@ -273,8 +272,8 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(15),
                         ),
                         padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.blockSizeVertical! * 1.5,
-                          horizontal: SizeConfig.blockSizeHorizontal! * 6,
+                          vertical: SizeConfig.blockSizeVertical * 1.5,
+                          horizontal: SizeConfig.blockSizeHorizontal * 6,
                         ),
                         backgroundColor: const Color(0xFF933A8E),
                         elevation: 5,
@@ -313,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SignupPage()),
+              MaterialPageRoute(builder: (context) => const SignupPage()),
             );
           },
           child: const Text(
@@ -372,8 +371,8 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(25),
         ),
         padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.blockSizeVertical! * 1.5,
-          horizontal: SizeConfig.blockSizeHorizontal! * 6,
+          vertical: SizeConfig.blockSizeVertical * 1.5,
+          horizontal: SizeConfig.blockSizeHorizontal * 6,
         ),
         backgroundColor: const Color(0xFF933A8E),
         elevation: 5,

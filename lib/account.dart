@@ -142,11 +142,12 @@ class _AccountPageState extends State<AccountPage>
                 },
                 child: Text(
                   'Giriş Yap',
-                  style: TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 4),
+                  style:
+                      TextStyle(fontSize: SizeConfig.blockSizeHorizontal * 4),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                  const Color.fromARGB(255, 147, 58, 142), // Buton rengi
+                      const Color.fromARGB(255, 147, 58, 142), // Buton rengi
                   foregroundColor: Colors.white, // Metin rengi
                 ),
               ),
@@ -162,32 +163,35 @@ class _AccountPageState extends State<AccountPage>
           'Profil',
           style: TextStyle(fontSize: SizeConfig.scaledFontSize(14)),
         ),
-        leading: IconButton(onPressed: (){Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Home(),
-          ),
-        );}, icon: Icon(Icons.arrow_back)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Home(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.arrow_back)),
       ),
       body: _userData == null
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildHeader(),
-            _buildTabBar(),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: _buildTabBarView(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(),
+                  _buildTabBar(),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: _buildTabBarView(),
+                  ),
+                  _buildActionButtons(context),
+                ],
+              ),
             ),
-            _buildActionButtons(context),
-          ],
-        ),
-      ),
     );
   }
-
 
   Widget _buildHeader() {
     return Stack(
@@ -237,12 +241,12 @@ class _AccountPageState extends State<AccountPage>
   Widget _buildTabBar() {
     return TabBar(
       controller: _tabController,
-      tabs: [
+      tabs: const [
         Tab(text: 'Hayvanlarım'),
         Tab(text: 'Başvuranlar'),
       ],
-      indicatorColor: Color.fromARGB(255, 147, 58, 142),
-      labelColor: Color.fromARGB(255, 147, 58, 142),
+      indicatorColor: const Color.fromARGB(255, 147, 58, 142),
+      labelColor: const Color.fromARGB(255, 147, 58, 142),
     );
   }
 
@@ -255,107 +259,107 @@ class _AccountPageState extends State<AccountPage>
       ],
     );
   }
+
   Widget _buildPetsList() {
     return _userPets.isNotEmpty
         ? Padding(
-      padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
-      child: GridView.builder(
-        physics: BouncingScrollPhysics(),
-        shrinkWrap: false,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
-          mainAxisSpacing: SizeConfig.screenWidth * 0.02 * 2,
-          childAspectRatio: 0.75,
-        ),
-        itemCount: _userPets.length,
-        itemBuilder: (context, index) {
-          var pet = _userPets[index];
-          return Stack(
-            children: [
-              Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+            padding: EdgeInsets.all(SizeConfig.blockSizeHorizontal * 4),
+            child: GridView.builder(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: false,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: SizeConfig.blockSizeHorizontal * 2,
+                mainAxisSpacing: SizeConfig.screenWidth * 0.02 * 2,
+                childAspectRatio: 0.75,
+              ),
+              itemCount: _userPets.length,
+              itemBuilder: (context, index) {
+                var pet = _userPets[index];
+                return Stack(
                   children: [
-                    ClipRRect(
-                      borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(15)),
-                      child: Image.network(
-                        pet.imageUrl,
-                        height: SizeConfig.screenWidth / 2 - 32,
-                        width: SizeConfig.screenWidth / 2 - 32,
-                        fit: BoxFit.cover,
+                    Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(15)),
+                            child: Image.network(
+                              pet.imageUrl,
+                              height: SizeConfig.screenWidth / 2 - 32,
+                              width: SizeConfig.screenWidth / 2 - 32,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(
+                                SizeConfig.blockSizeHorizontal * 2),
+                            child: Text(
+                              pet.name ?? 'Hayvan Adı',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: SizeConfig.blockSizeHorizontal * 4,
+                                color: Colors.black,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Padding(
-                      padding:
-                      EdgeInsets.all(SizeConfig.blockSizeHorizontal * 2),
-                      child: Text(
-                        pet.name ?? 'Hayvan Adı',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: SizeConfig.blockSizeHorizontal * 4,
-                          color: Colors.black,
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: GestureDetector(
+                        onTap: () {
+                          // Düzenleme sayfasına yönlendirme
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditPetPage(pet: pet),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: const Icon(
+                            Icons.edit,
+                            color: Color.fromARGB(255, 147, 58, 142),
+                            size: 20,
+                          ),
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
-                ),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: GestureDetector(
-                  onTap: () {
-                    // Düzenleme sayfasına yönlendirme
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditPetPage(pet: pet),
-                      ),
-                    );
-
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                    padding: EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.edit,
-                      color: Color.fromARGB(255, 147, 58, 142),
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    )
+                );
+              },
+            ),
+          )
         : Center(
-      child: Text(
-        'Hayvanınız bulunmuyor',
-        style: TextStyle(
-          fontSize: SizeConfig.blockSizeHorizontal * 4,
-        ),
-      ),
-    );
+            child: Text(
+              'Hayvanınız bulunmuyor',
+              style: TextStyle(
+                fontSize: SizeConfig.blockSizeHorizontal * 4,
+              ),
+            ),
+          );
   }
 
   Widget _buildApplicationsList() {
@@ -384,11 +388,12 @@ class _AccountPageState extends State<AccountPage>
                 ]),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Hata: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.length != 2) {
-                    return Center(child: Text('Veri yüklenemedi veya eksik.'));
+                    return const Center(
+                        child: Text('Veri yüklenemedi veya eksik.'));
                   }
 
                   DocumentSnapshot userDoc = snapshot.data![0];
@@ -417,8 +422,8 @@ class _AccountPageState extends State<AccountPage>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           ClipRRect(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(15)),
+                            borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(15)),
                             child: Image.network(
                               petData?['imageUrl'] ??
                                   'https://via.placeholder.com/150',
@@ -433,7 +438,7 @@ class _AccountPageState extends State<AccountPage>
                             child: Text(
                               petData?['name'] ?? 'Hayvan Adı',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.0,
                                 color: Colors.black,
@@ -464,7 +469,7 @@ class _AccountPageState extends State<AccountPage>
               );
             },
           )
-        : Center(child: Text('Başvurunuz bulunmuyor'));
+        : const Center(child: Text('Başvurunuz bulunmuyor'));
   }
 
   Widget _buildActionButtons(BuildContext context) {
@@ -482,18 +487,19 @@ class _AccountPageState extends State<AccountPage>
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditProfilePage()),
+                  MaterialPageRoute(
+                      builder: (context) => const EditProfilePage()),
                 );
               },
-              icon: Icon(Icons.edit),
-              label: Text(
+              icon: const Icon(Icons.edit),
+              label: const Text(
                 'Profil Düzenle',
                 style: TextStyle(fontSize: 13), // Yazı boyutu
               ),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 foregroundColor: Colors.white,
-                backgroundColor: Color.fromARGB(255, 147, 58, 142),
+                backgroundColor: const Color.fromARGB(255, 147, 58, 142),
               ),
             ),
           ),
@@ -505,18 +511,19 @@ class _AccountPageState extends State<AccountPage>
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChangePasswordPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const ChangePasswordPage()),
                 );
               },
-              icon: Icon(Icons.lock),
-              label: Text(
+              icon: const Icon(Icons.lock),
+              label: const Text(
                 'Şifre Değiştir',
                 style: TextStyle(fontSize: 13), // Yazı boyutu
               ),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 foregroundColor: Colors.white,
-                backgroundColor: Color.fromARGB(255, 147, 58, 142),
+                backgroundColor: const Color.fromARGB(255, 147, 58, 142),
               ),
             ),
           ),
@@ -531,13 +538,13 @@ class _AccountPageState extends State<AccountPage>
                   Navigator.pushReplacementNamed(context, '/introScreen');
                 }
               },
-              icon: Icon(Icons.delete),
-              label: Text(
+              icon: const Icon(Icons.delete),
+              label: const Text(
                 'Hesabımı Sil',
                 style: TextStyle(fontSize: 13), // Yazı boyutu
               ),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 foregroundColor: Colors.white,
                 backgroundColor: Colors.red,
               ),
@@ -569,18 +576,18 @@ class _AccountPageState extends State<AccountPage>
             context, user, password); // 3. argümanı ekledik
         await user.delete();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Hesabınız başarıyla silindi.')),
+          const SnackBar(content: Text('Hesabınız başarıyla silindi.')),
         );
         return true;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Kullanıcı bulunamadı.')),
+          const SnackBar(content: Text('Kullanıcı bulunamadı.')),
         );
         return false;
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Hesap silme işlemi başarısız')),
+        const SnackBar(content: Text('Hesap silme işlemi başarısız')),
       );
       return false;
     }
@@ -616,7 +623,7 @@ class _AccountPageState extends State<AccountPage>
       await user.reauthenticateWithCredential(credential);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Yeniden kimlik doğrulama başarısız')),
+        const SnackBar(content: Text('Yeniden kimlik doğrulama başarısız')),
       );
       throw e; // Hata durumunda bir hata fırlat
     }
@@ -628,20 +635,20 @@ class _AccountPageState extends State<AccountPage>
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Şifrenizi girin'),
+          title: const Text('Şifrenizi girin'),
           content: TextField(
             obscureText: true,
             onChanged: (value) {
               password = value;
             },
-            decoration: InputDecoration(hintText: 'Şifreniz'),
+            decoration: const InputDecoration(hintText: 'Şifreniz'),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Tamam'),
+              child: const Text('Tamam'),
             ),
           ],
         );

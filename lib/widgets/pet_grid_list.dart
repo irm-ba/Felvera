@@ -22,10 +22,10 @@ class _PetGridListState extends State<PetGridList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Son Eklenen Hayvanlar'),
+        title: const Text('Son Eklenen Hayvanlar'),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_list),
             onPressed: _showFilterDialog,
           ),
         ],
@@ -34,16 +34,16 @@ class _PetGridListState extends State<PetGridList> {
         stream: _getFilteredPetsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Bir hata oluştu: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Görüntülenecek hayvan yok'));
+            return const Center(child: Text('Görüntülenecek hayvan yok'));
           } else {
             final pets = snapshot.data!;
 
             return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 10.0,
                 crossAxisSpacing: 10.0,
@@ -186,7 +186,7 @@ class _PetGridListState extends State<PetGridList> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Filtrele'),
+          title: const Text('Filtrele'),
           content: StatefulBuilder(
             builder: (context, setState) {
               return Column(
@@ -197,7 +197,7 @@ class _PetGridListState extends State<PetGridList> {
                     value: selectedAnimalType.isNotEmpty
                         ? selectedAnimalType
                         : null,
-                    hint: Text('Hayvan Türü'),
+                    hint: const Text('Hayvan Türü'),
                     onChanged: (String? newValue) {
                       setState(() {
                         selectedAnimalType = newValue ?? '';
@@ -225,7 +225,7 @@ class _PetGridListState extends State<PetGridList> {
                   ),
                   // Yaş aralığı seçimi
                   TextField(
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Yaş (ör. 1-5 , 2 )',
                     ),
                     onChanged: (value) {
@@ -237,7 +237,7 @@ class _PetGridListState extends State<PetGridList> {
                   // Konum seçimi
                   DropdownButton<String>(
                     value: location.isNotEmpty ? location : null,
-                    hint: Text('Konum'),
+                    hint: const Text('Konum'),
                     onChanged: (String? newValue) {
                       setState(() {
                         location = newValue ?? '';
@@ -336,7 +336,7 @@ class _PetGridListState extends State<PetGridList> {
           ),
           actions: [
             TextButton(
-              child: Text('İptal'),
+              child: const Text('İptal'),
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {
@@ -348,7 +348,7 @@ class _PetGridListState extends State<PetGridList> {
               },
             ),
             TextButton(
-              child: Text('Uygula'),
+              child: const Text('Uygula'),
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {

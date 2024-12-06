@@ -101,13 +101,13 @@ class _EditPetPageState extends State<EditPetPage> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Hayvan bilgileri başarıyla güncellendi!')),
+          const SnackBar(content: Text('Hayvan bilgileri başarıyla güncellendi!')),
         );
 
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AccountPage(),
+            builder: (context) => const AccountPage(),
           ),
         );
       } catch (e) {
@@ -127,7 +127,7 @@ class _EditPetPageState extends State<EditPetPage> {
           .delete();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Hayvan başarıyla silindi!')),
+        const SnackBar(content: Text('Hayvan başarıyla silindi!')),
       );
 
       Navigator.pop(context); // Silme işleminden sonra geri dön
@@ -138,18 +138,18 @@ class _EditPetPageState extends State<EditPetPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Hayvanı Düzenle',
           style: TextStyle(color: Color.fromARGB(255, 147, 58, 142)),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: Color.fromARGB(255, 147, 58, 142)),
+        iconTheme:
+            const IconThemeData(color: Color.fromARGB(255, 147, 58, 142)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -167,34 +167,34 @@ class _EditPetPageState extends State<EditPetPage> {
                   ),
                   child: _selectedImage != null
                       ? Image.file(
-                    _selectedImage!,
-                    fit: BoxFit.cover,
-                  )
+                          _selectedImage!,
+                          fit: BoxFit.cover,
+                        )
                       : _uploadedImageUrl != null
-                      ? Image.network(
-                    _uploadedImageUrl!,
-                    fit: BoxFit.cover,
-                  )
-                      : Icon(
-                    Icons.add_a_photo,
-                    color: Colors.grey,
-                    size: 50,
-                  ),
+                          ? Image.network(
+                              _uploadedImageUrl!,
+                              fit: BoxFit.cover,
+                            )
+                          : const Icon(
+                              Icons.add_a_photo,
+                              color: Colors.grey,
+                              size: 50,
+                            ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildTextField(
                 controller: _nameController,
                 label: 'Adı',
                 validator: (value) =>
-                value!.isEmpty ? 'Hayvan adı boş bırakılamaz.' : null,
+                    value!.isEmpty ? 'Hayvan adı boş bırakılamaz.' : null,
               ),
               _buildTextField(
                 controller: _ageController,
                 label: 'Yaşı',
                 keyboardType: TextInputType.number,
                 validator: (value) =>
-                value!.isEmpty ? 'Yaş boş bırakılamaz.' : null,
+                    value!.isEmpty ? 'Yaş boş bırakılamaz.' : null,
               ),
               _buildTextField(
                 controller: _healthStatusController,
@@ -213,26 +213,26 @@ class _EditPetPageState extends State<EditPetPage> {
                 label: 'Açıklama',
                 maxLines: 3,
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _saveChanges,
-                child: Text('Değişiklikleri Kaydet'),
+                child: const Text('Değişiklikleri Kaydet'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 147, 58, 142),
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   foregroundColor: Colors.white,
-                  textStyle: TextStyle(fontSize: 18),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _deletePet,
-                child: Text('Hayvanı Sil'),
+                child: const Text('Hayvanı Sil'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   foregroundColor: Colors.white,
-                  textStyle: TextStyle(fontSize: 18),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
               ),
             ],

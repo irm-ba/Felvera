@@ -52,7 +52,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   Widget _animatedIcon(IconData icon, int index) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -84,7 +84,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         height: 40,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [Colors.purple, Colors.deepPurple],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -94,11 +94,11 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
               color: Colors.black.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 6,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
-        child: Center(
+        child: const Center(
           child: Icon(
             Icons.add,
             color: Colors.white,
@@ -114,13 +114,13 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Home()),
+          MaterialPageRoute(builder: (context) => const Home()),
         );
         break;
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
         break;
       case 2:
@@ -135,7 +135,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       case 4:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AccountPage()),
+          MaterialPageRoute(builder: (context) => const AccountPage()),
         );
         break;
     }

@@ -17,10 +17,10 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kayıp Hayvanlar'),
+        title: const Text('Kayıp Hayvanlar'),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list),
+            icon: const Icon(Icons.filter_list),
             onPressed: _showFilterDialog,
           ),
         ],
@@ -29,16 +29,16 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
         stream: _getFilteredLostAnimalsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('Henüz kayıp ilanı yok.'));
+            return const Center(child: Text('Henüz kayıp ilanı yok.'));
           }
 
           // Kayıp hayvanlar listesini GridView ile oluştur
           return GridView.builder(
-            padding: EdgeInsets.all(10),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            padding: const EdgeInsets.all(10),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 10.0,
               crossAxisSpacing: 10.0,
@@ -118,17 +118,17 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
-                      Row(
+                      const Row(
                         children: [
                           Icon(
                             Icons.access_time_outlined,
                             size: 16,
                             color: Colors.white,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             'Kayıp',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -169,7 +169,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Filtrele'),
+          title: const Text('Filtrele'),
           content: StatefulBuilder(
             builder: (context, setState) {
               return Column(
@@ -180,7 +180,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
                     value: selectedAnimalType.isNotEmpty
                         ? selectedAnimalType
                         : null,
-                    hint: Text('Hayvan Türü'),
+                    hint: const Text('Hayvan Türü'),
                     onChanged: (String? newValue) {
                       setState(() {
                         selectedAnimalType = newValue ?? '';
@@ -209,7 +209,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
                   // Konum seçimi
                   DropdownButton<String>(
                     value: location.isNotEmpty ? location : null,
-                    hint: Text('Konum'),
+                    hint: const Text('Konum'),
                     onChanged: (String? newValue) {
                       setState(() {
                         location = newValue ?? '';
@@ -308,7 +308,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
           ),
           actions: [
             TextButton(
-              child: Text('İptal'),
+              child: const Text('İptal'),
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {
@@ -320,7 +320,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
               },
             ),
             TextButton(
-              child: Text('Uygula'),
+              child: const Text('Uygula'),
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {

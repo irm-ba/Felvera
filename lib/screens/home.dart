@@ -225,7 +225,7 @@ class _HomeState extends State<Home> {
                 : selectedCategory == 'Forum'
                     ? ForumPage()
                     : selectedCategory == 'Gönüllülük Etkinlikleri'
-                        ? EventPage()
+                        ? const EventPage()
                         : selectedCategory == 'Kayıp İlanları'
                             ? LostAnimalsPage()
                             : StreamBuilder(
