@@ -122,7 +122,7 @@ class _ProductAddState extends State<ProductAdd> {
 
   Future<String?> _uploadFile(File file, String folder) async {
     final storageRef =
-        FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
+    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
     try {
       await storageRef.putFile(file);
       return await storageRef.getDownloadURL();
@@ -153,7 +153,7 @@ class _ProductAddState extends State<ProductAdd> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content:
-              Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
+          Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
         ),
       );
       return;
@@ -411,32 +411,32 @@ class _ProductAddState extends State<ProductAdd> {
                 onTap: _getImage,
                 child: Container(
                   height: 200,
-                  color: Colors.grey,
+                  color: Colors.grey[300],
                   width: 180,
                   child: _images.isEmpty
                       ? const Center(child: Text("Resim Ekle"))
                       : Wrap(
-                          spacing: 8.0,
-                          children: List.generate(_images.length, (index) {
-                            return Stack(
-                              children: [
-                                Image.file(
-                                  _images[index],
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.remove_circle),
-                                    onPressed: () => _removeImage(index),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
-                        ),
+                    spacing: 8.0,
+                    children: List.generate(_images.length, (index) {
+                      return Stack(
+                        children: [
+                          Image.file(
+                            _images[index],
+                            width: 180,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                          Positioned(
+                            right: 0,
+                            child: IconButton(
+                              icon: const Icon(Icons.remove_circle),
+                              onPressed: () => _removeImage(index),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ),
                 ),
               ),
               const SizedBox(
@@ -446,35 +446,36 @@ class _ProductAddState extends State<ProductAdd> {
                 onTap: _getHealthCardImage,
                 child: Container(
                   height: 200,
-                  color: Colors.grey,
+                  color: Colors.grey[300],
                   width: 180,
-                  child: _images.isEmpty
-                      ? const Center(
-                          child: Text(
-                          "Sağlık Kartı Ekle",
-                        ))
+                  child: _healthCardImage == null
+                      ? const Center(child: Text("Sağlık Kartı Ekle"))
                       : Wrap(
-                          spacing: 8.0,
-                          children: List.generate(_images.length, (index) {
-                            return Stack(
-                              children: [
-                                Image.file(
-                                  _images[index],
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.remove_circle),
-                                    onPressed: () => _removeImage(index),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
-                        ),
+                    spacing: 8.0,
+                    children: [
+                      Stack(
+                        children: [
+                          Image.file(
+                            _healthCardImage!,
+                            width: 180,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                          Positioned(
+                            right: 0,
+                            child: IconButton(
+                              icon: const Icon(Icons.remove_circle),
+                              onPressed: () {
+                                setState(() {
+                                  _healthCardImage = null;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -569,7 +570,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
 
   Future<String?> _uploadFile(File file, String folder) async {
     final storageRef =
-        FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
+    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
     try {
       await storageRef.putFile(file);
       return await storageRef.getDownloadURL();
@@ -601,7 +602,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content:
-                Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.')),
+            Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.')),
       );
       return;
     }
@@ -833,32 +834,32 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
         onTap: _getImage,
         child: Container(
           height: 200,
-          color: Colors.grey,
+          color: Colors.grey[300],
           width: 180,
           child: _images.isEmpty
               ? const Center(child: Text("Resim Ekle"))
               : Wrap(
-                  spacing: 8.0,
-                  children: List.generate(_images.length, (index) {
-                    return Stack(
-                      children: [
-                        Image.file(
-                          _images[index],
-                          width: 400,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
-                        Positioned(
-                          right: 0,
-                          child: IconButton(
-                            icon: const Icon(Icons.remove_circle),
-                            onPressed: () => _removeImage(index),
-                          ),
-                        ),
-                      ],
-                    );
-                  }),
-                ),
+            spacing: 8.0,
+            children: List.generate(_images.length, (index) {
+              return Stack(
+                children: [
+                  Image.file(
+                    _images[index],
+                    width: 400,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    right: 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.remove_circle),
+                      onPressed: () => _removeImage(index),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
         ),
       ),
       const SizedBox(height: 16.0),
