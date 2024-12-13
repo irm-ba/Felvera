@@ -86,6 +86,10 @@ class _ProductAddState extends State<ProductAdd> {
   File? _healthCardImage;
   final picker = ImagePicker();
 
+  String selectedPetType = "Kedi";
+
+  get animalTypes => null;
+
   Future<void> _getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -144,7 +148,7 @@ class _ProductAddState extends State<ProductAdd> {
         _images.isEmpty ||
         healthStatusController.text.isEmpty ||
         selectedLocation == null ||
-        animalTypeController.text.isEmpty ||
+        selectedPetType == null ||
         descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -184,7 +188,7 @@ class _ProductAddState extends State<ProductAdd> {
       healthStatus: healthStatusController.text,
       healthCardImageUrl: healthCardUrl ?? '',
       description: descriptionController.text,
-      animalType: animalTypeController.text,
+      animalType: selectedPetType,
       location: selectedLocation!,
       userId: userId,
       petId: petId,
@@ -209,6 +213,7 @@ class _ProductAddState extends State<ProductAdd> {
       'status': newPet.status, // Status alanını ekleyin
     });
 
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Hayvan başarıyla eklendi!'),
@@ -315,7 +320,7 @@ class _ProductAddState extends State<ProductAdd> {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        children: [
+        children: <Widget>[
           TextField(
             controller: nameController,
             decoration: const InputDecoration(labelText: 'Hayvan Adı'),
@@ -341,10 +346,25 @@ class _ProductAddState extends State<ProductAdd> {
             controller: healthStatusController,
             decoration: const InputDecoration(labelText: 'Sağlık Durumu'),
           ),
-          TextField(
-            controller: animalTypeController,
+
+          // Hayvan türlerini tanımlayın
+          DropdownButtonFormField<String>(
             decoration: const InputDecoration(labelText: 'Hayvan Türü'),
+            value: selectedPetType,
+            items: <String>['Kedi', 'Köpek', 'Kuş', 'Diğer']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedPetType = newValue!;
+              });
+            },
           ),
+
           DropdownButtonFormField<String>(
             value: selectedLocation,
             decoration: const InputDecoration(labelText: 'Konum'),
@@ -385,51 +405,90 @@ class _ProductAddState extends State<ProductAdd> {
               const Text('Dişi'),
             ],
           ),
-          ElevatedButton(
-            onPressed: _getImage,
-            child: const Text('Resim Seç'),
-          ),
-          _images.isEmpty
-              ? const Text('Resim seçilmedi')
-              : Wrap(
-                  spacing: 8.0,
-                  children: List.generate(_images.length, (index) {
-                    return Stack(
-                      children: [
-                        Image.file(
-                          _images[index],
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
+          Row(
+            children: [
+              GestureDetector(
+                onTap: _getImage,
+                child: Container(
+                  height: 200,
+                  color: Colors.grey,
+                  width: 180,
+                  child: _images.isEmpty
+                      ? const Center(child: Text("Resim Ekle"))
+                      : Wrap(
+                          spacing: 8.0,
+                          children: List.generate(_images.length, (index) {
+                            return Stack(
+                              children: [
+                                Image.file(
+                                  _images[index],
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.remove_circle),
+                                    onPressed: () => _removeImage(index),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ),
-                        Positioned(
-                          right: 0,
-                          child: IconButton(
-                            icon: const Icon(Icons.remove_circle),
-                            onPressed: () => _removeImage(index),
-                          ),
+                ),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              GestureDetector(
+                onTap: _getHealthCardImage,
+                child: Container(
+                  height: 200,
+                  color: Colors.grey,
+                  width: 180,
+                  child: _images.isEmpty
+                      ? const Center(
+                          child: Text(
+                          "Sağlık Kartı Ekle",
+                        ))
+                      : Wrap(
+                          spacing: 8.0,
+                          children: List.generate(_images.length, (index) {
+                            return Stack(
+                              children: [
+                                Image.file(
+                                  _images[index],
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.remove_circle),
+                                    onPressed: () => _removeImage(index),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ),
-                      ],
-                    );
-                  }),
                 ),
-          const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: _getHealthCardImage,
-            child: const Text('Sağlık Kartı Resmi Seç'),
+              ),
+            ],
           ),
-          _healthCardImage == null
-              ? const Text('Sağlık kartı resmi seçilmedi')
-              : Image.file(
-                  _healthCardImage!,
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _submitForm,
             child: const Text('İlanı Gönder'),
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Color.fromARGB(255, 147, 58, 142),
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 110),
+              textStyle: TextStyle(fontSize: 18),
+            ),
           ),
         ],
       ),
@@ -487,6 +546,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
   List<File> _images = [];
   final picker = ImagePicker();
 
+  String selectedPetType = "Kedi";
   Future<void> _getImage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -683,104 +743,135 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
       'Zonguldak'
     ];
 
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
-      children: [
-        TextField(
-          controller: nameController,
-          decoration: const InputDecoration(labelText: 'Hayvan Adı'),
-        ),
-        TextField(
-          controller: breedController,
-          decoration: const InputDecoration(labelText: 'Cinsi'),
-        ),
-        TextField(
-          controller: ageController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: 'Yaşı'),
-        ),
-        TextField(
-          controller: descriptionController,
-          decoration: const InputDecoration(labelText: 'Açıklama'),
-        ),
-        TextField(
-          controller: animalTypeController,
-          decoration: const InputDecoration(labelText: 'Hayvan Türü'),
-        ),
-        DropdownButtonFormField<String>(
-          value: selectedLocation,
-          decoration: const InputDecoration(labelText: 'Konum'),
-          items: cities.map((String city) {
-            return DropdownMenuItem<String>(
-              value: city,
-              child: Text(city),
-            );
-          }).toList(),
-          onChanged: (newValue) {
-            setState(() {
-              selectedLocation = newValue;
-            });
-          },
-        ),
-        Row(
-          children: [
-            const Text('Cinsiyet: '),
-            Radio(
-              value: true,
-              groupValue: isGenderMale,
-              onChanged: (bool? value) {
-                setState(() {
-                  isGenderMale = value ?? true;
-                });
-              },
-            ),
-            const Text('Erkek'),
-            Radio(
-              value: false,
-              groupValue: isGenderMale,
-              onChanged: (bool? value) {
-                setState(() {
-                  isGenderMale = value ?? false;
-                });
-              },
-            ),
-            const Text('Dişi'),
-          ],
-        ),
-        ElevatedButton(
-          onPressed: _getImage,
-          child: const Text('Resim Seç'),
-        ),
-        _images.isEmpty
-            ? const Text('Resim seçilmedi')
-            : Wrap(
-                spacing: 8.0,
-                children: List.generate(_images.length, (index) {
-                  return Stack(
-                    children: [
-                      Image.file(
-                        _images[index],
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: IconButton(
-                          icon: const Icon(Icons.remove_circle),
-                          onPressed: () => _removeImage(index),
+    return ListView(padding: const EdgeInsets.all(16.0), children: [
+      TextField(
+        controller: nameController,
+        decoration: const InputDecoration(labelText: 'Hayvan Adı'),
+      ),
+      TextField(
+        controller: breedController,
+        decoration: const InputDecoration(labelText: 'Cinsi'),
+      ),
+      TextField(
+        controller: ageController,
+        keyboardType: TextInputType.number,
+        decoration: const InputDecoration(labelText: 'Yaşı'),
+      ),
+      TextField(
+        controller: descriptionController,
+        decoration: const InputDecoration(labelText: 'Açıklama'),
+      ),
+      DropdownButtonFormField<String>(
+        decoration: const InputDecoration(labelText: 'Hayvan Türü'),
+        value: selectedPetType,
+        items: <String>[
+          'Kedi',
+          'Köpek',
+          'Kuş',
+          'Balık',
+          'Hamster',
+          'Tavşan',
+          'Kaplumbağa',
+          'Yılan',
+          'Kertenkele',
+          'Sürüngen',
+          'Böcek',
+          'Diğer'
+        ].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (newValue) {
+          setState(() {
+            selectedPetType = newValue!;
+          });
+        },
+      ),
+      DropdownButtonFormField<String>(
+        value: selectedLocation,
+        decoration: const InputDecoration(labelText: 'Konum'),
+        items: cities.map((String city) {
+          return DropdownMenuItem<String>(
+            value: city,
+            child: Text(city),
+          );
+        }).toList(),
+        onChanged: (newValue) {
+          setState(() {
+            selectedLocation = newValue;
+          });
+        },
+      ),
+      Row(
+        children: [
+          const Text('Cinsiyet: '),
+          Radio(
+            value: true,
+            groupValue: isGenderMale,
+            onChanged: (bool? value) {
+              setState(() {
+                isGenderMale = value ?? true;
+              });
+            },
+          ),
+          const Text('Erkek'),
+          Radio(
+            value: false,
+            groupValue: isGenderMale,
+            onChanged: (bool? value) {
+              setState(() {
+                isGenderMale = value ?? false;
+              });
+            },
+          ),
+          const Text('Dişi'),
+        ],
+      ),
+      GestureDetector(
+        onTap: _getImage,
+        child: Container(
+          height: 200,
+          color: Colors.grey,
+          width: 180,
+          child: _images.isEmpty
+              ? const Center(child: Text("Resim Ekle"))
+              : Wrap(
+                  spacing: 8.0,
+                  children: List.generate(_images.length, (index) {
+                    return Stack(
+                      children: [
+                        Image.file(
+                          _images[index],
+                          width: 400,
+                          height: 200,
+                          fit: BoxFit.cover,
                         ),
-                      ),
-                    ],
-                  );
-                }),
-              ),
-        const SizedBox(height: 16.0),
-        ElevatedButton(
-          onPressed: _submitForm,
-          child: const Text('İlanı Gönder'),
+                        Positioned(
+                          right: 0,
+                          child: IconButton(
+                            icon: const Icon(Icons.remove_circle),
+                            onPressed: () => _removeImage(index),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
         ),
-      ],
-    );
+      ),
+      const SizedBox(height: 16.0),
+      ElevatedButton(
+        onPressed: _submitForm,
+        child: const Text('İlanı Gönder'),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: Color.fromARGB(255, 147, 58, 142),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 110),
+          textStyle: TextStyle(fontSize: 18),
+        ),
+      )
+    ]);
   }
 }

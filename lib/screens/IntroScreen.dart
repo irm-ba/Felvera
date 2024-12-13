@@ -1,9 +1,16 @@
 import 'package:felvera/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 
-class IntroScreen extends StatelessWidget {
+class IntroScreen extends StatefulWidget {
+  @override
+  _IntroScreenState createState() => _IntroScreenState();
+}
+
+class _IntroScreenState extends State<IntroScreen> {
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     // Hides the status bar
@@ -14,47 +21,103 @@ class IntroScreen extends StatelessWidget {
       body: Container(
         color: const Color.fromARGB(255, 241, 213, 239),
         padding: EdgeInsets.only(top: screenWidth * 0.1),
-        child: IntroductionScreen(
-          pages: [
-            PageViewModel(
-              title: "Felvera Evcil Hayvan Platformu",
-              body:
-                  "Felvera'ya Hoş Geldiniz! Sevgi dolu dostlarımızı keşfedin ve hayatlarına neşe katın.",
-              image: Image.asset("assets/images/birinci.png",
-                  height: 400, width: 400),
-              decoration: getPageDecoration(),
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                children: [
+                  buildPage(
+                    "Felvera Evcil Hayvan Platformu",
+                    "Felvera'ya Hoş Geldiniz! Sevgi dolu dostlarımızı keşfedin ve hayatlarına neşe katın.",
+                    "assets/images/birinci.png",
+                  ),
+                  buildPage(
+                    "Felvera Evcil Hayvan Platformu",
+                    "Bizim amacımız sevimli dostlarımızın daha güzel bir yaşam sürmesi. Bunu hep birlikte başarabiliriz.",
+                    "assets/images/ikinci.png",
+                  ),
+                  buildPage(
+                    "Felvera Evcil Hayvan Platformu",
+                    "Sokak hayvanlarına yuva, kayıp dostlara kavuşma, evcil hayvanlara sıcak bir yuva sunmak için hemen başlayın!",
+                    "assets/images/resim.png",
+                  ),
+                ],
+              ),
             ),
-            PageViewModel(
-              title: "Felvera Evcil Hayvan Platformu",
-              body:
-                  "Bizim amacımız sevimli dostlarımızın daha güzel bir yaşam sürmesi. Bunu hep birlikte başarabiliriz.",
-              image: Image.asset("assets/images/ikinci.png",
-                  height: 400, width: 400),
-              decoration: getPageDecoration(),
-            ),
-            PageViewModel(
-              title: "Felvera Evcil Hayvan Platformu",
-              body:
-                  "Sokak hayvanlarına yuva, kayıp dostlara kavuşma, evcil hayvanlara sıcak bir yuva sunmak için hemen başlayın!",
-              image: Image.asset("assets/images/resim.png",
-                  height: 400, width: 400),
-              decoration: getPageDecoration(),
-            ),
+            buildDotsIndicator(),
+            SizedBox(height: 20),
+            buildButtons(context),
+            SizedBox(height: 30),
           ],
-          onDone: () {
+        ),
+      ),
+    );
+  }
+
+  Widget buildPage(String title, String body, String imagePath) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF933A8E),
+          ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 20),
+        Text(
+          body,
+          style: const TextStyle(fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 40),
+        Image.asset(imagePath, height: 400, width: 400),
+      ],
+    );
+  }
+
+  Widget buildDotsIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(
+        3, // Number of pages
+        (index) => AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          height: 10,
+          width: _currentIndex == index ? 20 : 10,
+          decoration: BoxDecoration(
+            color: _currentIndex == index
+                ? const Color(0xFF933A8E)
+                : Colors.black26,
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextButton(
+          onPressed: () {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => const SignupPage()),
             );
           },
-          onSkip: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const SignupPage()),
-            );
-          },
-          showSkipButton: true,
-          skip: const Text(
+          child: const Text(
             "Atla",
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -62,40 +125,37 @@ class IntroScreen extends StatelessWidget {
               color: Color(0xFF933A8E),
             ),
           ),
-          next: const Icon(Icons.arrow_forward, color: Color(0xFF933A8E)),
-          done: const Text(
-            "Devam et",
-            style: TextStyle(
+        ),
+        TextButton(
+          onPressed: () {
+            if (_currentIndex < 2) {
+              _pageController.nextPage(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const SignupPage()),
+              );
+            }
+          },
+          child: Text(
+            _currentIndex == 2 ? "Devam et" : "İleri",
+            style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
               color: Color(0xFF933A8E),
             ),
           ),
-          dotsDecorator: DotsDecorator(
-            size: const Size.square(10.0),
-            activeSize: const Size(20.0, 10.0),
-            color: Colors.black26,
-            activeColor: const Color(0xFF933A8E),
-            spacing: const EdgeInsets.symmetric(horizontal: 3.0),
-            activeShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25.0),
-            ),
-          ),
-          // Setting the background color for the bottom bar
-          globalBackgroundColor: const Color.fromARGB(255, 240, 222, 238),
         ),
-      ),
+      ],
     );
   }
 
-  // Helper method for styling each page
-  PageDecoration getPageDecoration() => const PageDecoration(
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF933A8E),
-        ),
-        bodyTextStyle: TextStyle(fontSize: 16),
-        pageColor: Color.fromARGB(255, 241, 213, 239),
-      );
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 }
