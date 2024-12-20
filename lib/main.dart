@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'image_upload_page.dart';  // ImageUploadPage dosyasını import edin
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,13 +49,16 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      navigatorObservers: [routeObserver], // RouteObserver burada ekleniyor
+      navigatorObservers: [routeObserver],
       initialRoute: '/', // Başlangıç rotasını ana sayfa yapın
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/support':
             return MaterialPageRoute(
                 builder: (context) => ContactPage(), settings: settings);
+          case '/upload':
+            return MaterialPageRoute(
+                builder: (context) => ImageUploadPage(), settings: settings); // Resim yükleme sayfası
           default:
             return MaterialPageRoute(
                 builder: (context) => AuthWrapper(), settings: settings);
