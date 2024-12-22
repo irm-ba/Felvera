@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class AddQuestionPage extends StatefulWidget {
   @override
@@ -36,7 +37,7 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
         setState(() {
           _profileImageUrl = userInfo?['profileImageUrl'];
           _userName =
-              "${userInfo?['firstName'] ?? 'İsim Yok'} ${userInfo?['lastName'] ?? 'Soyisim Yok'}";
+          "${userInfo?['firstName'] ?? 'İsim Yok'} ${userInfo?['lastName'] ?? 'Soyisim Yok'}";
         });
       } catch (e) {
         print("Error loading user data: $e");
@@ -56,145 +57,174 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       ),
       body: Stack(
         children: [
-          // Background shapes
-          Positioned(
-            top: -50,
-            left: -50,
-            child: Container(
-              width: 200,
-              height: 200,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromARGB(255, 147, 58, 142),
-                    Color(0xFFC478D1)
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -100,
-            right: -100,
-            child: Container(
-              width: 300,
-              height: 300,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFC478D1),
-                    Color.fromARGB(255, 147, 58, 142)
-                  ],
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                ),
-              ),
-            ),
-          ),
-          // Main content
+          // Arka Plan
+          _buildBackgroundShapes(),
           SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (_profileImageUrl != null)
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(_profileImageUrl!),
-                        backgroundColor: Colors.grey[200],
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        _userName ?? 'İsim Yok',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
-                  ),
+                if (_profileImageUrl != null) _buildProfileInfo(),
                 const SizedBox(height: 20),
-                TextField(
-                  controller: _questionController,
-                  decoration: InputDecoration(
-                    labelText: 'Sorunuzu giriniz',
-                    labelStyle: const TextStyle(color: Colors.black54),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 147, 58, 142)),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  maxLines: 5,
-                  keyboardType: TextInputType.multiline,
-                ),
+                _buildQuestionInputField(),
                 const SizedBox(height: 20),
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: _selectedImages.map((image) {
-                    return Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.file(File(image.path),
-                              width: 100, height: 100, fit: BoxFit.cover),
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: IconButton(
-                            icon: const Icon(Icons.cancel, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                _selectedImages.remove(image);
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  }).toList(),
-                ),
+                _buildImagePreview(),
                 const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.photo_library, color: Colors.white),
-                  label: const Text("Resim Ekle"),
-                  onPressed: _pickImages,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 147, 58, 142),
-                    foregroundColor: const Color.fromARGB(255, 255, 254, 255),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
+                _buildImagePickerButton(),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _submitQuestion,
-                  child: const Text('Gönder'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 147, 58, 142),
-                    foregroundColor: const Color.fromARGB(255, 255, 254, 255),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
+                _buildSubmitButton(),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBackgroundShapes() {
+    return Stack(
+      children: [
+        Positioned(
+          top: -50,
+          left: -50,
+          child: Container(
+            width: 200,
+            height: 200,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(255, 147, 58, 142),
+                  Color(0xFFC478D1)
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: -100,
+          right: -100,
+          child: Container(
+            width: 300,
+            height: 300,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFC478D1),
+                  Color.fromARGB(255, 147, 58, 142)
+                ],
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfileInfo() {
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 30,
+          backgroundImage: NetworkImage(_profileImageUrl!),
+          backgroundColor: Colors.grey[200],
+        ),
+        const SizedBox(width: 10),
+        Text(
+          _userName ?? 'İsim Yok',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuestionInputField() {
+    return TextField(
+      controller: _questionController,
+      decoration: InputDecoration(
+        labelText: 'Sorunuzu giriniz',
+        labelStyle: const TextStyle(color: Colors.black54),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide:
+          const BorderSide(color: Color.fromARGB(255, 147, 58, 142)),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      maxLines: 5,
+      keyboardType: TextInputType.multiline,
+    );
+  }
+
+  Widget _buildImagePreview() {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: _selectedImages.map((image) {
+        return Stack(
+          children: [
+            kIsWeb
+                ? Image.network(image.path,
+                width: 100, height: 100, fit: BoxFit.cover)
+                : ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.file(File(image.path),
+                  width: 100, height: 100, fit: BoxFit.cover),
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: IconButton(
+                icon: const Icon(Icons.cancel, color: Colors.red),
+                onPressed: () {
+                  setState(() {
+                    _selectedImages.remove(image);
+                  });
+                },
+              ),
+            ),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildImagePickerButton() {
+    return ElevatedButton.icon(
+      icon: const Icon(Icons.photo_library, color: Colors.white),
+      label: const Text("Resim Ekle"),
+      onPressed: _pickImages,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+        foregroundColor: const Color.fromARGB(255, 255, 254, 255),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return ElevatedButton(
+      onPressed: _submitQuestion,
+      child: const Text('Gönder'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+        foregroundColor: const Color.fromARGB(255, 255, 254, 255),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }
@@ -253,14 +283,15 @@ class _AddQuestionPageState extends State<AddQuestionPage> {
       final ref = FirebaseStorage.instance.ref().child(
           'questions/${DateTime.now().millisecondsSinceEpoch}_${image.name}');
       try {
-        await ref.putFile(File(image.path));
+        if (kIsWeb) {
+          await ref.putData(await image.readAsBytes());
+        } else {
+          await ref.putFile(File(image.path));
+        }
         String url = await ref.getDownloadURL();
         imageUrls.add(url);
       } catch (e) {
         print("Error uploading image: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Resim yüklenirken bir hata oluştu')),
-        );
       }
     }
     return imageUrls;
