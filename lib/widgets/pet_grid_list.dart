@@ -20,6 +20,12 @@ class _PetGridListState extends State<PetGridList> {
 
   @override
   Widget build(BuildContext context) {
+    // Ekran genişliğini al
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Kart sayısını ekran genişliğine göre belirle
+    final crossAxisCount = screenWidth > 600 ? 4 : 2;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Son Eklenen Hayvanlar'),
@@ -43,8 +49,8 @@ class _PetGridListState extends State<PetGridList> {
             final pets = snapshot.data!;
 
             return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
                 mainAxisSpacing: 10.0,
                 crossAxisSpacing: 10.0,
                 childAspectRatio: 0.75,
