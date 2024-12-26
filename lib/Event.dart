@@ -1,8 +1,10 @@
-import 'package:felvera/CreateEvent.dart';
-import 'package:felvera/models/event_data.dart';
+import 'package:felvera/services/image_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
 
 class EventPage extends StatefulWidget {
   const EventPage({Key? key}) : super(key: key);
@@ -45,8 +47,7 @@ class _EventPageState extends State<EventPage> {
           List<QueryDocumentSnapshot> docs = snapshot.data!.docs;
 
           return ListView.builder(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             itemCount: docs.length,
             itemBuilder: (context, index) {
               var doc = docs[index];
@@ -61,6 +62,169 @@ class _EventPageState extends State<EventPage> {
   }
 }
 
+class CreateEventPage extends StatefulWidget {
+  const CreateEventPage({Key? key}) : super(key: key);
+
+  @override
+  _CreateEventPageState createState() => _CreateEventPageState();
+}
+
+class _CreateEventPageState extends State<CreateEventPage> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  Uint8List? _selectedImage;
+
+  final _formKey = GlobalKey<FormState>();
+
+  Future<void> _pickImage() async {
+    _selectedImage = await ImageUtils.pickImage();
+    setState(() {});
+  }
+
+  Future<void> _uploadEvent() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    String? imageUrl;
+    if (_selectedImage != null) {
+      imageUrl = await ImageUtils.uploadImage(_selectedImage!, 'events');
+    }
+
+    await FirebaseFirestore.instance.collection('events').add({
+      'title': _titleController.text,
+      'description': _descriptionController.text,
+      'imageUrl': imageUrl,
+      'date': _dateController.text,
+      'participants': [],
+    });
+
+    Navigator.pop(context);
+  }
+
+  Future<void> _selectDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        _dateController.text = pickedDate.toLocal().toIso8601String().split('T')[0];
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Etkinlik Oluştur"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              GestureDetector(
+                onTap: _pickImage,
+                child: Container(
+                  height: 200,
+                  color: Colors.grey[200],
+                  child: _selectedImage == null
+                      ? const Center(child: Text('Resim Seç'))
+                      : Image.memory(_selectedImage!, fit: BoxFit.cover),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: 'Başlık'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Başlık boş olamaz';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(labelText: 'Açıklama'),
+                maxLines: 4,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Açıklama boş olamaz';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16.0),
+              GestureDetector(
+                onTap: _selectDate,
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    controller: _dateController,
+                    decoration: const InputDecoration(
+                      labelText: 'Tarih',
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Tarih boş olamaz';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32.0),
+              ElevatedButton(
+                onPressed: _uploadEvent,
+                child: const Text('Oluştur'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class EventData {
+  final String id;
+  final String? title;
+  final String? description;
+  final String? imageUrl;
+  final String? date;
+  final List<dynamic>? participants;
+
+  EventData({
+    required this.id,
+    this.title,
+    this.description,
+    this.imageUrl,
+    this.date,
+    this.participants,
+  });
+
+  factory EventData.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
+    return EventData(
+      id: snapshot.id,
+      title: data['title'] as String?,
+      description: data['description'] as String?,
+      imageUrl: data['imageUrl'] as String?,
+      date: data['date'] as String?,
+      participants: data['participants'] as List<dynamic>?,
+    );
+  }
+}
+
 class EventCard extends StatelessWidget {
   final EventData eventData;
 
@@ -70,9 +234,8 @@ class EventCard extends StatelessWidget {
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
       final eventDoc =
-          FirebaseFirestore.instance.collection('events').doc(eventData.id);
+      FirebaseFirestore.instance.collection('events').doc(eventData.id);
 
-      // Katılımcı listesine UID ekle
       await eventDoc.update({
         'participants': FieldValue.arrayUnion([userId])
       });
@@ -103,14 +266,14 @@ class EventCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12.0)),
+              const BorderRadius.vertical(top: Radius.circular(12.0)),
               child: eventData.imageUrl != null
                   ? Image.network(
-                      eventData.imageUrl!,
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
+                eventData.imageUrl!,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              )
                   : const Placeholder(fallbackHeight: 200),
             ),
             Padding(

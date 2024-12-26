@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:felvera/firebase/petimage.dart';
+import 'package:felvera/services/image_utils.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,9 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'models/lost_animal_data.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:typed_data';
-import 'dart:html' as html;
+
 class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -64,164 +62,40 @@ class ProductAdd extends StatefulWidget {
 }
 
 class _ProductAddState extends State<ProductAdd> {
-
-  void uploadPetImage(String imagePath) async {
-    bool isValid = await isPetImage(imagePath);
-    if (isValid) {
-      print('Geçerli hayvan resmi. Yükleniyor...');
-      // Resmi Firebase Storage'a yükleyin
-    } else {
-      print('Bu resim hayvan resmi değil.');
-      // Uyarı mesajı göster
-    }
-  }
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController breedController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController healthStatusController = TextEditingController();
-  final TextEditingController animalTypeController = TextEditingController();
 
   String? selectedLocation;
   bool isGenderMale = true;
-  List<File> _images = [];
-
-  File? _healthCardImage;
-  final picker = ImagePicker();
-  List<Uint8List> _webImageBytes = [];
-  Uint8List? _healthCardImageBytes;
-  Uint8List?webImageBytes;
+  Uint8List? _healthCardImage;
+  final List<Uint8List> _images = [];
   String selectedPetType = "Kedi";
 
-  get animalTypes => null;
-  Future<void> pickAndUploadImage() async {
-    if (kIsWeb) {
-      // Web platformu için resim seçme
-      html.FileUploadInputElement uploadInput = html.FileUploadInputElement()
-        ..accept = 'image/*'; // Yalnızca resim dosyalarını kabul et
-      uploadInput.click();
-
-      uploadInput.onChange.listen((e) async {
-        final files = uploadInput.files;
-        if (files?.isEmpty ?? true) return;
-
-        final file = files![0];
-        final reader = html.FileReader();
-        reader.readAsArrayBuffer(file);
-        reader.onLoadEnd.listen((e) async {
-          final bytes = reader.result as Uint8List;
-
-          // Burada dosyanın formatını kontrol edin (JPEG, PNG vs.)
-          if (isImage(bytes)) {
-            String fileName = file.name!;
-            await uploadImageToFirebase(bytes, fileName);
-          } else {
-            print('Geçersiz resim formatı');
-          }
-        });
+  Future<void> _pickImage() async {
+    final Uint8List? image = await ImageUtils.pickImage();
+    if (image != null) {
+      setState(() {
+        _images.add(image);
       });
-    } else {
-      // Mobil platformlar için ImagePicker kullanabilirsiniz
-      final picker = ImagePicker();
-      final image = await picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        await uploadImageToFirebase(image.readAsBytes() as Uint8List, image.name);
-      }
     }
   }
 
-// Dosyanın resim olup olmadığını kontrol eden yardımcı fonksiyon
-  bool isImage(Uint8List bytes) {
-    final header = bytes.sublist(0, 4);
-    // JPEG, PNG, GIF, BMP, vb. için başlık kontrolü yapın
-    const jpegHeader = [0xFF, 0xD8, 0xFF, 0xE0]; // JPEG dosyasının başlık değeri
-    const pngHeader = [0x89, 0x50, 0x4E, 0x47]; // PNG dosyasının başlık değeri
-    return header == jpegHeader || header == pngHeader;
-  }
-
-  Future<void> uploadImageToFirebase(Uint8List imageBytes, String fileName) async {
-    try {
-      // Firebase Storage referansını oluşturun
-      FirebaseStorage storage = FirebaseStorage.instance;
-      Reference ref = storage.ref().child('pet_images/$fileName');
-
-      // Resmi yükleyin
-      UploadTask uploadTask = ref.putData(imageBytes);
-      TaskSnapshot snapshot = await uploadTask.whenComplete(() => {});
-
-      // Yüklenen resmin URL'sini alın
-      String imageUrl = await snapshot.ref.getDownloadURL();
-      print('Image URL: $imageUrl');
-      // Firebase veritabanına kaydedebilirsiniz
-      // Firestore'a imageUrl'yi kaydedebilirsiniz
-    } catch (e) {
-      print('Resim yükleme hatası: $e');
+  Future<void> _pickHealthCardImage() async {
+    final Uint8List? image = await ImageUtils.pickImage();
+    if (image != null) {
+      setState(() {
+        _healthCardImage = image;
+      });
     }
-  }
-  html.FileUploadInputElement uploadInput = html.FileUploadInputElement()
-    ..accept = 'image/*';
-  Future<void> _getImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        // Eğer Web platformu ise, imageBytes kullan
-        if (kIsWeb) {
-          pickedFile.readAsBytes().then((bytes) {
-            setState(() {
-              _webImageBytes.add(bytes);  // Web için byte listesine ekle
-            });
-          });
-        } else {
-          _images.add(File(pickedFile.path));
-
-        }
-      } else {
-        print('Resim seçilmedi');
-      }
-    });
-  }
-  Future<void> _getHealthCardImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        if (kIsWeb) {
-          pickedFile.readAsBytes().then((bytes) {
-            setState(() {
-              _healthCardImageBytes = bytes;  // Web platformunda byte olarak ekle
-            });
-          });
-        } else {
-          _healthCardImage = File(pickedFile.path);  // Mobil platformda dosya olarak ekle
-        }
-      } else {
-        print('Sağlık kartı resmi seçilmedi');
-      }
-    });
   }
 
   void _removeImage(int index) {
     setState(() {
-      if (kIsWeb) {
-        _webImageBytes.removeAt(index);  // Web için byte listesinde sil
-      } else {
-        _images.removeAt(index);  // Diğer platformlarda dosya listesinde sil
-      }
+      _images.removeAt(index);
     });
-  }
-
-  Future<String?> _uploadFile(File file, String folder) async {
-    final storageRef =
-    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
-    try {
-      await storageRef.putFile(file);
-      return await storageRef.getDownloadURL();
-    } catch (e) {
-      print('Dosya yükleme hatası: $e');
-      return null;
-    }
   }
 
   Future<void> _submitForm() async {
@@ -234,194 +108,81 @@ class _ProductAddState extends State<ProductAdd> {
       );
       return;
     }
-    void _submitForm() async {
-      print("Name: ${nameController.text}");
-      print("Breed: ${breedController.text}");
-      print("Age: ${ageController.text}");
-      print("Images count: ${_images.length}");
-      print("Web images count: ${_webImageBytes.length}");
-      print("Health status: ${healthStatusController.text}");
-      print("Selected location: $selectedLocation");
-      print("Selected pet type: $selectedPetType");
-      print("Description: ${descriptionController.text}");
 
-      if (nameController.text.isEmpty ||
-          breedController.text.isEmpty ||
-          ageController.text.isEmpty ||
-          _images.isEmpty ||
-          _webImageBytes.isEmpty ||
-          healthStatusController.text.isEmpty ||
-          selectedLocation == null ||
-          selectedPetType == null ||
-          descriptionController.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
-          ),
-        );
-        return;
-      }
+    if (nameController.text.isEmpty ||
+        breedController.text.isEmpty ||
+        ageController.text.isEmpty ||
+        _images.isEmpty ||
+        healthStatusController.text.isEmpty ||
+        selectedLocation == null ||
+        descriptionController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+          Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
+        ),
+      );
+      return;
     }
-    String userId = user.uid; // Kullanıcının ID'sini al
-    String petId = const Uuid().v4(); // Benzersiz bir kimlik
 
-    // Fotoğrafları Firebase Storage'a yükleyin
+    String userId = user.uid;
+    String petId = const Uuid().v4();
+
+    // Resimleri Firebase Storage'a yükle
     List<String> imageUrls = [];
     for (var image in _images) {
-      bool isValid = await isPetImage(image.path); // Hayvan resmi doğrulama
-      if (isValid) {
-        print('Geçerli hayvan resmi. Yükleniyor...');
-        var imageUrl = await _uploadFile(image, 'pet_images');
-        if (imageUrl != null) imageUrls.add(imageUrl);
-      } else {
-        print('Bu resim hayvan resmi değil.');
-        // İsteğe bağlı olarak kullanıcıya uyarı gösterin
+      String? imageUrl = await ImageUtils.uploadImage(image, 'pet_images');
+      if (imageUrl != null) {
+        imageUrls.add(imageUrl);
       }
     }
 
-    // Sağlık kartı varsa yüklenir, zorunlu değil
     String? healthCardUrl = _healthCardImage != null
-        ? await _uploadFile(_healthCardImage!, 'health_card_images')
+        ? await ImageUtils.uploadImage(_healthCardImage!, 'health_card_images')
         : null;
 
-    final newPet = PetData(
-      name: nameController.text,
-      breed: breedController.text,
-      isGenderMale: isGenderMale,
-      age: int.parse(ageController.text),
-      imageUrl: imageUrls.isNotEmpty ? imageUrls[0] : '',  // İlk resmi kullan
-      healthStatus: healthStatusController.text,
-      healthCardImageUrl: healthCardUrl ?? '', // Sağlık kartı var mı kontrolü
-      description: descriptionController.text,
-      animalType: selectedPetType,
-      location: selectedLocation!,
-      userId: userId,
-      petId: petId,
-      status: 'Available', // Status alanını ekleyin
-    );
+    final newPet = {
+      'name': nameController.text,
+      'breed': breedController.text,
+      'isGenderMale': isGenderMale,
+      'age': int.parse(ageController.text),
+      'imageUrl': imageUrls.isNotEmpty ? imageUrls[0] : '',
+      'healthStatus': healthStatusController.text,
+      'healthCardImageUrl': healthCardUrl ?? '',
+      'description': descriptionController.text,
+      'animalType': selectedPetType,
+      'location': selectedLocation!,
+      'userId': userId,
+      'petId': petId,
+      'status': 'Available',
+    };
 
-
-    // Firestore'a veri ekleme
     final firestore = FirebaseFirestore.instance;
-    await firestore.collection('pet').doc(petId).set({
-      'name': newPet.name,
-      'breed': newPet.breed,
-      'isGenderMale': newPet.isGenderMale,
-      'age': newPet.age,
-      'imageUrl': newPet.imageUrl,
-      'healthStatus': newPet.healthStatus,
-      'healthCardImageUrl': newPet.healthCardImageUrl,
-      'description': newPet.description,
-      'animalType': newPet.animalType,
-      'location': newPet.location,
-      'userId': newPet.userId,
-      'petId': newPet.petId,
-      'status': newPet.status, // Status alanını ekleyin
-    });
+    await firestore.collection('pet').doc(petId).set(newPet);
 
-    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Hayvan başarıyla eklendi!'),
       ),
     );
-    // Formu sıfırlama
+
+    // Formu sıfırla
     nameController.clear();
     breedController.clear();
     ageController.clear();
     descriptionController.clear();
     healthStatusController.clear();
-    animalTypeController.clear();
     setState(() {
       _images.clear();
-      _webImageBytes.clear();
       _healthCardImage = null;
       selectedLocation = null;
-      isGenderMale = true; // Default gender
+      isGenderMale = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    List<String> cities = [
-      'Adana',
-      'Adıyaman',
-      'Afyonkarahisar',
-      'Ağrı',
-      'Aksaray',
-      'Amasya',
-      'Ankara',
-      'Antalya',
-      'Artvin',
-      'Aydın',
-      'Balıkesir',
-      'Bilecik',
-      'Bingöl',
-      'Bitlis',
-      'Bolu',
-      'Burdur',
-      'Bursa',
-      'Çanakkale',
-      'Çankırı',
-      'Çorum',
-      'Denizli',
-      'Diyarbakır',
-      'Düzce',
-      'Edirne',
-      'Elazığ',
-      'Erzincan',
-      'Erzurum',
-      'Eskişehir',
-      'Gaziantep',
-      'Giresun',
-      'Gümüşhane',
-      'Hakkari',
-      'Hatay',
-      'Iğdır',
-      'Isparta',
-      'İstanbul',
-      'İzmir',
-      'Kahramanmaraş',
-      'Karabük',
-      'Karaman',
-      'Kars',
-      'Kastamonu',
-      'Kayseri',
-      'Kırıkkale',
-      'Kırklareli',
-      'Kırşehir',
-      'Kilis',
-      'Kocaeli',
-      'Konya',
-      'Kütahya',
-      'Malatya',
-      'Manisa',
-      'Mardin',
-      'Mersin',
-      'Muğla',
-      'Muş',
-      'Nevşehir',
-      'Niğde',
-      'Ordu',
-      'Osmaniye',
-      'Rize',
-      'Sakarya',
-      'Samsun',
-      'Siirt',
-      'Sinop',
-      'Sivas',
-      'Şanlıurfa',
-      'Şırnak',
-      'Tekirdağ',
-      'Tokat',
-      'Trabzon',
-      'Tunceli',
-      'Uşak',
-      'Van',
-      'Yalova',
-      'Yozgat',
-      'Zonguldak'
-    ];
+    List<String> cities = ['Adana'];
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -441,7 +202,7 @@ class _ProductAddState extends State<ProductAdd> {
             decoration: const InputDecoration(labelText: 'Yaşı'),
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(2), // En fazla 2 karakter
+              LengthLimitingTextInputFormatter(2),
             ],
           ),
           TextField(
@@ -452,8 +213,6 @@ class _ProductAddState extends State<ProductAdd> {
             controller: healthStatusController,
             decoration: const InputDecoration(labelText: 'Sağlık Durumu'),
           ),
-
-          // Hayvan türlerini tanımlayın
           DropdownButtonFormField<String>(
             decoration: const InputDecoration(labelText: 'Hayvan Türü'),
             value: selectedPetType,
@@ -470,7 +229,6 @@ class _ProductAddState extends State<ProductAdd> {
               });
             },
           ),
-
           DropdownButtonFormField<String>(
             value: selectedLocation,
             decoration: const InputDecoration(labelText: 'Konum'),
@@ -513,47 +271,21 @@ class _ProductAddState extends State<ProductAdd> {
           ),
           Row(
             children: [
-              // Resim Ekle
               GestureDetector(
-                onTap: _getImage,
+                onTap: _pickImage,
                 child: Container(
                   height: 200,
                   color: Colors.grey[300],
                   width: 180,
-                  child: kIsWeb
-                      ? (_webImageBytes.isEmpty
-                      ? const Center(child: Text("Resim Ekle"))
-                      : Wrap(
-                    spacing: 8.0,
-                    children: List.generate(_webImageBytes.length, (index) {
-                      return Stack(
-                        children: [
-                          Image.memory(
-                            _webImageBytes[index],  // Web için bellekteki resmi göster
-                            width: 180,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                          Positioned(
-                            right: 0,
-                            child: IconButton(
-                              icon: const Icon(Icons.remove_circle),
-                              onPressed: () => _removeImage(index),
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ))
-                      : (_images.isEmpty
+                  child: _images.isEmpty
                       ? const Center(child: Text("Resim Ekle"))
                       : Wrap(
                     spacing: 8.0,
                     children: List.generate(_images.length, (index) {
                       return Stack(
                         children: [
-                          Image.file(
-                            _images[index],  // Diğer platformlarda dosya ile resmi göster
+                          Image.memory(
+                            _images[index],
                             width: 180,
                             height: 200,
                             fit: BoxFit.cover,
@@ -568,50 +300,38 @@ class _ProductAddState extends State<ProductAdd> {
                         ],
                       );
                     }),
-                  )),
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
-
-              // Sağlık Kartı Ekle
               GestureDetector(
-                onTap: _getHealthCardImage,
+                onTap: _pickHealthCardImage,
                 child: Container(
                   height: 200,
                   color: Colors.grey[300],
                   width: 180,
-                  child: kIsWeb
-                      ? (_healthCardImageBytes == null
+                  child: _healthCardImage == null
                       ? const Center(child: Text("Sağlık Kartı Ekle"))
                       : Image.memory(
-                    _healthCardImageBytes!,  // Web platformu için byte ile sağlık kartı göster
+                    _healthCardImage!,
                     width: 180,
                     height: 200,
                     fit: BoxFit.cover,
-                  ))
-                      : (_healthCardImage == null
-                      ? const Center(child: Text("Sağlık Kartı Ekle"))
-                      : Image.file(
-                    _healthCardImage!,  // Mobil platformda dosya olarak sağlık kartı göster
-                    width: 180,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  )),
+                  ),
                 ),
               ),
             ],
           ),
-
-
           const SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: _submitForm,
             child: const Text('İlanı Gönder'),
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
-              backgroundColor: Color.fromARGB(255, 147, 58, 142),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 110),
-              textStyle: TextStyle(fontSize: 18),
+              backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+              padding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 110),
+              textStyle: const TextStyle(fontSize: 18),
             ),
           ),
         ],
@@ -664,27 +384,25 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
   final TextEditingController breedController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
-  final TextEditingController animalTypeController = TextEditingController();
   String? selectedLocation;
   bool isGenderMale = true;
-  List<File> _images = [];
-  List<File>_webImageBytes = [];
-
-  final picker = ImagePicker();
+  List<Uint8List> _images = [];
+  final picker = ImageUtils();
 
   String selectedPetType = "Kedi";
-  Future<void> _getImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      if (pickedFile != null) {
-        _images.add(File(pickedFile.path));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Resim seçilmedi')),
-        );
-      }
-    });
+  Future<void> _getImage() async {
+    final image = await ImageUtils
+        .pickImage(); // Accessing static method directly through class
+    if (image != null) {
+      setState(() {
+        _images.add(image);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Resim seçilmedi')),
+      );
+    }
   }
 
   void _removeImage(int index) {
@@ -692,17 +410,20 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
       _images.removeAt(index);
     });
   }
-  Future<String?> _uploadFile(File file, String folder) async {
-    final storageRef = FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
+
+  Future<String?> _uploadFile(Uint8List file, String folder) async {
+    final storageRef =
+    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
     try {
-      // Resmi Firebase Storage'a yükleyin
-      await storageRef.putFile(file);
-      // Yükleme başarılıysa, URL'yi döndürün
-      String downloadUrl = await storageRef.getDownloadURL();
-      print("Resim Yüklendi! URL: $downloadUrl");
-      return downloadUrl;
+      final uploadTask = storageRef.putData(file);
+      await uploadTask;
+      return await storageRef.getDownloadURL();
     } catch (e) {
       print('Dosya yükleme hatası: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Dosya yükleme sırasında bir hata oluştu.')),
+      );
       return null;
     }
   }
@@ -720,7 +441,6 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
         breedController.text.isEmpty ||
         descriptionController.text.isEmpty ||
         _images.isEmpty ||
-
         selectedLocation == null ||
         ageController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -740,34 +460,24 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
       if (imageUrl != null) imageUrls.add(imageUrl);
     }
 
-    final newLostAnimal = LostAnimalData(
-      name: nameController.text,
-      breed: breedController.text,
-      isGenderMale: isGenderMale,
-      age: int.parse(ageController.text),
-      imageUrls: imageUrls,
-      description: descriptionController.text,
-      location: selectedLocation!,
-      userId: userId,
-      lostAnimalId: lostAnimalId,
-      animalType: animalTypeController.text.isNotEmpty
-          ? animalTypeController.text
-          : 'Belirtilmemiş',
-    );
+    final newLostAnimal = {
+      'name': nameController.text,
+      'breed': breedController.text,
+      'isGenderMale': isGenderMale,
+      'age': int.parse(ageController.text),
+      'imageUrls': imageUrls,
+      'description': descriptionController.text,
+      'location': selectedLocation!,
+      'userId': userId,
+      'lostAnimalId': lostAnimalId,
+      'animalType': selectedPetType,
+    };
 
     final firestore = FirebaseFirestore.instance;
-    await firestore.collection('lost_animals').doc(lostAnimalId).set({
-      'name': newLostAnimal.name,
-      'breed': newLostAnimal.breed,
-      'isGenderMale': newLostAnimal.isGenderMale,
-      'age': newLostAnimal.age,
-      'imageUrls': newLostAnimal.imageUrls,
-      'description': newLostAnimal.description,
-      'location': newLostAnimal.location,
-      'userId': newLostAnimal.userId,
-      'lostAnimalId': newLostAnimal.lostAnimalId,
-      'animalType': newLostAnimal.animalType,
-    });
+    await firestore
+        .collection('lost_animals')
+        .doc(lostAnimalId)
+        .set(newLostAnimal);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Kayıp hayvan ilanı başarıyla eklendi!')),
@@ -778,7 +488,6 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
     breedController.clear();
     descriptionController.clear();
     ageController.clear();
-    animalTypeController.clear();
     setState(() {
       _images.clear();
       selectedLocation = null;
@@ -788,85 +497,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> cities = [
-      'Adana',
-      'Adıyaman',
-      'Afyonkarahisar',
-      'Ağrı',
-      'Aksaray',
-      'Amasya',
-      'Ankara',
-      'Antalya',
-      'Artvin',
-      'Aydın',
-      'Balıkesir',
-      'Bilecik',
-      'Bingöl',
-      'Bitlis',
-      'Bolu',
-      'Burdur',
-      'Bursa',
-      'Çanakkale',
-      'Çankırı',
-      'Çorum',
-      'Denizli',
-      'Diyarbakır',
-      'Düzce',
-      'Edirne',
-      'Elazığ',
-      'Erzincan',
-      'Erzurum',
-      'Eskişehir',
-      'Gaziantep',
-      'Giresun',
-      'Gümüşhane',
-      'Hakkari',
-      'Hatay',
-      'Iğdır',
-      'Isparta',
-      'İstanbul',
-      'İzmir',
-      'Kahramanmaraş',
-      'Karabük',
-      'Karaman',
-      'Kars',
-      'Kastamonu',
-      'Kayseri',
-      'Kırıkkale',
-      'Kırklareli',
-      'Kırşehir',
-      'Kilis',
-      'Kocaeli',
-      'Konya',
-      'Kütahya',
-      'Malatya',
-      'Manisa',
-      'Mardin',
-      'Mersin',
-      'Muğla',
-      'Muş',
-      'Nevşehir',
-      'Niğde',
-      'Ordu',
-      'Osmaniye',
-      'Rize',
-      'Sakarya',
-      'Samsun',
-      'Siirt',
-      'Sinop',
-      'Sivas',
-      'Şanlıurfa',
-      'Şırnak',
-      'Tekirdağ',
-      'Tokat',
-      'Trabzon',
-      'Tunceli',
-      'Uşak',
-      'Van',
-      'Yalova',
-      'Yozgat',
-      'Zonguldak'
-    ];
+    List<String> cities = ['Zonguldak'];
 
     return ListView(padding: const EdgeInsets.all(16.0), children: [
       TextField(
@@ -967,10 +598,10 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
             children: List.generate(_images.length, (index) {
               return Stack(
                 children: [
-                  Image.file(
+                  Image.memory(
                     _images[index],
-                    width: 400,
-                    height: 200,
+                    width: 100,
+                    height: 100,
                     fit: BoxFit.cover,
                   ),
                   Positioned(

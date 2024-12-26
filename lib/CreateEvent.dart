@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+//CREATEVET DOSYASI EVENTİN İÇİNDE !!!!!!
 class CreateEventPage extends StatefulWidget {
   @override
   _CreateEventPageState createState() => _CreateEventPageState();
@@ -68,7 +69,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             colorScheme: const ColorScheme.light(
                 primary: Colors.purple), // İkincil renk olarak moru ayarla
             buttonTheme:
-                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            const ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,
         );
@@ -78,7 +79,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
     if (picked != null && picked != DateTime.now()) {
       setState(() {
         _dateController.text =
-            "${picked.toLocal()}".split(' ')[0]; // YYYY-MM-DD formatında tarih
+        "${picked.toLocal()}".split(' ')[0]; // YYYY-MM-DD formatında tarih
       });
     }
   }
