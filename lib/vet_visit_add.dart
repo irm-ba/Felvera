@@ -168,42 +168,42 @@ class _VetVisitAddState extends State<VetVisitAdd> {
                               ),
                         ),
                         const SizedBox(height: 20),
-                        GestureDetector(
-                          onTap: _pickImage,
-                          child: _selectedImage == null
-                              ? Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.add_a_photo,
-                                            color: Colors.grey[600]),
-                                        const SizedBox(width: 8),
-                                        const Text('Hayvan Resmi Ekle'),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Column(
-                                  children: [
-                                    Image.file(
-                                      _selectedImage!,
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    TextButton(
-                                      onPressed: _pickImage,
-                                      child: const Text('Resmi Değiştir'),
-                                    ),
-                                  ],
-                                ),
-                        ),
+                        // GestureDetector(
+                        //   onTap: _pickImage,
+                        //   child: _selectedImage == null
+                        //       ? Card(
+                        //           elevation: 2,
+                        //           shape: RoundedRectangleBorder(
+                        //             borderRadius: BorderRadius.circular(12),
+                        //           ),
+                        //           child: Padding(
+                        //             padding: const EdgeInsets.all(16.0),
+                        //             child: Row(
+                        //               children: [
+                        //                 Icon(Icons.add_a_photo,
+                        //                     color: Colors.grey[600]),
+                        //                 const SizedBox(width: 8),
+                        //                 const Text('Hayvan Resmi Ekle'),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         )
+                        //       : Column(
+                        //           children: [
+                        //             Image.file(
+                        //               _selectedImage!,
+                        //               width: 100,
+                        //               height: 100,
+                        //               fit: BoxFit.cover,
+                        //             ),
+                        //             const SizedBox(height: 8),
+                        //             TextButton(
+                        //               onPressed: _pickImage,
+                        //               child: const Text('Resmi Değiştir'),
+                        //             ),
+                        //           ],
+                        //         ),
+                        // ),
                         const SizedBox(height: 20),
                         _buildTextField(
                           controller: _descriptionController,

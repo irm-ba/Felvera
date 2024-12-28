@@ -46,7 +46,8 @@ class _ChatListPageState extends State<ChatListPage> {
 
     // Eğer kullanıcı giriş yapmamışsa bir hata mesajı göster.
     if (currentUserId == null) {
-      return const Scaffold(
+      return Scaffold(
+        appBar: AppBar(),
         body: Center(child: Text('Kullanıcı giriş yapmamış.')),
       );
     }

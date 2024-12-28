@@ -124,6 +124,7 @@ class _AccountPageState extends State<AccountPage>
     // Kullanıcı giriş yapmamışsa otomatik olarak giriş sayfasına yönlendir
     if (currentUser == null) {
       return Scaffold(
+        appBar: AppBar(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
