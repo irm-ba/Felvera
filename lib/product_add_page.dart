@@ -119,7 +119,7 @@ class _ProductAddState extends State<ProductAdd> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content:
-          Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
+              Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.'),
         ),
       );
       return;
@@ -182,7 +182,87 @@ class _ProductAddState extends State<ProductAdd> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> cities = ['Adana'];
+    List<String> cities = [
+      'Adana',
+      'Adıyaman',
+      'Afyonkarahisar',
+      'Ağrı',
+      'Aksaray',
+      'Amasya',
+      'Ankara',
+      'Antalya',
+      'Ardahan',
+      'Artvin',
+      'Aydın',
+      'Balıkesir',
+      'Bartın',
+      'Batman',
+      'Bayburt',
+      'Bilecik',
+      'Bingöl',
+      'Bitlis',
+      'Bolu',
+      'Burdur',
+      'Bursa',
+      'Çanakkale',
+      'Çankırı',
+      'Çorum',
+      'Denizli',
+      'Diyarbakır',
+      'Düzce',
+      'Edirne',
+      'Elazığ',
+      'Erzincan',
+      'Erzurum',
+      'Eskişehir',
+      'Gaziantep',
+      'Giresun',
+      'Gümüşhane',
+      'Hakkari',
+      'Hatay',
+      'Iğdır',
+      'Isparta',
+      'İstanbul',
+      'İzmir',
+      'Kahramanmaraş',
+      'Karabük',
+      'Karaman',
+      'Kars',
+      'Kayseri',
+      'Kırıkkale',
+      'Kırklareli',
+      'Kırşehir',
+      'Kocaeli',
+      'Konya',
+      'Kütahya',
+      'Malatya',
+      'Manisa',
+      'Mardin',
+      'Mersin',
+      'Muğla',
+      'Muş',
+      'Nevşehir',
+      'Niğde',
+      'Ordu',
+      'Osmaniye',
+      'Rize',
+      'Sakarya',
+      'Samsun',
+      'Siirt',
+      'Sinop',
+      'Sivas',
+      'Şanlıurfa',
+      'Şırnak',
+      'Tekirdağ',
+      'Tokat',
+      'Trabzon',
+      'Tunceli',
+      'Uşak',
+      'Van',
+      'Yalova',
+      'Yozgat',
+      'Zonguldak'
+    ];
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -280,27 +360,27 @@ class _ProductAddState extends State<ProductAdd> {
                   child: _images.isEmpty
                       ? const Center(child: Text("Resim Ekle"))
                       : Wrap(
-                    spacing: 8.0,
-                    children: List.generate(_images.length, (index) {
-                      return Stack(
-                        children: [
-                          Image.memory(
-                            _images[index],
-                            width: 180,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                          Positioned(
-                            right: 0,
-                            child: IconButton(
-                              icon: const Icon(Icons.remove_circle),
-                              onPressed: () => _removeImage(index),
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
+                          spacing: 8.0,
+                          children: List.generate(_images.length, (index) {
+                            return Stack(
+                              children: [
+                                Image.memory(
+                                  _images[index],
+                                  width: 180,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.remove_circle),
+                                    onPressed: () => _removeImage(index),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -313,11 +393,11 @@ class _ProductAddState extends State<ProductAdd> {
                   child: _healthCardImage == null
                       ? const Center(child: Text("Sağlık Kartı Ekle"))
                       : Image.memory(
-                    _healthCardImage!,
-                    width: 180,
-                    height: 200,
-                    fit: BoxFit.cover,
-                  ),
+                          _healthCardImage!,
+                          width: 180,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ],
@@ -330,7 +410,7 @@ class _ProductAddState extends State<ProductAdd> {
               foregroundColor: Colors.white,
               backgroundColor: const Color.fromARGB(255, 147, 58, 142),
               padding:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 110),
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 110),
               textStyle: const TextStyle(fontSize: 18),
             ),
           ),
@@ -413,7 +493,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
 
   Future<String?> _uploadFile(Uint8List file, String folder) async {
     final storageRef =
-    FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
+        FirebaseStorage.instance.ref().child('$folder/${Uuid().v4()}');
     try {
       final uploadTask = storageRef.putData(file);
       await uploadTask;
@@ -446,7 +526,7 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content:
-            Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.')),
+                Text('Lütfen tüm zorunlu alanları doldurun ve resim ekleyin.')),
       );
       return;
     }
@@ -497,7 +577,87 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> cities = ['Zonguldak'];
+    List<String> cities = [
+      'Adana',
+      'Adıyaman',
+      'Afyonkarahisar',
+      'Ağrı',
+      'Aksaray',
+      'Amasya',
+      'Ankara',
+      'Antalya',
+      'Ardahan',
+      'Artvin',
+      'Aydın',
+      'Balıkesir',
+      'Bartın',
+      'Batman',
+      'Bayburt',
+      'Bilecik',
+      'Bingöl',
+      'Bitlis',
+      'Bolu',
+      'Burdur',
+      'Bursa',
+      'Çanakkale',
+      'Çankırı',
+      'Çorum',
+      'Denizli',
+      'Diyarbakır',
+      'Düzce',
+      'Edirne',
+      'Elazığ',
+      'Erzincan',
+      'Erzurum',
+      'Eskişehir',
+      'Gaziantep',
+      'Giresun',
+      'Gümüşhane',
+      'Hakkari',
+      'Hatay',
+      'Iğdır',
+      'Isparta',
+      'İstanbul',
+      'İzmir',
+      'Kahramanmaraş',
+      'Karabük',
+      'Karaman',
+      'Kars',
+      'Kayseri',
+      'Kırıkkale',
+      'Kırklareli',
+      'Kırşehir',
+      'Kocaeli',
+      'Konya',
+      'Kütahya',
+      'Malatya',
+      'Manisa',
+      'Mardin',
+      'Mersin',
+      'Muğla',
+      'Muş',
+      'Nevşehir',
+      'Niğde',
+      'Ordu',
+      'Osmaniye',
+      'Rize',
+      'Sakarya',
+      'Samsun',
+      'Siirt',
+      'Sinop',
+      'Sivas',
+      'Şanlıurfa',
+      'Şırnak',
+      'Tekirdağ',
+      'Tokat',
+      'Trabzon',
+      'Tunceli',
+      'Uşak',
+      'Van',
+      'Yalova',
+      'Yozgat',
+      'Zonguldak'
+    ];
 
     return ListView(padding: const EdgeInsets.all(16.0), children: [
       TextField(
@@ -594,27 +754,27 @@ class _LostAnimalAddState extends State<LostAnimalAdd> {
           child: _images.isEmpty
               ? const Center(child: Text("Resim Ekle"))
               : Wrap(
-            spacing: 8.0,
-            children: List.generate(_images.length, (index) {
-              return Stack(
-                children: [
-                  Image.memory(
-                    _images[index],
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    right: 0,
-                    child: IconButton(
-                      icon: const Icon(Icons.remove_circle),
-                      onPressed: () => _removeImage(index),
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
+                  spacing: 8.0,
+                  children: List.generate(_images.length, (index) {
+                    return Stack(
+                      children: [
+                        Image.memory(
+                          _images[index],
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
+                        Positioned(
+                          right: 0,
+                          child: IconButton(
+                            icon: const Icon(Icons.remove_circle),
+                            onPressed: () => _removeImage(index),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
+                ),
         ),
       ),
       const SizedBox(height: 16.0),
