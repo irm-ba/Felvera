@@ -150,8 +150,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ),
               const SizedBox(height: 32.0),
               ElevatedButton(
+
                 onPressed: _createEvent,
                 child: const Text('Oluştur'),
+                style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+                )
               ),
             ],
           ),

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:felvera/lost_details.dart';
 import 'package:felvera/models/lost_animal_data.dart';
-import 'package:flutter/material.dart';
 
 class LostAnimalsPage extends StatefulWidget {
   @override
@@ -10,7 +11,6 @@ class LostAnimalsPage extends StatefulWidget {
 
 class _LostAnimalsPageState extends State<LostAnimalsPage> {
   String selectedAnimalType = '';
-  String ageRange = '';
   String location = '';
 
   @override
@@ -35,20 +35,25 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
             return const Center(child: Text('Henüz kayıp ilanı yok.'));
           }
 
-          // Kayıp hayvanlar listesini GridView ile oluştur
+          // Kart sayısını platforma göre ayarla
+          int crossAxisCount = kIsWeb
+              ? 4 // Web için 4 kart
+              : MediaQuery.of(context).size.width > 600
+              ? 4 // Tablet ve geniş ekranlı cihazlar için 4 kart
+              : 2; // Mobil cihazlar için 2 kart
+
           return GridView.builder(
             padding: const EdgeInsets.all(10),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
               mainAxisSpacing: 10.0,
               crossAxisSpacing: 10.0,
-              childAspectRatio: 0.75, // Grid elemanının en-boy oranı
+              childAspectRatio: 0.75, // Kartların en-boy oranı
             ),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               final doc = snapshot.data!.docs[index];
 
-              // Veriyi LostAnimalData nesnesine dönüştür
               final lostAnimal = LostAnimalData(
                 name: doc['name'],
                 breed: doc['breed'],
@@ -149,7 +154,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
 
   Stream<QuerySnapshot> _getFilteredLostAnimalsStream() {
     CollectionReference lostAnimalsRef =
-        FirebaseFirestore.instance.collection('lost_animals');
+    FirebaseFirestore.instance.collection('lost_animals');
 
     Query query = lostAnimalsRef;
 
@@ -217,84 +222,13 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
                     },
                     items: [
                       'Adana',
-                      'Adıyaman',
-                      'Afyonkarahisar',
-                      'Ağrı',
-                      'Aksaray',
-                      'Amasya',
                       'Ankara',
-                      'Antalya',
-                      'Ardahan',
-                      'Artvin',
-                      'Aydın',
-                      'Balıkesir',
-                      'Bartın',
-                      'Batman',
-                      'Bayburt',
-                      'Bilecik',
-                      'Bingöl',
-                      'Bitlis',
-                      'Bolu',
-                      'Burdur',
-                      'Bursa',
-                      'Çanakkale',
-                      'Çankırı',
-                      'Çorum',
-                      'Denizli',
-                      'Diyarbakır',
-                      'Düzce',
-                      'Edirne',
-                      'Elazığ',
-                      'Erzincan',
-                      'Erzurum',
-                      'Eskişehir',
-                      'Gaziantep',
-                      'Giresun',
-                      'Gümüşhane',
-                      'Hakkari',
-                      'Hatay',
-                      'Iğdır',
-                      'Isparta',
                       'İstanbul',
                       'İzmir',
-                      'Kahramanmaraş',
-                      'Karabük',
-                      'Karaman',
-                      'Kars',
-                      'Kayseri',
-                      'Kırıkkale',
-                      'Kırklareli',
-                      'Kırşehir',
-                      'Kocaeli',
-                      'Konya',
-                      'Kütahya',
-                      'Malatya',
-                      'Manisa',
-                      'Mardin',
-                      'Mersin',
-                      'Muğla',
-                      'Muş',
-                      'Nevşehir',
-                      'Niğde',
-                      'Ordu',
-                      'Osmaniye',
-                      'Rize',
-                      'Sakarya',
-                      'Samsun',
-                      'Siirt',
-                      'Sinop',
-                      'Sivas',
-                      'Şanlıurfa',
-                      'Şırnak',
-                      'Tekirdağ',
-                      'Tokat',
-                      'Trabzon',
-                      'Tunceli',
-                      'Uşak',
-                      'Van',
-                      'Yalova',
-                      'Yozgat',
-                      'Zonguldak'
+                      'Bursa',
+                      'Antalya',
+                      'Gaziantep',
+                      // Diğer şehirler eklenebilir
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -312,9 +246,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
               onPressed: () {
                 Navigator.of(context).pop();
                 setState(() {
-                  // İptal butonuna basıldığında filtreleme değerlerini sıfırla
                   selectedAnimalType = '';
-                  ageRange = '';
                   location = '';
                 });
               },
@@ -323,9 +255,7 @@ class _LostAnimalsPageState extends State<LostAnimalsPage> {
               child: const Text('Uygula'),
               onPressed: () {
                 Navigator.of(context).pop();
-                setState(() {
-                  // Filtreleme değerlerini güncelle
-                });
+                setState(() {});
               },
             ),
           ],

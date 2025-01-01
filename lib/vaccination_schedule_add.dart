@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,33 +18,24 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _visitDateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  File? _selectedImage;
+  Uint8List? _selectedImageBytes; // Resim bytes (web ve mobil uyumlu)
   bool _isLoading = false;
 
-  final ImagePicker _picker = ImagePicker();
-
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+    final imageBytes = await ImageUtils.pickImage();
+    if (imageBytes != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _selectedImageBytes = imageBytes;
       });
     }
   }
 
-  Future<String?> _uploadImage(File image) async {
-    try {
-      final storageRef = FirebaseStorage.instance.ref();
-      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      final imageRef = storageRef.child('vaccination_images/$fileName');
-      final uploadTask = imageRef.putFile(image);
-      final snapshot = await uploadTask.whenComplete(() {});
-      final downloadUrl = await snapshot.ref.getDownloadURL();
-      return downloadUrl;
-    } catch (e) {
-      print('Error uploading image: $e');
-      return null;
-    }
+  Future<String?> _uploadImage() async {
+    if (_selectedImageBytes == null) return null;
+    return await ImageUtils.uploadImage(
+      _selectedImageBytes!,
+      'vaccination_images',
+    );
   }
 
   Future<void> _saveVaccinationSchedule() async {
@@ -56,8 +47,8 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
       if (user != null) {
         try {
           String? imageUrl;
-          if (_selectedImage != null) {
-            imageUrl = await _uploadImage(_selectedImage!);
+          if (_selectedImageBytes != null) {
+            imageUrl = await _uploadImage();
           }
 
           await FirebaseFirestore.instance
@@ -120,46 +111,46 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                               .textTheme
                               .headlineSmall
                               ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: const Color.fromARGB(255, 147, 58, 142),
-                              ),
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(255, 147, 58, 142),
+                          ),
                         ),
                         const SizedBox(height: 20),
                         GestureDetector(
-                          onTap: _pickImage, // Resim ekleme fonksiyonu
-                          child: _selectedImage == null
+                          onTap: _pickImage,
+                          child: _selectedImageBytes == null
                               ? Card(
-                                  elevation: 2,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.add_a_photo,
-                                            color: Colors.grey[600]),
-                                        const SizedBox(width: 8),
-                                        const Text('Hayvan Resmi Ekle'),
-                                      ],
-                                    ),
-                                  ),
-                                )
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.add_a_photo,
+                                      color: Colors.grey[600]),
+                                  const SizedBox(width: 8),
+                                  const Text('Hayvan Resmi Ekle'),
+                                ],
+                              ),
+                            ),
+                          )
                               : Column(
-                                  children: [
-                                    Image.file(
-                                      _selectedImage!,
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    TextButton(
-                                      onPressed: _pickImage,
-                                      child: const Text('Resmi Değiştir'),
-                                    ),
-                                  ],
-                                ),
+                            children: [
+                              Image.memory(
+                                _selectedImageBytes!,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                              const SizedBox(height: 8),
+                              TextButton(
+                                onPressed: _pickImage,
+                                child: const Text('Resmi Değiştir'),
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 20),
                         _buildTextField(
@@ -199,21 +190,21 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
                   child: _isLoading
                       ? const CircularProgressIndicator()
                       : ElevatedButton(
-                          onPressed: _saveVaccinationSchedule,
-                          child: const Text('Kaydet'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 147, 58, 142),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
-                            textStyle: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                        ),
+                    onPressed: _saveVaccinationSchedule,
+                    child: const Text('Kaydet'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                      const Color.fromARGB(255, 147, 58, 142),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      textStyle: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -242,7 +233,7 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
           start = pickedStart;
           end = pickedEnd;
           _visitDateController.text =
-              '${start?.toLocal().toString().split(' ')[0]} - ${end?.toLocal().toString().split(' ')[0]}';
+          '${start?.toLocal().toString().split(' ')[0]} - ${end?.toLocal().toString().split(' ')[0]}';
         });
       }
     }
@@ -265,9 +256,39 @@ class _VaccinationScheduleAddState extends State<VaccinationScheduleAdd> {
         filled: true,
         fillColor: Colors.white,
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       validator: validator,
     );
+  }
+}
+
+// ImageUtils sınıfı
+class ImageUtils {
+  // Resim seçici (web ve mobil uyumlu)
+  static Future<Uint8List?> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+
+    final XFile? file = await picker.pickImage(source: ImageSource.gallery);
+    if (file != null) {
+      return await file.readAsBytes();
+    }
+    return null;
+  }
+
+  // Firebase'e resim yükleme
+  static Future<String?> uploadImage(Uint8List imageBytes, String path) async {
+    try {
+      final String fileName = '${DateTime.now().millisecondsSinceEpoch}.png';
+      final Reference storageRef =
+      FirebaseStorage.instance.ref().child('$path/$fileName');
+
+      await storageRef.putData(imageBytes);
+      return await storageRef.getDownloadURL();
+    } catch (e) {
+      // Hata durumunu loglayabilirsiniz
+      print('Resim yükleme hatası: $e');
+      return null;
+    }
   }
 }

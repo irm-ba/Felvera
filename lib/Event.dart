@@ -186,7 +186,12 @@ class _CreateEventPageState extends State<CreateEventPage> {
               ElevatedButton(
                 onPressed: _uploadEvent,
                 child: const Text('Oluştur'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                backgroundColor: const Color.fromARGB(255, 147, 58, 142),
+                )
               ),
+
             ],
           ),
         ),
